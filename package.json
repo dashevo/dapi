@@ -23,6 +23,7 @@
   "devDependencies": {
     "bitcore-mnemonic-dash": "^1.0.3",
     "khal": "^1.0.0",
+    "memwatch-next": "^0.3.0",
     "mocha": "^3.4.1",
     "should": "^11.2.1"
   },
