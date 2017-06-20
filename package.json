@@ -21,6 +21,7 @@
     "zmq": "^2.15.3"
   },
   "devDependencies": {
+    "assert": "^1.4.1",
     "bitcore-mnemonic-dash": "^1.0.3",
     "khal": "^1.0.0",
     "memwatch-next": "^0.3.0",
