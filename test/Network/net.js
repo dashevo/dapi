@@ -4,30 +4,15 @@ const net = require('net');
 const portfinder = require('portfinder');
 const assert = require('assert');
 const Net = require('../../lib/net/net');
+const {isPortTaken}=require('../../lib/utils');
+
 const PORTS = {
     'pub': '10000',
     'sub': '10000',
     'rep': '10001',
     'req': '10001'
 }
-function isPortTaken(port, ipv6 = false) {
-    return new Promise(function (resolve, reject) {
-        let uri = ipv6 ? '::' : '127.0.0.1';
-        let i = 0;
-        let servlet = net.createServer();
-        servlet.on('error', function (err) {
-            if (err.code !== 'EADDRINUSE') return reject(err)
-            return resolve(true);
-        });
-        servlet.on('listening', function () {
-            return resolve(false);
-        });
-        servlet.on('close', function () {
-            return resolve(false);
-        })
-        servlet.listen(port, uri);
-    });
-}
+
 describe('Network - Net (0mq)', function () {
     let net = new Net()
     let socks = {};
