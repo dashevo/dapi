@@ -91,7 +91,7 @@ describe('Network - Net (0mq)', function() {
             assert(socks.pReq.socket._zmq.state == 0)
             isPortTaken(PORTS['pReq'])
                 .then(function(res) {
-                    assert(res == false); //pvr: todo investigate false
+                    assert(res == true);
                     done();
                 })
                 .catch(function(e) {
