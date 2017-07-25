@@ -3,20 +3,6 @@ const should = require('should');
 const assert = require('assert');
 const Node = require('../../lib/node/node');
 const mocks = require('../../lib/mocks/mocks');
-// const bld = require('bitcore-lib-dash')
-
-// var mns = []
-// for (let i = 0; i < 10; i++) {
-//     var privateKey = new bld.PrivateKey()
-
-//     mns.push({
-//         id: `MasterNode_${i}`,
-//         privKey: privateKey.toString(),
-//         publicAdr: privateKey.publicKey.toAddress().toString()
-//     })
-// }
-
-// console.log(mns)
 
 describe('Network - Mempool', function() {
 
