@@ -23,6 +23,7 @@
     "orbit-db": "^0.17.3",
     "portfinder": "^1.0.13",
     "request": "^2.81.0",
+    "signal-exit": "^3.0.2",
     "zmq": "^2.15.3"
   },
   "devDependencies": {
