@@ -1,5 +1,6 @@
 const Node = require('./lib/node/node');
 const config = require('./dapi.json');
+const pjson = require('./package.json');
 const {isPortTaken} = require('./lib/utils');
 const ifaces = require('os').networkInterfaces();
 
@@ -30,8 +31,11 @@ async function starter(){
     await preparePublisher();
     await prepareReplier();
     await getIP(); //get ip programmatically @cofresi
+    //console.log('insight v.' + pjson.dependencies.insight-api-dash); get embedded insight api version programmatically
     try{
         node = new Node({
+            version:pjson.version,
+            insight:'0.5.0', //later on we get embedded insight api version programmatically from pjson.dependencies.insight-api-dash
             debug:true,
             rep:rep,
             pub:pub,
