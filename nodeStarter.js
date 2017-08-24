@@ -2,7 +2,6 @@ const Node = require('./lib/node/node');
 const config = require('./dapi.json');
 const pjson = require('./package.json');
 const {isPortTaken} = require('./lib/utils');
-const ifaces = require('os').networkInterfaces();
 
 let node;
 let ip;
@@ -30,7 +29,6 @@ async function preparePublisher() {
 async function starter(){
     await preparePublisher();
     await prepareReplier();
-    await getIP(); //get ip programmatically @cofresi
     //console.log('insight v.' + pjson.dependencies.insight-api-dash); get embedded insight api version programmatically
     try{
         node = new Node({
@@ -40,24 +38,14 @@ async function starter(){
             rep:rep,
             pub:pub,
             pubKey:pubKey+rep.port,//Just in order to make it unique. TO BE REMOVED TODO
-            ip:ip
+            nlhbTimeout:-1, //nodeList heartbeat timeout: if positiv value in milliseconds until polling dapilist stops; default -1 = no timeout
+            nlhbInterval:900000, //nodeList heartbeat interval: interval in milliseconds; 15 min. = 900000 | set to a few seconds for testing
+            nltsTimeout:1800001 //nodeList timestamp timeout: interval in milliseconds; 30 min. = 1800001 (should be > 2x nodeListHeartBeatInterval to make sure we don't delete a connected node that just didn't refresh in between)
         });
     }catch (e) {
         console.log('Cannot start node...');
         console.error(e);
     }
-}
-
-async function getIP () {
-    let address;
-    Object.keys(ifaces).forEach(dev => {
-        ifaces[dev].filter(details => {
-            if (details.family === 'IPv4' && details.internal === false) {
-                address = details.address;
-                ip = address;
-            }
-        });
-    });
 }
 
 starter();
