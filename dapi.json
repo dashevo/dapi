@@ -1,5 +1,6 @@
 {
   "livenet":false,
+  "filterMNList":true,
   "server":{
     "enable":true,
     "port":3000
@@ -11,6 +12,7 @@
     },
     "pub":{
       "port":50000
+
     }
   }
 }

@@ -33,7 +33,7 @@ async function starter(){
     try{
         node = new Node({
             version:pjson.version,
-            insight:'0.5.0', //later on we get embedded insight api version programmatically from pjson.dependencies.insight-api-dash
+            insight:'0.5.0', // TODO: later on we get embedded insight api version programmatically from /status route, once it is available
             debug:true,
             rep:rep,
             pub:pub,
