@@ -14,8 +14,8 @@
       "port":50000
     },
     "list":{
-      "heartbeatInterval":5,
-      "timestampTimeout":11
+      "heartbeatInterval":20,
+      "timestampTimeout":41
     }
   }
 }
