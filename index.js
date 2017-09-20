@@ -22,7 +22,8 @@ function terminator(sig) {
     }
     console.log('Dapi node server is shutting down...');
 }
-
-process.on('uncaughtException', function (err) {
-    console.log(err);
-});
+const ErrorHelper = require('./errorHelper');
+ErrorHelper.handleUncaughtException();
+ErrorHelper.handleRejectionHandled();
+ErrorHelper.handleUnhandledRejection();
+ErrorHelper.handleError();
