@@ -29,6 +29,7 @@
   "devDependencies": {
     "assert": "^1.4.1",
     "bitcore-mnemonic-dash": "^1.0.3",
+    "chai": "^4.1.2",
     "eslint": "4.10.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-standard": "10.2.1",
@@ -41,7 +42,8 @@
     "khal": "^2.0.0",
     "memwatch-next": "^0.3.0",
     "mocha": "^3.4.1",
-    "should": "^11.2.1"
+    "should": "^11.2.1",
+    "sinon": "^4.1.0"
   },
   "main": "index.js",
   "repository": {
