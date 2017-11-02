@@ -35,7 +35,7 @@ describe('Insight', () => {
   describe('.getAddress', () => {
     const txHash = '50622f66236671501c0e80f388d6cf1e81158de8526f4acc9db00adf3c524077';
     it('should return address', () => insight.getAddress(txHash).then((address) => {
-      expect(address).to.be.an('string');
+      expect(address).to.be.a('string');
     }));
   });
 });
