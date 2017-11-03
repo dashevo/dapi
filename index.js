@@ -2,17 +2,19 @@ const Dapi = require('./lib/dapi');
 //let dapi = new Dapi(require('./dapi.json'));
 
 //QDEVTEMP
-let dapiCount = 10; //start 10 dapi instances
+let dapiCount = 2; //start 10 dapi instances
 let dapiArr = [];
 
-let dapiBuilder = function() {
-    dapiArr.push(new Dapi(require('./dapi.json')))
-    if (dapiArr.length >= dapiCount) {
-        clearInterval(dapiInt);
-    }
+
+for (let i = 0; i < dapiCount; i++) {
+    let config = require('./dapi.json');
+    config.server.port = 3000 + i;
+    dapiArr.push(new Dapi(config))
 }
 
-let dapiInt = setInterval(dapiBuilder, 500);
+
+
+
 //QDEVTEMP END
 
 

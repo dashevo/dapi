@@ -25,6 +25,7 @@
     "portfinder": "^1.0.13",
     "quorums-dash": "file:../quorums-dash",
     "request": "^2.81.0",
+    "sha256": "^0.2.0",
     "zmq": "^2.15.3"
   },
   "devDependencies": {
