@@ -2,7 +2,7 @@ const Dapi = require('./lib/dapi');
 //let dapi = new Dapi(require('./dapi.json'));
 
 //QDEVTEMP
-let dapiCount = 2; //start 10 dapi instances
+let dapiCount = 1; //start 10 dapi instances
 let dapiArr = [];
 
 
