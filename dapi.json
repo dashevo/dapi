@@ -12,8 +12,5 @@
     "pub": {
       "port": 50000
     }
-  },
-  "quorums": {
-    "quorumRefHeight": 100
   }
 }
