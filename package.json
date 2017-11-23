@@ -27,6 +27,9 @@
   },
   "devDependencies": {
     "assert": "^1.4.1",
+    "eslint": "4.10.0",
+    "eslint-config-airbnb-base": "12.1.0",
+    "eslint-plugin-import": "2.8.0",
     "bitcore-mnemonic-dash": "^1.0.3",
     "khal": "^2.0.0",
     "memwatch-next": "^0.3.0",
