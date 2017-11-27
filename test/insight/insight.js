@@ -1,15 +1,13 @@
 const { expect } = require('chai');
 
-const Insight = require('../../lib/insight/insight');
+const insight = require('../../lib/insight');
 
 // Stubs
 // TODO: add stubs for network
-const app = { config: { livenet: false } };
 
 // Disable no-undef rule for mocha
 /* eslint-disable no-undef */
 describe('Insight', () => {
-  const insight = new Insight(app);
 
   describe('.getLastBlockHash', () => {
     it('should return block hash', () => insight.getLastBlockHash().then((lastBlockHash) => {
