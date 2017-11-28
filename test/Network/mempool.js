@@ -26,14 +26,13 @@ describe('Network - Mempool', () => {
   it('should sync a value from a VALID masternode on the list of masternodes', (done) => {
     const key = 'mn_valid_sync';
     const value = new Date().getTime();
-    const nodes = [];
 
-    mocks.mnList.map((mn) => {
+    const nodes = mocks.mnList.map((mn) => {
       const parms = {
         pubKey: mn.publicAdr,
         privKey: mn.privKey,
       };
-      nodes.push(new Node(parms));
+      return new Node(parms);
     });
 
     nodes[0].addMemPoolData(nodes[0].config.privKey, nodes[0].config.pubKey, value, key);
