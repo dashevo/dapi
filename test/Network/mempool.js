@@ -7,12 +7,8 @@ const mocks = require('../../lib/mocks/mocks');
 const sinon = require('sinon');
 const kvstore = require('orbit-db-kvstore');
 
-console.log(kvstore.prototype.get);
-
 const orbitDBStubGet = sinon.stub(kvstore.prototype, 'get');
 const orbitDBStubSet = sinon.stub(kvstore.prototype, 'set');
-
-console.log(kvstore.prototype.get);
 const fakeStore = {};
 orbitDBStubGet.callsFake(key => fakeStore[key]);
 orbitDBStubSet.callsFake((key, value) => {
