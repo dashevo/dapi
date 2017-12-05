@@ -27,7 +27,7 @@
     "quorums-dash": "^1.0.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5",
-    "zmq": "^2.15.3"
+    "zeromq": "^4.6.0"
   },
   "devDependencies": {
     "assert": "^1.4.1",
