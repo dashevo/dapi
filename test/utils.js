@@ -1,6 +1,6 @@
 'use strict'
 const should = require('should');
-const {Logger}=require('../lib/utils');
+const {Logger}=require('../lib/utils/utils');
 
 describe('Utils - Utils', function () {
 	let logger = new Logger();

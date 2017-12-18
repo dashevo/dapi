@@ -4,7 +4,7 @@ const net = require('net');
 const portfinder = require('portfinder');
 const assert = require('assert');
 const Net = require('../../lib/net/net');
-const { isPortTaken } = require('../../lib/utils');
+const { isPortTaken } = require('../../lib/utils/utils');
 
 const PORTS = {
     'pub': '10000',
