@@ -1,7 +1,7 @@
 
 const should = require('should');
 const assert = require('assert');
-const Node = require('../../lib/node/node');
+const Node = require('../../lib/services/node/node');
 const mocks = require('../../lib/mocks/mocks');
 
 const sinon = require('sinon');

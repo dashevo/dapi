@@ -1,7 +1,7 @@
 'use strict'
 const should = require('should');
 const assert = require('assert');
-const Node = require('../../lib/node/node');
+const Node = require('../../lib/services/node/node');
 
 describe('Network - Node', function() {
     let node = new Node();

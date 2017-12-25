@@ -39,7 +39,7 @@
     "khal": "^2.0.0",
     "memwatch-next": "^0.3.0",
     "mocha": "^3.4.1",
-    "nodemon": "^1.12.1",
+    "nodemon": "^1.14.3",
     "should": "^11.2.1",
     "sinon": "^4.1.0"
   },

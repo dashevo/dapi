@@ -1,4 +1,4 @@
-const authServiceLib = require('../../lib/authService/authService');
+const authServiceLib = require('../../lib/services/authService/authService');
 const should = require('should');
 
 const Mnemonic = require('bitcore-mnemonic-dash');

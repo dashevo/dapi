@@ -1,4 +1,4 @@
-const Node = require('./lib/node/node');
+const Node = require('./lib/services/node/node');
 const config = require('./lib/config');
 const { isPortTaken } = require('./lib/utils/utils');
 

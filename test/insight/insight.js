@@ -5,7 +5,7 @@ const sinon = require('sinon');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-const insight = require('../../lib/insight');
+const insight = require('../../lib/api/insight');
 
 // Stubs
 // TODO: add stubs for network
