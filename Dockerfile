@@ -14,4 +14,5 @@ COPY . /dapi
 
 EXPOSE 3000
 
-CMD ["node", "/dapi/nodeStarter.js"]
+ENV NODE_ENV=regtest
+CMD ["node", "/dapi/lib/app.js"]
