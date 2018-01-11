@@ -1,4 +1,4 @@
-FROM node:8-wheezy
+FROM node:8-stretch
 LABEL maintainer="Dash Evolution Developers <evodevs@dash.org>"
 LABEL description="Dockerised DAPI"
 
