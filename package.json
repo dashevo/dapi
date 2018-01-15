@@ -48,6 +48,10 @@
     "type": "git",
     "url": "git+https://github.com/dashevo/dapi.git"
   },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha --no-timeouts"
+  },
   "author": "",
   "license": "ISC",
   "bugs": {
