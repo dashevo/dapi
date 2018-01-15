@@ -1,3 +1,5 @@
+// TODO: Address ESLint issues the next time this file is edited
+/* eslint-disable */
 const authServiceLib = require('../../lib/services/authService/authService');
 const should = require('should');
 
@@ -8,7 +10,7 @@ let privKey = mnemonic.toHDPrivateKey().derive("m/1/1495176227").privateKey;
 let txId = 'cb1aa5d405c148a4990ff0035a6cd86cc73857ea57be3e49539cd8a9d0358315';
 
 
-//Todo: some bitcore version incompatiblities causing error 
+//Todo: some bitcore version incompatiblities causing error
 //"bitcore.ErrorInvalidArgument: Invalid Argument: First argument should be an instance of PrivateKey"
 //retry after dependancies is update
 //tests might be removed from here anyway as already covered in SDK

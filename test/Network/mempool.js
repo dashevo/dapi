@@ -1,4 +1,5 @@
-
+// TODO: Address ESLint issues the next time this file is edited
+/* eslint-disable */
 const should = require('should');
 const assert = require('assert');
 const Node = require('../../lib/services/node/node');
