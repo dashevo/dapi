@@ -14,5 +14,4 @@ COPY . /dapi
 
 EXPOSE 3000
 
-ENV NODE_ENV=regtestDocker
 CMD ["node", "/dapi/lib/app.js"]
