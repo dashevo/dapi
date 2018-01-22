@@ -24,7 +24,7 @@ describe('Network - Mempool', () => {
     done();
   });
 
-  xit('should sync a value from a VALID masternode on the list of masternodes', (done) => {
+  it('should sync a value from a VALID masternode on the list of masternodes', (done) => {
     const key = 'mn_valid_sync';
     const value = new Date().getTime();
 
@@ -49,7 +49,7 @@ describe('Network - Mempool', () => {
     }, 1000);
   });
 
-  xit('should sync a value from a VALID masternode on the list of masternodes', (done) => {
+  it('should sync a value from a VALID masternode on the list of masternodes', (done) => {
     const key = 'mn_invalid_sync';
     const value = new Date().getTime();
     const nodes = [];
