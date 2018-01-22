@@ -6,7 +6,8 @@ const assert = require('assert');
 const Node = require('../../lib/services/node/node');
 
 describe('Network - Node', function() {
-    let node = new Node();
+    // todo: add node tests
+    // let node = new Node();
     it('should create the node', function() { });
     it('should allow connection', function() { });
     it('should be able to connect', function() { });
