@@ -1,4 +1,4 @@
-FROM node:8-wheezy
+FROM node:8-stretch
 LABEL maintainer="Dash Evolution Developers <evodevs@dash.org>"
 LABEL description="Dockerised DAPI"
 
@@ -14,4 +14,4 @@ COPY . /dapi
 
 EXPOSE 3000
 
-CMD ["node", "/dapi/nodeStarter.js"]
+CMD ["node", "/dapi/lib/app.js"]
