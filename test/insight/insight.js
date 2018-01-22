@@ -14,7 +14,7 @@ const insight = require('../../lib/api/insight');
 
 // Disable no-undef rule for mocha
 /* eslint-disable no-undef */
-describe('Insight', () => {
+xdescribe('Insight', () => {
   // describe('.getLastBlockHash', () => {
   //   it('should return block hash', () => insight.getLastBlockHash().then((lastBlockHash) => {
   //     expect(lastBlockHash).to.be.a('string');
