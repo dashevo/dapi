@@ -6,3 +6,4 @@ Dockerfile
 .travis.yml
 build_docker_image.sh
 npm-debug.log
+node_modules
