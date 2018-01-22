@@ -1,7 +1,8 @@
-const portfinder = require('portfinder')
+// TODO: Address ESLint issues the next time this file is edited
+/* eslint-disable */
 const should = require('should');
 const assert = require('assert');
-const Node = require('../../lib/node/node');
+const Node = require('../../lib/services/node/node');
 const mocks = require('../../lib/mocks/mocks');
 
 const sinon = require('sinon');
@@ -17,118 +18,83 @@ orbitDBStubSet.callsFake((key, value) => {
 });
 
 
+describe('Network - Mempool', () => {
+  it('should verify ipfs deamon is running', (done) => {
+    // todo
+    done();
+  });
 
-describe('Network - Mempool', (done) => {
+  it('should sync a value from a VALID masternode on the list of masternodes', (done) => {
+    const key = 'mn_valid_sync';
+    const value = new Date().getTime();
 
-  var ipfsRunning;
-  ipfsCheck = function(done) {
-    //TODO: Improve by detecting if ipfs service is running or not
-    //ipfs typically runs on port 5001
-    portfinder.basePort = 5001
-    portfinder.getPortPromise()
-      .then(port => {
-        if (port == 5001) {
-          ipfsRunning = false
-        }
-        else {
-          ipfsRunning = true
-        }
-      })
-    done()
-  }
+    const nodes = mocks.mnList.map((mn) => {
+      const parms = {
+        pubKey: mn.publicAdr,
+        privKey: mn.privKey,
+      };
+      return new Node(parms);
+    });
 
-  before(function(done) {
-    ipfsCheck(done)
-  })
+    nodes[0].addMemPoolData(nodes[0].config.privKey, nodes[0].config.pubKey, value, key);
 
-  describe('IPFS tests', function() {
+    setTimeout(() => {
+      nodes.filter((n) => {
+        const data = n.getMemPoolData(key);
+        return data && data.value == value;
+      }).length.should.equal(mocks.mnList.length);
+      orbitDBStubSet.restore();
+      orbitDBStubGet.restore();
+      done();
+    }, 1000);
+  });
 
-    if (!ipfsRunning) {
-      it('should skip all tests since ipfs is offline', (done) => {
-        done();
-      });
-    }
-    else {
+  it('should sync a value from a VALID masternode on the list of masternodes', (done) => {
+    const key = 'mn_invalid_sync';
+    const value = new Date().getTime();
+    const nodes = [];
 
-      it('should verify ipfs deamon is running', (done) => {
-        // todo
-        done();
-      });
+    mocks.mnList.map((mn) => {
+      const parms = {
+        pubKey: mn.publicAdr,
+        privKey: mn.privKey,
+      };
+      nodes.push(new Node(parms));
+    });
 
-      it('should sync a value from a VALID masternode on the list of masternodes', (done) => {
-        const key = 'mn_valid_sync';
-        const value = new Date().getTime();
+    // change MN privkey to valid key but not in the mnList to simulate invalid MN
+    nodes[0].config.privKey = 'ce0e2e1b39cef330e8d645ddec8724f737f2f44b7c9f4f78dc3b33d62de003cd';
 
-        const nodes = mocks.mnList.map((mn) => {
-          const parms = {
-            pubKey: mn.publicAdr,
-            privKey: mn.privKey,
-          };
-          return new Node(parms);
-        });
+    nodes[0].addMemPoolData(nodes[0].config.privKey, nodes[0].config.pubKey, value, key);
 
-        nodes[0].addMemPoolData(nodes[0].config.privKey, nodes[0].config.pubKey, value, key);
+    setTimeout(() => {
+      nodes.filter((n) => {
+        const data = n.getMemPoolData(key);
+        return data && data.value == value;
+      }).length.should.equal(0);
+      done();
+    }, 1000);
+  });
 
-        setTimeout(() => {
-          nodes.filter((n) => {
-            const data = n.getMemPoolData(key);
-            return data && data.value == value;
-          }).length.should.equal(mocks.mnList.length);
-          orbitDBStubSet.restore();
-          orbitDBStubGet.restore();
-          done();
-        }, 1000);
-      });
 
-      it('should sync a value from a VALID masternode on the list of masternodes', (done) => {
-        const key = 'mn_invalid_sync';
-        const value = new Date().getTime();
-        const nodes = [];
+  // let mempool = new Mempool()
 
-        mocks.mnList.map((mn) => {
-          const parms = {
-            pubKey: mn.publicAdr,
-            privKey: mn.privKey,
-          };
-          nodes.push(new Node(parms));
-        });
+  // it('should open the mempool', function() {
+  //     // mempool.open();
+  // });
+  // it('should handle incomming relevant object', function() {
 
-        // change MN privkey to valid key but not in the mnList to simulate invalid MN
-        nodes[0].config.privKey = 'ce0e2e1b39cef330e8d645ddec8724f737f2f44b7c9f4f78dc3b33d62de003cd';
+  // });
+  // it('should verify invalid received object', function() {
 
-        nodes[0].addMemPoolData(nodes[0].config.privKey, nodes[0].config.pubKey, value, key);
+  // });
+  // it('should handle duplicate received data', function() {
 
-        setTimeout(() => {
-          nodes.filter((n) => {
-            const data = n.getMemPoolData(key);
-            return data && data.value == value;
-          }).length.should.equal(0);
-          done();
-        }, 1000);
-      });
+  // });
+  // it('should be able to retrieve a specific data', function() {
 
-      // let mempool = new Mempool()
-
-      // it('should open the mempool', function() {
-      //     // mempool.open();
-      // });
-      // it('should handle incomming relevant object', function() {
-
-      // });
-      // it('should verify invalid received object', function() {
-
-      // });
-      // it('should handle duplicate received data', function() {
-
-      // });
-      // it('should be able to retrieve a specific data', function() {
-
-      // });
-      // it('should destroy the mempool', function() {
-      //     // mempool.close();
-      // });
-    }
-  })
-
-})
-
+  // });
+  // it('should destroy the mempool', function() {
+  //     // mempool.close();
+  // });
+});
