@@ -1,3 +1,5 @@
+// TODO: Address ESLint issues the next time this file is edited
+/* eslint-disable */
 const { cl, misc } = require('khal');
 const memwatch = require('memwatch-next');
 const Benchtest = {

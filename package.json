@@ -5,7 +5,8 @@
   "scripts": {
     "start": "./scripts/start",
     "stop": "./scripts/stop",
-    "test": "./node_modules/.bin/mocha test/ --recursive"
+    "test": "mocha test/ --recursive",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@dashevo/dash-schema": "git+ssh://git@github.com/dashevo/dash-schema.git",

@@ -1,3 +1,5 @@
+// TODO: Address ESLint issues the next time this file is edited
+/* eslint-disable */
 'use strict'
 const should = require('should');
 const net = require('net');

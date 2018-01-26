@@ -1,3 +1,5 @@
+// TODO: Address ESLint issues the next time this file is edited
+/* eslint-disable */
 'use strict'
 const should = require('should');
 const {Logger}=require('../lib/utils/utils');
@@ -36,4 +38,4 @@ describe('Utils - Utils', function () {
 			logger.verbose('This is also a verbose useless thing');
 		}
 	})
-}); 
+});
