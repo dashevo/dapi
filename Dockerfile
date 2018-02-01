@@ -1,5 +1,3 @@
-FROM node:8-stretch
-LABEL maintainer="Dash Evolution Developers <evodevs@dash.org>"
 FROM 103738324493.dkr.ecr.us-west-2.amazonaws.com/dashevo/v13-node-base:latest
 LABEL maintainer="Dash Developers <dev@dash.org>"
 LABEL description="Dockerised DAPI"
