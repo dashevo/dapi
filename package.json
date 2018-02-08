@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@dashevo/dash-schema": "git+ssh://git@github.com/dashevo/dash-schema.git",
-    "bitcore-lib-dash": "git+ssh://git@github.com/dashevo/bitcore-lib-dash-private.git#feature-state-transition",
+    "bitcore-lib-dash": "git+ssh://git@github.com/dashevo/bitcore-lib-dash-private.git",
     "bluebird": "^3.4.6",
     "body-parser": "^1.18.2",
     "crypto": "0.0.3",
