@@ -14,5 +14,14 @@
     "pub": {
       "port": 50000
     }
+  },
+  "dashcore": {
+    "rpcClient": {
+      "protocol": "http",
+      "user": "dash",
+      "pass": "local321",
+      "host": "127.0.0.1",
+      "port": 19998
+    }
   }
 }

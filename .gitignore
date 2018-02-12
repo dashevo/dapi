@@ -4,3 +4,4 @@ node_modules
 *.db
 dapinet.orbitdb
 lib/config/config.json
+test/rpc
