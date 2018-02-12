@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@dashevo/dash-schema": "git+ssh://git@github.com/dashevo/dash-schema.git",
-    "bitcoind-rpc-dash": "^1.0.1",
+    "bitcoind-rpc-dash": "git+ssh://git@github.com/dashevo/bitcoind-rpc-dash-private.git#develop",
     "bitcore-lib-dash": "git+ssh://git@github.com/dashevo/bitcore-lib-dash-private.git#develop",
     "bluebird": "^3.4.6",
     "crypto": "0.0.3",
