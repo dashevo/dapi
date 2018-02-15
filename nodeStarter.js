@@ -3,8 +3,9 @@
 const Node = require('./lib/services/node/node');
 const config = require('./lib/config');
 const { isPortTaken } = require('./lib/utils/utils');
+const Dapi = require('./lib/dapi');
 
-const { rep, pub, pubKey } = config.node.rep;
+const { rep, pub, pubKey } = config.node;
 
 async function prepareReplier() {
   const taken = await isPortTaken(rep.port);
@@ -33,6 +34,8 @@ async function starter() {
       pub,
       pubKey: pubKey + rep.port, // Just in order to make it unique. TO BE REMOVED TODO
     });
+      const dapi = new Dapi();
+
   } catch (e) {
     console.log('Cannot start node...');
     console.error(e);
