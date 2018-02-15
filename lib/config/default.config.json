@@ -21,7 +21,10 @@
       "user": "dash",
       "pass": "local321",
       "host": "127.0.0.1",
-      "port": 19998
+      "port": 9998
+    },
+    "zmq": {
+      "port": 28332
     }
   }
 }
