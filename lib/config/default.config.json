@@ -18,13 +18,10 @@
   "dashcore": {
     "rpcClient": {
       "protocol": "http",
-      "user": "dash",
-      "pass": "local321",
+      "user": "dashrpc",
+      "pass": "password",
       "host": "127.0.0.1",
-      "port": 19998
-    },
-    "zmq": {
-      "port": 28332
+      "port": 30002
     }
   }
 }
