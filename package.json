@@ -29,7 +29,7 @@
     "node-json-rpc2": "^1.0.1",
     "orbit-db": "^0.17.3",
     "portfinder": "^1.0.13",
-    "quorums-dash": "git+ssh://git@github.com/dashevo/quorums-dash.git",
+    "quorums-dash": "git+ssh://git@github.com/dashevo/quorums-dash.git#feature/getQuorumForDapi",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5",
     "zeromq": "^4.6.0"
