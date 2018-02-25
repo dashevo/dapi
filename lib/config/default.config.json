@@ -1,6 +1,6 @@
 {
   "name": "regtest",
-  "insightUri": "http://insight:3001/insight-api-dash",
+  "insightUri": "http://insight.dashevo.org/insight-api-dash",
   "livenet": false,
   "server": {
     "enable": true,
