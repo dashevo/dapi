@@ -1,7 +1,8 @@
 const Dapi = require('./lib/dapi');
 const config = require('./lib/config');
-// let dapi = new Dapi(config);
 const qDash = require('quorums-dash');
+
+//const dapi = new Dapi(config);
 
 // QDEVTEMP
 const dapiArr = [];
