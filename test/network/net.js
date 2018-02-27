@@ -17,7 +17,7 @@ const PORTS = {
 }
 
 describe('Network - Net (0mq)', function() {
-    let net = new Net()
+    let net = new Net();
     let socks = {};
     it('should be able to create a publisher', function(done) {
         this.timeout(2000);
