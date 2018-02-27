@@ -3,7 +3,6 @@
 'use strict'
 const should = require('should');
 const net = require('net');
-const portfinder = require('portfinder');
 const assert = require('assert');
 const Net = require('../../lib/services/net/net');
 const { isPortTaken } = require('../../lib/utils/utils');
