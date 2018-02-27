@@ -16,7 +16,7 @@
     }
   },
   "dashcore": {
-    "rpcClient": {
+    "rpc": {
       "protocol": "http",
       "user": "dashrpc",
       "pass": "password",
