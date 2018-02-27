@@ -3,7 +3,6 @@
 'use strict'
 const should = require('should');
 const net = require('net');
-const portfinder = require('portfinder');
 const assert = require('assert');
 const Net = require('../../lib/services/net/net');
 const { isPortTaken } = require('../../lib/utils/utils');
@@ -18,7 +17,7 @@ const PORTS = {
 }
 
 describe('Network - Net (0mq)', function() {
-    let net = new Net()
+    let net = new Net();
     let socks = {};
     it('should be able to create a publisher', function(done) {
         this.timeout(2000);
