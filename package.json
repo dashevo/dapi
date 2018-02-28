@@ -24,7 +24,7 @@
     "lodash": "^4.17.4",
     "node-cache": "^4.1.1",
     "orbit-db": "^0.17.3",
-    "quorums-dash": "git+ssh://git@github.com/dashevo/quorums-dash.git#feature/getQuorumForDapi",
+    "quorums-dash": "git+ssh://git@github.com/dashevo/quorums-dash.git#develop",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5",
     "zeromq": "^4.6.0"
