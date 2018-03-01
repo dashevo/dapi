@@ -1,6 +1,6 @@
 {
   "name": "regtest",
-  "insightUri": "http://insight:3001/insight-api-dash",
+  "insightUri": "http://127.0.0.1:3001/insight-api-dash",
   "livenet": false,
   "server": {
     "enable": true,
@@ -16,12 +16,15 @@
     }
   },
   "dashcore": {
-    "rpcClient": {
+    "rpc": {
       "protocol": "http",
       "user": "dashrpc",
       "pass": "password",
       "host": "127.0.0.1",
       "port": 30002
+    },
+    "zmq": {
+      "port": 29998
     }
   }
 }
