@@ -13,6 +13,9 @@
     },
     "pub": {
       "port": 50000
+    },
+    "ipfs": {
+      "port": 5001
     }
   },
   "dashcore": {
