@@ -1,21 +1,18 @@
 {
   "name": "regtest",
-  "insightUri": "http://insight.dashevo.org/insight-api-dash",
+  "insightUri": "http://127.0.0.1:3001/insight-api-dash",
   "livenet": false,
   "server": {
     "enable": true,
     "port": 3000
   },
   "node": {
-    "pubKey": "Xt89s798ewCpB8Xz8jwu3sApHEBdubrjpA",
+    "pubKey": "XkifrWK9yHVzXLgeAaqjhjDJuFad6b",
     "rep": {
       "port": 40000
     },
     "pub": {
       "port": 50000
-    },
-    "ipfs": {
-      "port": 5001
     }
   },
   "dashcore": {
@@ -24,10 +21,11 @@
       "user": "dashrpc",
       "pass": "password",
       "host": "127.0.0.1",
-      "port": 9998
+      "port": 30002
     },
     "zmq": {
-      "port": 28332
+      "host": "127.0.0.1",
+      "port": 30003
     }
   }
 }
