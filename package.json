@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Dash Decentralized API (DAPI)",
   "scripts": {
-    "start": "node index.js",
+    "start": "./scripts/start",
+    "stop": "./scripts/stop",
     "test": "mocha test/ --recursive",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
@@ -12,8 +13,10 @@
     "@dashevo/dash-schema": "git+ssh://git@github.com/dashevo/dash-schema.git",
     "bitcoind-rpc-dash": "git+ssh://git@github.com/dashevo/bitcoind-rpc-dash-private.git#develop",
     "bitcore-lib-dash": "git+ssh://git@github.com/dashevo/bitcore-lib-dash-private.git#develop",
+    "bls-lib": "^0.3.0",
     "bluebird": "^3.4.6",
     "crypto": "0.0.3",
+    "dkg": "^0.0.0",
     "eventemitter2": "^4.1.0",
     "extend": "^3.0.1",
     "ipfs-api": "^14.0.4",
@@ -22,7 +25,7 @@
     "lodash": "^4.17.4",
     "node-cache": "^4.1.1",
     "orbit-db": "^0.17.3",
-    "quorums-dash": "git+ssh://git@github.com/dashevo/quorums-dash.git",
+    "quorums-dash": "git+ssh://git@github.com/dashevo/quorums-dash.git#controlDeps",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5",
     "zeromq": "^4.6.0"
