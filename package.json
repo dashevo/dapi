@@ -24,7 +24,7 @@
     "khal": "^2.0.0",
     "lodash": "^4.17.4",
     "node-cache": "^4.1.1",
-    "orbit-db": "^0.17.3",
+    "orbit-db": "^0.19.5",
     "quorums-dash": "git+ssh://git@github.com/dashevo/quorums-dash.git#controlDeps",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5",
