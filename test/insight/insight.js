@@ -1,49 +1,26 @@
-// TODO: Address ESLint issues the next time this file is edited
-/* eslint-disable */
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
+const request = require('request-promise-native');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
 const insight = require('../../lib/api/insight');
 
-// Stubs
-// TODO: add stubs for network
+// TODO: Unit tests need to be written
+describe('Insight', () => {});
 
-// Disable no-undef rule for mocha
-/* eslint-disable no-undef */
-xdescribe('Insight', () => {
-  // describe('.getLastBlockHash', () => {
-  //   it('should return block hash', () => insight.getLastBlockHash().then((lastBlockHash) => {
-  //     expect(lastBlockHash).to.be.a('string');
-  //   }));
-  // });
-  //
-  // describe('.getMnList', () => {
-  //   it('should return mn list', () => insight.getMnList().then((MNList) => {
-  //     expect(MNList).to.be.an('array');
-  //     expect(MNList[0]).to.be.an('object');
-  //     expect(MNList[0].vin).to.be.a('string');
-  //     expect(MNList[0].status).to.be.a('string');
-  //     expect(MNList[0].rank).to.be.a('number');
-  //     expect(MNList[0].ip).to.be.a('string');
-  //     expect(MNList[0].protocol).to.be.a('number');
-  //     expect(MNList[0].payee).to.be.a('string');
-  //     expect(MNList[0].activeseconds).to.be.a('number');
-  //     expect(MNList[0].lastseen).to.be.a('number');
-  //   }));
-  // });
-
-  describe('.getAddress', () => {
+// TODO: Integration tests need to be migrated to another level
+xdescribe('Insight - Integration', () => {
+  describe('#getAddress(txHash)', () => {
     const txHash = '50622f66236671501c0e80f388d6cf1e81158de8526f4acc9db00adf3c524077';
     it('should return address', () => insight.getAddress(txHash).then((address) => {
       expect(address).to.be.a('string');
     }));
   });
 
-  describe('.getUser', () => {
+  describe('#getUser', () => {
     const validUserData = {
       result: {
         uname: 'Alice',
@@ -56,10 +33,11 @@ xdescribe('Insight', () => {
         state: 'open',
       },
     };
-    const request = require('request-promise-native');
     const requestStub = sinon.stub(request, 'get');
     requestStub.rejects(new Error('user not found. Code:-1'));
-    requestStub.withArgs(`${insight.URI}/getuser/Alice`).returns(new Promise(resolve => resolve(validUserData)));
+    requestStub
+      .withArgs(`${insight.URI}/getuser/Alice`)
+      .returns(new Promise(resolve => resolve(validUserData)));
 
     it('Should return user if such user exists on blockchain', async () => {
       const user = await insight.getUser('Alice');
@@ -73,9 +51,6 @@ xdescribe('Insight', () => {
 
     it('Should return error if user not found', () => expect(insight.getUser('Bob')).to.be.rejected);
 
-    after(() => {
-      requestStub.restore();
-    });
+    after(() => { requestStub.restore(); });
   });
 });
-
