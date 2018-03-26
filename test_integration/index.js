@@ -1,3 +1,5 @@
+// This test simulates client actions to be implemented on SDK
+// To test send tDash to yj62dAADEBbryoSMG6TcosmH9Gu2asXwat (normal NOT instant Send)
 const SpvService = require('../lib/services/spv');
 const config = require('../lib/config');
 const bitcore = require('bitcore-lib-dash');
@@ -37,12 +39,12 @@ spvService.start()
     setInterval(() => {
       const clientCache = spvService.getData(filter);
       if (clientCache && clientCache.merkleblocks.length > lastMerkleLength) {
-        log.info(`${clientCache.merkleblocks.length - lastMerkleLength} new merkle block(s) found`);
+        log.info(`CLIENT: ${clientCache.merkleblocks.length - lastMerkleLength} new merkle block(s) found`);
         lastMerkleLength = clientCache.merkleblocks.length;
       }
 
       if (clientCache && clientCache.transactions.length > lastTxLength) {
-        log.info(`${clientCache.transactions.length - lastTxLength} new transaction(s) found`);
+        log.info(`CLIENT: ${clientCache.transactions.length - lastTxLength} new transaction(s) found`);
         lastTxLength = clientCache.transactions.length;
       }
     }, 5000);
