@@ -28,12 +28,23 @@ spvService.start()
     filter.insert(bitcore.crypto.Hash.sha256ripemd160(tempPubKeyBuffer));
     spvService.loadBloomFilter(filter);
 
-    // log.info(`...filtering for transactions & block on + ${publicKey.toAddress()}`);
+    // log.info(`...filtering for transactions & merkle blocks on + ${publicKey.toAddress()}`);
     log.info('...filtering for transactions & block on yj62dAADEBbryoSMG6TcosmH9Gu2asXwat');
 
     // Check cache
+    let lastTxLength = 0;
+    let lastMerkleLength = 0;
     setInterval(() => {
+      const clientCache = spvService.getData(filter);
+      if (clientCache && clientCache.merkleblocks.length > lastMerkleLength) {
+        log.info(`${clientCache.merkleblocks.length - lastMerkleLength} new merkle block(s) found`);
+        lastMerkleLength = clientCache.merkleblocks.length;
+      }
 
+      if (clientCache && clientCache.transactions.length > lastTxLength) {
+        log.info(`${clientCache.transactions.length - lastTxLength} new transaction(s) found`);
+        lastTxLength = clientCache.transactions.length;
+      }
     }, 5000);
   });
 
