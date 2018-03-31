@@ -15,4 +15,4 @@ COPY . /dapi
 
 EXPOSE 3000
 
-CMD ["node", "/dapi/nodeStarter.js"]
+CMD ["node", "/dapi/lib/app.js"]

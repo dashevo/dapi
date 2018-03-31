@@ -3,31 +3,29 @@
   "version": "1.0.0",
   "description": "Dash Decentralized API (DAPI)",
   "scripts": {
-    "start": "./scripts/start",
-    "stop": "./scripts/stop",
-    "test": "./node_modules/.bin/mocha test/ --recursive"
+    "start": "node index.js",
+    "test": "mocha test/ --recursive",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@dashevo/dash-schema": "git+ssh://git@github.com/dashevo/dash-schema.git",
-    "bitcore-lib-dash": "^0.14.3",
-    "bitcore-message-dash": "^1.0.5",
+    "bitcoind-rpc-dash": "git+ssh://git@github.com/dashevo/bitcoind-rpc-dash-private.git#develop",
+    "bitcore-lib-dash": "git+ssh://git@github.com/dashevo/bitcore-lib-dash-private.git#develop",
     "bluebird": "^3.4.6",
     "crypto": "0.0.3",
     "eventemitter2": "^4.1.0",
-    "express": "^4.14.0",
     "extend": "^3.0.1",
-    "externalip": "^1.0.2",
     "ipfs-api": "^14.0.4",
     "jayson": "^2.0.4",
+    "khal": "^2.0.0",
     "lodash": "^4.17.4",
     "node-cache": "^4.1.1",
-    "node-json-rpc2": "^1.0.1",
     "orbit-db": "^0.17.3",
-    "portfinder": "^1.0.13",
-    "quorums-dash": "^1.0.1",
+    "quorums-dash": "git+ssh://git@github.com/dashevo/quorums-dash.git",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5",
-    "zmq": "^2.15.3"
+    "zeromq": "^4.6.0"
   },
   "devDependencies": {
     "assert": "^1.4.1",
@@ -37,12 +35,11 @@
     "eslint": "4.10.0",
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.8.0",
-    "khal": "^2.0.0",
     "memwatch-next": "^0.3.0",
     "mocha": "^3.4.1",
-    "nodemon": "^1.12.1",
+    "nodemon": "^1.14.11",
     "should": "^11.2.1",
-    "sinon": "^4.1.0"
+    "sinon": "^4.2.0"
   },
   "main": "index.js",
   "repository": {
