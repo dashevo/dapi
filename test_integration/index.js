@@ -36,6 +36,12 @@ spvService.start()
     // Check cache
     let lastTxLength = 0;
     let lastMerkleLength = 0;
+
+    // Todo: re-investigate after discrepancy of all and not
+    // only filterblocks returned has been fixed
+    // spvService
+    //   .getBlocks('0000000000747fd6af8c8aa61da1c2ec1f089fafc824bae9c3bf7ef51f20a777');
+
     setInterval(() => {
       const clientCache = spvService.getData(filter);
       if (clientCache && clientCache.merkleblocks.length > lastMerkleLength) {
@@ -47,6 +53,6 @@ spvService.start()
         log.info(`CLIENT: ${clientCache.transactions.length - lastTxLength} new transaction(s) found`);
         lastTxLength = clientCache.transactions.length;
       }
-    }, 5000);
+    }, 10000);
   });
 
