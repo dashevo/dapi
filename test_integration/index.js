@@ -3,6 +3,7 @@
 const SpvService = require('../lib/services/spv');
 const config = require('../lib/config');
 const bitcore = require('bitcore-lib-dash');
+
 bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
 
 const log = require('../lib/log');
@@ -47,7 +48,7 @@ const listenToBloomFilter = (privKey) => {
         }
       }, 10000);
     });
-}
+};
 
 
 // TODO: doing a privateke.toPublicKey() causes this bug:
@@ -67,6 +68,4 @@ const privateKey2 = new bitcore.PrivateKey(pkSeed2);
 
 listenToBloomFilter(privateKey);
 listenToBloomFilter(privateKey2);
-
-
 
