@@ -10,7 +10,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@dashevo/dash-schema": "git+ssh://git@github.com/dashevo/dash-schema.git",
+    "@dashevo/dash-schema": "git+ssh://git@github.com/dashevo/dash-schema.git#v2",
     "bitcoind-rpc-dash": "git+ssh://git@github.com/dashevo/bitcoind-rpc-dash-private.git#develop",
     "bitcore-lib-dash": "git+ssh://git@github.com/dashevo/bitcore-lib-dash-private.git#develop",
     "bitcore-p2p-dash": "^1.1.6",
