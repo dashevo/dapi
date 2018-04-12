@@ -5,3 +5,5 @@ node_modules
 dapinet.orbitdb
 lib/config/config.json
 test/rpc
+/vmn/stack.log
+/vmn/stack-db.json
