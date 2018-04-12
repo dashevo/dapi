@@ -34,12 +34,12 @@ const listenToBloomFilter = (privKey) => {
       setInterval(() => {
         const clientCache = spvService.getData(filter);
         if (clientCache && clientCache.merkleblocks.length > lastMerkleLength) {
-          log.info(`CLIENT: ${clientCache.merkleblocks.length - lastMerkleLength} new merkle block(s) found`);
+          log.info(`MOCK CLIENT ${publicKey.toAddress().toString('hex')}: ${clientCache.merkleblocks.length - lastMerkleLength} new merkle block(s) found`);
           lastMerkleLength = clientCache.merkleblocks.length;
         }
 
         if (clientCache && clientCache.transactions.length > lastTxLength) {
-          log.info(`CLIENT: ${clientCache.transactions.length - lastTxLength} new transaction(s) found`);
+          log.info(`MOCK CLIENT ${publicKey.toAddress().toString('hex')}: ${clientCache.transactions.length - lastTxLength} new transaction(s) found`);
           lastTxLength = clientCache.transactions.length;
         }
       }, 10000);
