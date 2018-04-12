@@ -1,5 +1,3 @@
-// This test simulates client actions to be implemented on SDK
-// To test send tDash to yj62dAADEBbryoSMG6TcosmH9Gu2asXwat (normal NOT instant Send)
 const SpvService = require('../lib/services/spv');
 const config = require('../lib/config');
 const bitcore = require('bitcore-lib-dash');
@@ -15,16 +13,14 @@ const listenToBloomFilter = (privKey) => {
   const nbElements = 100;
   const falsePositiveRate = 0.000001;
 
-
   const filter = bloomFilter.create(nbElements, falsePositiveRate, 0, bloomFilter.BLOOM_UPDATE_ALL);
-  const publicKey = privKey.toPublicKey();// yN5XwBX1KUXyzNhhrTb2uJoZXLm2m6dwRi
+  const publicKey = privKey.toPublicKey();
   filter.insert(bitcore.crypto.Hash.sha256ripemd160(publicKey.toBuffer()));
 
   spvService
     .loadBloomFilter(filter)
     .then(() => {
-      // log.info(`...filtering for transactions & merkle blocks on + ${publicKey.toAddress()}`);
-      log.info('...filtering for transactions & block on', publicKey.toAddress());
+      log.info('...filtering for transactions & block on', publicKey.toAddress().toString('hex'));
 
       // Check cache
       let lastTxLength = 0;
@@ -50,22 +46,7 @@ const listenToBloomFilter = (privKey) => {
     });
 };
 
-
-// TODO: doing a privateke.toPublicKey() causes this bug:
-// https://github.com/bitpay/bitcore-wallet-client/issues/392
-// likely bitcore-lib-dash did not fix this bug as discribed above ^^
-// out of scope for this task, new task to be created
-const pkSeed = 'b221d9dbb083a7f33428d7c2a3c3198ae925614d70210e28716ccaa7cd4ddb79';
-const privateKey = new bitcore.PrivateKey(pkSeed);
-// const publicKey = privateKey.toPublicKey();// yj62dAADEBbryoSMG6TcosmH9Gu2asXwat
-
-// using hard coded value until bug ^^ has been resolved
-// eslint-disable-next-line max-len
-// const tempPubKeyBuffer = Buffer.from([3, 250, 214, 40, 72, 241, 166, 205, 228, 196, 217, 69, 61, 173, 234, 113, 76, 189, 89, 241, 40, 32, 135, 133, 61, 232, 176, 198, 7, 43, 236, 39, 231]);
-
-const pkSeed2 = 'b221d9dbb083a7f33428d7c2a3c3198ae925614d70210e28716ccaa7cd4ddb78';
-const privateKey2 = new bitcore.PrivateKey(pkSeed2);
-
-listenToBloomFilter(privateKey);
-listenToBloomFilter(privateKey2);
+['b221d9dbb083a7f33428d7c2a3c3198ae925614d70210e28716ccaa7cd4ddb79',
+  'b221d9dbb083a7f33428d7c2a3c3198ae925614d70210e28716ccaa7cd4ddb78']
+  .forEach(seed => listenToBloomFilter(new bitcore.PrivateKey(seed)));
 
