@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@dashevo/dash-schema": "git+ssh://git@github.com/dashevo/dash-schema.git#v2",
+    "@dashevo/quorums": "git+ssh://git@github.com/dashevo/quorums-dash.git",
     "bitcoind-rpc-dash": "git+ssh://git@github.com/dashevo/bitcoind-rpc-dash-private.git#develop",
     "bitcore-lib-dash": "git+ssh://git@github.com/dashevo/bitcore-lib-dash-private.git#develop",
     "bitcore-p2p-dash": "^1.1.6",
@@ -26,7 +27,6 @@
     "node-cache": "^4.1.1",
     "object-hash": "^1.3.0",
     "orbit-db": "^0.17.3",
-    "quorums-dash": "git+ssh://git@github.com/dashevo/quorums-dash.git",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5",
     "zeromq": "^4.6.0"
