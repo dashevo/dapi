@@ -1,10 +1,11 @@
-const SpvService = require('../lib/services/spv');
+const bloomFilter = require('bloom-filter');
 const bitcore = require('bitcore-lib-dash');
+const SpvService = require('../lib/services/spv');
+const log = require('../lib/log');
+
+const spvService = new SpvService();
 
 bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
-
-const log = require('../lib/log');
-const bloomFilter = require('bloom-filter');
 
 const listenToBloomFilter = (privKey) => {
   const nbElements = 100;
@@ -14,7 +15,7 @@ const listenToBloomFilter = (privKey) => {
   const publicKey = privKey.toPublicKey();
   filter.insert(bitcore.crypto.Hash.sha256ripemd160(publicKey.toBuffer()));
 
-  SpvService
+  spvService
     .loadBloomFilter(filter)
     .then(() => {
       log.info('...filtering for transactions & block on', publicKey.toAddress().toString('hex'));
@@ -29,7 +30,7 @@ const listenToBloomFilter = (privKey) => {
       //   .getBlocks('0000000000747fd6af8c8aa61da1c2ec1f089fafc824bae9c3bf7ef51f20a777');
 
       setInterval(() => {
-        const clientCache = SpvService.getData(filter);
+        const clientCache = spvService.getData(filter);
         if (clientCache && clientCache.merkleblocks.length > lastMerkleLength) {
           log.info(`MOCK CLIENT ${publicKey.toAddress().toString('hex')}: ${clientCache.merkleblocks.length - lastMerkleLength} new merkle block(s) found`);
           lastMerkleLength = clientCache.merkleblocks.length;
