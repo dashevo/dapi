@@ -20,6 +20,8 @@ const listenToBloomFilter = (privKey) => {
     .then(() => {
       log.info('...filtering for transactions & block on', publicKey.toAddress().toString('hex'));
 
+      spvService.getMerkleBlocks(filter, '000000000d041b6555b628a8235e642eed9a397e407375b03aa03cb2c94b07d5');
+
       // Check cache
       let lastTxLength = 0;
       let lastMerkleLength = 0;
