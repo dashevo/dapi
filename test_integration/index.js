@@ -1,13 +1,11 @@
-const SpvService = require('../lib/services/spv');
-const config = require('../lib/config');
+const bloomFilter = require('bloom-filter');
 const bitcore = require('bitcore-lib-dash');
+const SpvService = require('../lib/services/spv');
+const log = require('../lib/log');
+
+const spvService = new SpvService();
 
 bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
-
-const log = require('../lib/log');
-const bloomFilter = require('bloom-filter');
-
-const spvService = new SpvService(config.dashcore.p2p);
 
 const listenToBloomFilter = (privKey) => {
   const nbElements = 100;
