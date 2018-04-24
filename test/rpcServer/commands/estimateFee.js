@@ -7,7 +7,7 @@ const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 const { expect } = chai;
 chai.use(chaiAsPromised);
 
-const spy = sion.spy(coreAPIFixture, 'estimateFee');
+let spy;
 
 describe('estimateFee', () => {
   describe('#factory', () => {
@@ -15,6 +15,10 @@ describe('estimateFee', () => {
       const estimateFee = estimateFeeFactory(coreAPIFixture);
       expect(estimateFee).to.be.a('function');
     });
+  });
+
+  before(() => {
+    spy = sion.spy(coreAPIFixture, 'estimateFee');
   });
 
   beforeEach(() => {
@@ -52,5 +56,4 @@ describe('estimateFee', () => {
     await expect(estimateFee([-1])).to.be.rejected;
     expect(spy.callCount).to.be.equal(0);
   });
-
 });

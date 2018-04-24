@@ -8,8 +8,8 @@ let spy;
 describe('getBestBlockHeight', () => {
   describe('#factory', () => {
     it('should return a function', () => {
-      const getAddressUnconfirmedBalance = getBestBlockHeightFactory(coreAPIFixture);
-      expect(getAddressUnconfirmedBalance).to.be.a('function');
+      const getBestBlockHeight = getBestBlockHeightFactory(coreAPIFixture);
+      expect(getBestBlockHeight).to.be.a('function');
     });
   });
 

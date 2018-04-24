@@ -1,0 +1,28 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "height": {
+          "$ref": "#/definitions/height"
+        }
+      },
+      "required": [
+        "height"
+      ]
+    },
+    {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/height"
+      },
+      "minItems": 1
+    }
+  ],
+  "definitions": {
+    "height": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

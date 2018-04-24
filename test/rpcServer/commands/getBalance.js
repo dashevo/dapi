@@ -8,8 +8,8 @@ let spy;
 describe('getBalance', () => {
   describe('#factory', () => {
     it('should return a function', () => {
-      const getAddressUnconfirmedBalance = getBalanceFactory(coreAPIFixture);
-      expect(getAddressUnconfirmedBalance).to.be.a('function');
+      const getBalance = getBalanceFactory(coreAPIFixture);
+      expect(getBalance).to.be.a('function');
     });
   });
 

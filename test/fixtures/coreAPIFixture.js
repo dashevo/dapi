@@ -6,4 +6,5 @@ module.exports = {
   async getAddressUnconfirmedBalance(address) { return 1100; },
   async getBalance(address) { return 100; },
   async getBestBlockHeight() { return 243789; },
+  async getBlockHash() { return 'hash'; },
 };
