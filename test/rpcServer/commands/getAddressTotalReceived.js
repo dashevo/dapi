@@ -18,6 +18,10 @@ describe('getAddressTotalReceived', () => {
     spy.resetHistory();
   });
 
+  after(() => {
+    spy.restore();
+  });
+
   it('Should return a number', async () => {
     const getAddressTotalReceived = getAddressTotalReceivedFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);

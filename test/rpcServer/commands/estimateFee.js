@@ -21,6 +21,10 @@ describe('estimateFee', () => {
     spy.resetHistory();
   });
 
+  after(() => {
+    spy.restore();
+  });
+
   it('Should return a number', async () => {
     const estimateFee = estimateFeeFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);

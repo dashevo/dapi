@@ -20,6 +20,10 @@ describe('getAddressSummary', () => {
     spy.resetHistory();
   });
 
+  after(() => {
+    spy.restore();
+  });
+
   it('Should return an object', async () => {
     const getAddressSummary = getAddressSummaryFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
