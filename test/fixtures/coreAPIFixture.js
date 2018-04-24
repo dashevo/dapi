@@ -3,4 +3,5 @@ module.exports = {
   async getAddressSummary(address) { return {}; },
   async getAddressTotalReceived(address) { return 1000; },
   async getAddressTotalSent(address) { return 900; },
+  async getAddressUnconfirmedBalance(address) { return 1100; },
 };

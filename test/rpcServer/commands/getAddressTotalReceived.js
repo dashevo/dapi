@@ -1,10 +1,9 @@
-const { expect, should } = require('chai');
-const sion = require('sinon');
+const { expect } = require('chai');
+const sinon = require('sinon');
 const getAddressTotalReceivedFactory = require('../../../lib/rpcServer/commands/getAddressTotalReceived');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
-const spy = sion.spy(coreAPIFixture, 'getAddressTotalReceived');
-should();
+let spy;
 
 describe('getAddressTotalReceived', () => {
   describe('#factory', () => {
@@ -12,6 +11,10 @@ describe('getAddressTotalReceived', () => {
       const getAddressTotalReceived = getAddressTotalReceivedFactory(coreAPIFixture);
       expect(getAddressTotalReceived).to.be.a('function');
     });
+  });
+
+  before(() => {
+    spy = sinon.spy(coreAPIFixture, 'getAddressTotalReceived');
   });
 
   beforeEach(() => {

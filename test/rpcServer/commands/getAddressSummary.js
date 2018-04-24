@@ -6,7 +6,7 @@ const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
 const { expect } = chai;
 chai.use(chaiAsPromised);
-const spy = sion.spy(coreAPIFixture, 'getAddressSummary');
+let spy;
 
 describe('getAddressSummary', () => {
   describe('#factory', () => {
@@ -14,6 +14,10 @@ describe('getAddressSummary', () => {
       const getAddressSummary = getAddressSummaryFactory(coreAPIFixture);
       expect(getAddressSummary).to.be.a('function');
     });
+  });
+
+  before(() => {
+    spy = sion.spy(coreAPIFixture, 'getAddressSummary');
   });
 
   beforeEach(() => {

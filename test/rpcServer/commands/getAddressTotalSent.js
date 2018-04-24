@@ -1,10 +1,9 @@
-const { expect, should } = require('chai');
-const sion = require('sinon');
+const { expect } = require('chai');
+const sinon = require('sinon');
 const getAddressTotalSentFactory = require('../../../lib/rpcServer/commands/getAddressTotalSent');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
-const spy = sion.spy(coreAPIFixture, 'getAddressTotalSent');
-should();
+let spy;
 
 describe('getAddressTotalSent', () => {
   describe('#factory', () => {
@@ -14,11 +13,15 @@ describe('getAddressTotalSent', () => {
     });
   });
 
+  before(() => {
+    spy = sinon.spy(coreAPIFixture, 'getAddressTotalSent');
+  });
+
   beforeEach(() => {
     spy.resetHistory();
   });
 
-  after(() => {
+  after(async () => {
     spy.restore();
   });
 
