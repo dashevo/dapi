@@ -1,10 +1,12 @@
-const { expect, should } = require('chai');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sion = require('sinon');
 const getAddressSummaryFactory = require('../../../lib/rpcServer/commands/getAddressSummary');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
+const { expect } = chai;
+chai.use(chaiAsPromised);
 const spy = sion.spy(coreAPIFixture, 'getAddressSummary');
-should();
 
 describe('getAddressSummary', () => {
   describe('#factory', () => {
@@ -14,11 +16,29 @@ describe('getAddressSummary', () => {
     });
   });
 
+  beforeEach(() => {
+    spy.resetHistory();
+  });
+
   it('Should return an object', async () => {
     const getAddressSummary = getAddressSummaryFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    const fee = await getAddressSummary('XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w');
-    expect(fee).to.be.an('object');
+    let summary = await getAddressSummary(['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w']);
+    expect(summary).to.be.an('object');
     expect(spy.callCount).to.be.equal(1);
+    summary = await getAddressSummary({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
+    expect(summary).to.be.an('object');
+    expect(spy.callCount).to.be.equal(2);
+  });
+
+  it('Should throw if arguments are not valid', async () => {
+    const getAddressSummary = getAddressSummaryFactory(coreAPIFixture);
+    expect(spy.callCount).to.be.equal(0);
+    await expect(getAddressSummary([])).to.be.rejected;
+    expect(spy.callCount).to.be.equal(0);
+    await expect(getAddressSummary({})).to.be.rejectedWith('should have required property \'address\'');
+    expect(spy.callCount).to.be.equal(0);
+    await expect(getAddressSummary({ address: 1 })).to.be.rejectedWith('address should be string');
+    expect(spy.callCount).to.be.equal(0);
   });
 });

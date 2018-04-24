@@ -14,11 +14,29 @@ describe('getAddressTotalReceived', () => {
     });
   });
 
-  it('Should return an object', async () => {
+  beforeEach(() => {
+    spy.resetHistory();
+  });
+
+  it('Should return a number', async () => {
     const getAddressTotalReceived = getAddressTotalReceivedFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    const fee = await getAddressTotalReceived('XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w');
-    expect(fee).to.be.an('number');
+    let summary = await getAddressTotalReceived(['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w']);
+    expect(summary).to.be.an('number');
     expect(spy.callCount).to.be.equal(1);
+    summary = await getAddressTotalReceived({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
+    expect(summary).to.be.an('number');
+    expect(spy.callCount).to.be.equal(2);
+  });
+
+  it('Should throw if arguments are not valid', async () => {
+    const getAddressTotalReceived = getAddressTotalReceivedFactory(coreAPIFixture);
+    expect(spy.callCount).to.be.equal(0);
+    await expect(getAddressTotalReceived([])).to.be.rejected;
+    expect(spy.callCount).to.be.equal(0);
+    await expect(getAddressTotalReceived({})).to.be.rejectedWith('should have required property \'address\'');
+    expect(spy.callCount).to.be.equal(0);
+    await expect(getAddressTotalReceived({ address: 1 })).to.be.rejectedWith('address should be string');
+    expect(spy.callCount).to.be.equal(0);
   });
 });
