@@ -14,10 +14,41 @@ describe('estimateFee', () => {
     });
   });
 
+  beforeEach(() => {
+    spy.resetHistory();
+  });
+
   it('Should return a number', async () => {
     const estimateFee = estimateFeeFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    const fee = await estimateFee(1);
+    let fee = await estimateFee([1]);
+    expect(fee).to.be.a('number');
+    expect(spy.callCount).to.be.equal(1);
+    fee = await estimateFee({ nbBlocks: 1 });
+    expect(fee).to.be.a('number');
+    expect(spy.callCount).to.be.equal(2);
+  });
+
+  it('Should throw an error if nbBlocks is not a positive number', async () => {
+    const estimateFee = estimateFeeFactory(coreAPIFixture);
+    expect(spy.callCount).to.be.equal(0);
+    const fee = await estimateFee({ nbBlocks: -1 });
+    expect(fee).to.be.a('number');
+    expect(spy.callCount).to.be.equal(1);
+  });
+
+  it('Should throw an error if nbBlocks is not an integer', async () => {
+    const estimateFee = estimateFeeFactory(coreAPIFixture);
+    expect(spy.callCount).to.be.equal(0);
+    const fee = await estimateFee({ nbBlocks: 0.5 });
+    expect(fee).to.be.a('number');
+    expect(spy.callCount).to.be.equal(1);
+  });
+
+  it('Should throw an error if nbBlocks is a string', async () => {
+    const estimateFee = estimateFeeFactory(coreAPIFixture);
+    expect(spy.callCount).to.be.equal(0);
+    const fee = await estimateFee({ nbBlocks: 'string' });
     expect(fee).to.be.a('number');
     expect(spy.callCount).to.be.equal(1);
   });
