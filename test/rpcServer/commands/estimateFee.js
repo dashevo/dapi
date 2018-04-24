@@ -1,10 +1,13 @@
-const { expect, should } = require('chai');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sion = require('sinon');
 const estimateFeeFactory = require('../../../lib/rpcServer/commands/estimateFee');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
+const { expect } = chai;
+chai.use(chaiAsPromised);
+
 const spy = sion.spy(coreAPIFixture, 'estimateFee');
-should();
 
 describe('estimateFee', () => {
   describe('#factory', () => {
@@ -29,27 +32,21 @@ describe('estimateFee', () => {
     expect(spy.callCount).to.be.equal(2);
   });
 
-  it('Should throw an error if nbBlocks is not a positive number', async () => {
+  it('Should throw an error if arguments is not valid', async () => {
     const estimateFee = estimateFeeFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    const fee = await estimateFee({ nbBlocks: -1 });
-    expect(fee).to.be.a('number');
-    expect(spy.callCount).to.be.equal(1);
+    await expect(estimateFee({ nbBlocks: -1 })).to.be.rejectedWith('should be >= 0');
+    expect(spy.callCount).to.be.equal(0);
+    await expect(estimateFee({ nbBlocks: 0.5 })).to.be.rejectedWith('should be integer');
+    expect(spy.callCount).to.be.equal(0);
+    await expect(estimateFee({})).to.be.rejectedWith('should have required property');
+    expect(spy.callCount).to.be.equal(0);
+    await expect(estimateFee()).to.be.rejectedWith('should be object');
+    expect(spy.callCount).to.be.equal(0);
+    await expect(estimateFee({ nbBlocks: 'string' })).to.be.rejectedWith('should be integer');
+    expect(spy.callCount).to.be.equal(0);
+    await expect(estimateFee([-1])).to.be.rejected;
+    expect(spy.callCount).to.be.equal(0);
   });
 
-  it('Should throw an error if nbBlocks is not an integer', async () => {
-    const estimateFee = estimateFeeFactory(coreAPIFixture);
-    expect(spy.callCount).to.be.equal(0);
-    const fee = await estimateFee({ nbBlocks: 0.5 });
-    expect(fee).to.be.a('number');
-    expect(spy.callCount).to.be.equal(1);
-  });
-
-  it('Should throw an error if nbBlocks is a string', async () => {
-    const estimateFee = estimateFeeFactory(coreAPIFixture);
-    expect(spy.callCount).to.be.equal(0);
-    const fee = await estimateFee({ nbBlocks: 'string' });
-    expect(fee).to.be.a('number');
-    expect(spy.callCount).to.be.equal(1);
-  });
 });
