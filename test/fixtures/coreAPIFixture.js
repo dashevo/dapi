@@ -14,4 +14,5 @@ module.exports = {
   async getMasternodesList() { return [{ ip: '127.0.0.1' }]; },
   async getRawBlock(blockHash) { return {}; },
   async getStatus(query) { return {}; },
+  async getTransactionById(txid) { return {}; },
 };
