@@ -12,4 +12,5 @@ module.exports = {
     return {};
   },
   async getMasternodesList() { return [{ ip: '127.0.0.1' }]; },
+  async getRawBlock(blockHash) { return {}; },
 };
