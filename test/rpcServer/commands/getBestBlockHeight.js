@@ -28,7 +28,7 @@ describe('getBestBlockHeight', () => {
   it('Should return a number', async () => {
     const getBestBlockHeight = getBestBlockHeightFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    const bestBlockHeight = await getBestBlockHeight(['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w']);
+    const bestBlockHeight = await getBestBlockHeight();
     expect(bestBlockHeight).to.be.an('number');
     expect(spy.callCount).to.be.equal(1);
   });

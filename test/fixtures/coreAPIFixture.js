@@ -11,4 +11,5 @@ module.exports = {
   async getHistoricBlockchainDataSyncStatus() {
     return {};
   },
+  async getMasternodesList() { return [{ ip: '127.0.0.1' }]; },
 };
