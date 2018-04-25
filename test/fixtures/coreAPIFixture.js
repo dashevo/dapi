@@ -15,4 +15,5 @@ module.exports = {
   async getRawBlock(blockHash) { return {}; },
   async getStatus(query) { return {}; },
   async getTransactionById(txid) { return {}; },
+  async getTransactionsByAddress(address) { return []; },
 };
