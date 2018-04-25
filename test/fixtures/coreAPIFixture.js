@@ -7,4 +7,8 @@ module.exports = {
   async getBalance(address) { return 100; },
   async getBestBlockHeight() { return 243789; },
   async getBlockHash() { return 'hash'; },
+  async getBlocks(limit, blockDate) { return [{}]; },
+  async getHistoricBlockchainDataSyncStatus() {
+    return {};
+  },
 };

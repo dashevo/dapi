@@ -1,0 +1,39 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "$ref": "#/definitions/limit"
+        },
+        "blockDate": {
+          "$ref": "#/definitions/blockDate"
+        }
+      },
+      "required": [
+        "limit", "blockDate"
+      ]
+    },
+    {
+      "type": "array",
+      "items": [
+        {
+          "$ref": "#/definitions/limit"
+        },
+        {
+          "$ref": "#/definitions/blockDate"
+        }
+      ],
+      "minItems": 2
+    }
+  ],
+  "definitions": {
+    "limit": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "blockDate": {
+      "type": "string"
+    }
+  }
+}
