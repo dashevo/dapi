@@ -16,4 +16,5 @@ module.exports = {
   async getStatus(query) { return {}; },
   async getTransactionById(txid) { return {}; },
   async getTransactionsByAddress(address) { return []; },
+  async getUser(usernameOrUserId) { return {}; },
 };

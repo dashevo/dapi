@@ -29,11 +29,11 @@ describe('getBlockHash', () => {
   it('Should return block hash', async () => {
     const getBlockHash = getBlockHashFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let fee = await getBlockHash([1]);
-    expect(fee).to.be.a('string');
+    let blockHash = await getBlockHash([1]);
+    expect(blockHash).to.be.a('string');
     expect(spy.callCount).to.be.equal(1);
-    fee = await getBlockHash({ height: 100 });
-    expect(fee).to.be.a('string');
+    blockHash = await getBlockHash({ height: 100 });
+    expect(blockHash).to.be.a('string');
     expect(spy.callCount).to.be.equal(2);
   });
 
