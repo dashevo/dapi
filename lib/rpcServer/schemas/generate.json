@@ -1,0 +1,28 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/amount"
+        }
+      },
+      "required": [
+        "amount"
+      ]
+    },
+    {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/amount"
+      },
+      "minItems": 1
+    }
+  ],
+  "definitions": {
+    "amount": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}
