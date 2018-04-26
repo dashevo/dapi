@@ -39,15 +39,15 @@ describe('sendRawTransaction', () => {
   });
 
   it('Should throw if arguments are not valid', async () => {
-    const getAddressTotalSent = sendRawTransactionFactory(coreAPIFixture);
+    const sendRawTransaction = sendRawTransactionFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    await expect(getAddressTotalSent([])).to.be.rejected;
+    await expect(sendRawTransaction([])).to.be.rejected;
     expect(spy.callCount).to.be.equal(0);
-    await expect(getAddressTotalSent({})).to.be.rejectedWith('should have required property \'rawTransaction\'');
+    await expect(sendRawTransaction({})).to.be.rejectedWith('should have required property \'rawTransaction\'');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getAddressTotalSent({ rawTransaction: 1 })).to.be.rejectedWith('rawTransaction should be string');
+    await expect(sendRawTransaction({ rawTransaction: 1 })).to.be.rejectedWith('rawTransaction should be string');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getAddressTotalSent({ rawTransaction: 'thisisnotvalidhex' })).to.be.rejectedWith('rawTransaction should match pattern "^(0x|0X)?[a-fA-F0-9]+$"');
+    await expect(sendRawTransaction({ rawTransaction: 'thisisnotvalidhex' })).to.be.rejectedWith('rawTransaction should match pattern "^(0x|0X)?[a-fA-F0-9]+$"');
     expect(spy.callCount).to.be.equal(0);
   });
 });
