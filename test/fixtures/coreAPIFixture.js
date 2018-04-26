@@ -17,4 +17,5 @@ module.exports = {
   async getTransactionById(txid) { return {}; },
   async getTransactionsByAddress(address) { return []; },
   async getUser(usernameOrUserId) { return {}; },
+  async getUTXO(address) { return []; },
 };
