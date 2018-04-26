@@ -18,4 +18,5 @@ module.exports = {
   async getTransactionsByAddress(address) { return []; },
   async getUser(usernameOrUserId) { return {}; },
   async getUTXO(address) { return []; },
+  async sendRawTransaction(rawTransaction) { return 'txid'; },
 };

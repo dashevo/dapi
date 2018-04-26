@@ -1,0 +1,28 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "rawTransaction": {
+          "$ref": "#/definitions/rawTransaction"
+        }
+      },
+      "required": [
+        "rawTransaction"
+      ]
+    },
+    {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/rawTransaction"
+      },
+      "minItems": 1
+    }
+  ],
+  "definitions": {
+    "rawTransaction": {
+      "type": "string",
+      "pattern": "^(0x|0X)?[a-fA-F0-9]+$"
+    }
+  }
+}
