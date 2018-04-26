@@ -1,0 +1,41 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "$ref": "#/definitions/offset"
+        },
+        "limit": {
+          "$ref": "#/definitions/limit"
+        }
+      },
+      "required": [
+        "limit", "offset"
+      ]
+    },
+    {
+      "type": "array",
+      "items": [
+        {
+          "$ref": "#/definitions/offset"
+        },
+        {
+          "$ref": "#/definitions/limit"
+        }
+      ],
+      "minItems": 2
+    }
+  ],
+  "definitions": {
+    "limit": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 25
+    },
+    "offset": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}
