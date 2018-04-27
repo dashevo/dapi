@@ -3,6 +3,15 @@ const sinon = require('sinon');
 const sendRawTransitionFactory = require('../../../lib/rpcServer/commands/sendRawTransition');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 const dashDriveFixture = require('../../fixtures/dashDriveFixture');
+const { TransitionPacket, TransitionHeader } = require('@dashevo/dashcore-lib').StateTransition;
+const { PrivateKey } = require('@dashevo/dashcore-lib');
+
+const testKey = 'cNfg1KdmEXySkwK5XyydmgoKLbMaCiRyqPEtXZPw1aq8XMd5U5GF';
+const updatePacket = new TransitionPacket()
+  .addObject({ type: 'dapobjectbase', idx: 1, rev: 1 });
+const updateHeader = new TransitionHeader()
+  .setMerkleRoot(updatePacket.getMerkleRoot().toString('hex'))
+  .sign(new PrivateKey(testKey));
 
 let spy;
 let stub;
@@ -48,6 +57,13 @@ describe('sendRawTransition', () => {
     tsid = await sendRawTransition({ rawTransitionHeader: validCloseTransitionHeader });
     expect(tsid).to.be.a('string');
     expect(spy.callCount).to.be.equal(2);
+    // We are surpassing this test for now, since Andy still working on TransitionPacket format
+    // tsid = await sendRawTransition({
+    //   rawTransitionHeader: updateHeader.serialize(),
+    //   rawTransitionPacket: updatePacket.serialize().toString('hex'),
+    // });
+    // expect(tsid).to.be.a('string');
+    // expect(spy.callCount).to.be.equal(3);
   });
 
   it('Should throw if arguments are not valid', async () => {
