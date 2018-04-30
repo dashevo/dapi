@@ -1,33 +1,55 @@
 {
   "oneOf": [
     {
-      "type": "object",
-      "properties": {
-        "username": {
-          "$ref": "#/definitions/username"
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "dapId": {
+              "$ref": "#/definitions/dapId"
+            }
+          },
+          "required": [
+            "dapId"
+          ]
         }
-      },
-      "required": [
-        "username"
-      ]
-    },
-    {
-      "type": "object",
-      "properties": {
-        "userId": {
-          "$ref": "#/definitions/userId"
+      ],
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "username": {
+              "$ref": "#/definitions/username"
+            }
+          },
+          "required": [
+            "username"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "$ref": "#/definitions/userId"
+            }
+          },
+          "required": [
+            "userId"
+          ]
         }
-      },
-      "required": [
-        "userId"
       ]
     },
     {
       "type": "array",
-      "items": {
-        "$ref": "#/definitions/username"
-      },
-      "minItems": 1
+      "items": [
+        {
+          "$ref": "#/definitions/dapId"
+        },
+        {
+          "$ref": "#/definitions/username"
+        }
+      ],
+      "minItems": 2
     }
   ],
   "definitions": {
@@ -37,6 +59,9 @@
     "userId": {
       "type": "string",
       "minLength": 20
+    },
+    "dapId": {
+      "type": "string"
     }
   }
 }
