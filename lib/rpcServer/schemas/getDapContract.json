@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "dapId": {
+      "$ref": "#/definitions/dapId"
+    }
+  },
+  "required": [
+    "dapId"
+  ],
+  "definitions": {
+    "dapId": {
+      "type": "string"
+    }
+  }
+}
