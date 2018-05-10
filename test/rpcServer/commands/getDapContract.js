@@ -26,10 +26,10 @@ describe('getDapContract', () => {
     spy.restore();
   });
 
-  it('Should return DAP contract', async () => {
+  it('Should return search results', async () => {
     const getDapContract = getDapContractFactory(dashDriveFixture);
     expect(spy.callCount).to.be.equal(0);
-    let contract = await getDapContract({ dapId: '123' });
+    const contract = await getDapContract({ dapId: '123' });
     expect(contract).to.be.an('object');
     expect(spy.callCount).to.be.equal(1);
   });

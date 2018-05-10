@@ -29,7 +29,7 @@ describe('searchDapContracts', () => {
   it('Should return an array', async () => {
     const getDapContract = searchDapContractsFactory(dashDriveFixture);
     expect(spy.callCount).to.be.equal(0);
-    let contractList = await getDapContract({ pattern: 'Dash' });
+    const contractList = await getDapContract({ pattern: 'Dash' });
     expect(contractList).to.be.an('array');
     expect(spy.callCount).to.be.equal(1);
   });
