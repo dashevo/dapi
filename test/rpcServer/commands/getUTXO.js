@@ -1,8 +1,11 @@
-const { expect } = require('chai');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const getUTXOFactory = require('../../../lib/rpcServer/commands/getUTXO.js');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
+const { expect } = chai;
+chai.use(chaiAsPromised);
 let spy;
 
 describe('getUTXO', () => {

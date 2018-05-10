@@ -1,8 +1,10 @@
 const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const searchUsersFactory = require('../../../lib/rpcServer/commands/searchUsers');
 const userIndex = require('../../fixtures/userIndexFixture');
 
+chai.use(chaiAsPromised);
 const { expect } = chai;
 let spy;
 
@@ -27,9 +29,9 @@ describe('searchUsers', () => {
   });
 
   it('Should return search results', async () => {
-    const searchUser = searchUsersFactory(userIndex);
+    const searchUsers = searchUsersFactory(userIndex);
     expect(spy.callCount).to.be.equal(0);
-    const users = await searchUser({ pattern: 'Dash', limit: 10, offset: 0 });
+    const users = await searchUsers({ pattern: 'Dash', limit: 10, offset: 0 });
     expect(users).to.be.an('object');
     expect(users).to.have.property('totalCount');
     expect(users).to.have.property('results');
@@ -37,33 +39,39 @@ describe('searchUsers', () => {
   });
 
   it('Should throw an error if arguments are not valid', async () => {
-    const getDapContract = searchUsersFactory(userIndex);
+    const searchUsers = searchUsersFactory(userIndex);
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract({ pattern: 123, offset: 10, limit: 10 })).to.be.rejectedWith('should be string');
+    await expect(searchUsers({ pattern: 123, offset: 10, limit: 10 })).to.be.rejectedWith('should be string');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract({ pattern: 'Dash', offset: -1, limit: 10 })).to.be.rejectedWith('offset should be >= 0');
+    await expect(searchUsers({ pattern: 'Dash', offset: -1, limit: 10 })).to.be.rejectedWith('offset should be >= 0');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract({ pattern: 'Dash', offset: 10, limit: -1 })).to.be.rejectedWith('limit should be >= 1');
+    await expect(searchUsers({ pattern: 'Dash', offset: 10, limit: -1 })).to.be.rejectedWith('limit should be >= 1');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract({ pattern: 'Dash', offset: 10, limit: 0.5 })).to.be.rejectedWith('should be integer');
+    await expect(searchUsers({ pattern: 'Dash', offset: 10, limit: 0.5 })).to.be.rejectedWith('should be integer');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract({ pattern: 'Dash', offset: 0.5, limit: 10 })).to.be.rejectedWith('should be integer');
+    await expect(searchUsers({ pattern: 'Dash', offset: 0.5, limit: 10 })).to.be.rejectedWith('should be integer');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract({ pattern: 'Dash', offset: '10', limit: 10 })).to.be.rejectedWith('should be integer');
+    await expect(searchUsers({ pattern: 'Dash', offset: '10', limit: 10 })).to.be.rejectedWith('should be integer');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract({ pattern: 'Dash', offset: 20, limit: '10' })).to.be.rejectedWith('should be integer');
+    await expect(searchUsers({ pattern: 'Dash', offset: 20, limit: '10' })).to.be.rejectedWith('should be integer');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract({ pattern: 'Dash', limit: 10 })).to.be.rejectedWith('should have required property \'offset\'');
+    await expect(searchUsers({
+      pattern: 'Dash',
+      limit: 10,
+    })).to.be.rejectedWith('should have required property \'offset\'');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract({ pattern: 'Dash', offset: 10 })).to.be.rejectedWith('should have required property \'limit\'');
+    await expect(searchUsers({
+      pattern: 'Dash',
+      offset: 10,
+    })).to.be.rejectedWith('should have required property \'limit\'');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract({})).to.be.rejectedWith('should have required property');
+    await expect(searchUsers({})).to.be.rejectedWith('should have required property');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract()).to.be.rejectedWith('should be object');
+    await expect(searchUsers()).to.be.rejectedWith('should be object');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract([123])).to.be.rejected;
+    await expect(searchUsers([123])).to.be.rejected;
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract([-1])).to.be.rejected;
+    await expect(searchUsers([-1])).to.be.rejected;
     expect(spy.callCount).to.be.equal(0);
   });
 });

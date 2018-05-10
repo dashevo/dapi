@@ -1,9 +1,11 @@
 const chai = require('chai');
 const sinon = require('sinon');
+const chaiAsPromised = require('chai-as-promised');
 const generateFactory = require('../../../lib/rpcServer/commands/generate');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
 const { expect } = chai;
+chai.use(chaiAsPromised);
 let spy;
 
 describe('generate', () => {

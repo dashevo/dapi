@@ -1,8 +1,10 @@
 const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const getBlocksFactory = require('../../../lib/rpcServer/commands/getBlocks');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
+chai.use(chaiAsPromised);
 const { expect } = chai;
 let spy;
 

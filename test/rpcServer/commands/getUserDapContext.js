@@ -1,9 +1,11 @@
 const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const getUserDapContextFactory = require('../../../lib/rpcServer/commands/getUserDapContext');
 const dashDriveFixture = require('../../fixtures/dashDriveFixture');
 const userIndexFixture = require('../../fixtures/userIndexFixture');
 
+chai.use(chaiAsPromised);
 const { expect } = chai;
 let spy;
 
@@ -33,7 +35,10 @@ describe('getUserDapContext', () => {
     let user = await getUserDapContext({ username: 'alice', dapId: '123' });
     expect(user).to.be.an('object');
     expect(spy.callCount).to.be.equal(1);
-    user = await getUserDapContext({ userId: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa', dapId: '123' });
+    user = await getUserDapContext({
+      userId: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa',
+      dapId: '123',
+    });
     expect(user).to.be.an('object');
     expect(spy.callCount).to.be.equal(2);
     user = await getUserDapContext(['123', 'alice']);
@@ -64,7 +69,9 @@ describe('getUserDapContext', () => {
     await expect(getUserDapContext(['123', 123])).to.be.rejected;
     expect(spy.callCount).to.be.equal(0);
     // todo
-    // await expect(getUserDapContext({ username: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa' })).to.be.rejectedWith('should be integer');
+    // await expect(getUserDapContext({
+    // username: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa'
+    // })).to.be.rejectedWith('should be integer');
     // expect(spy.callCount).to.be.equal(0);
     // todo
     // await expect(getUserDapContext({ userId: 'alice' })).to.be.rejectedWith('should be integer');

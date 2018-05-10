@@ -1,8 +1,11 @@
-const { expect } = require('chai');
+const chai = require('chai');
 const sinon = require('sinon');
+const chaiAsPromised = require('chai-as-promised');
 const getAddressTotalReceivedFactory = require('../../../lib/rpcServer/commands/getAddressTotalReceived');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
+chai.use(chaiAsPromised);
+const { expect } = chai;
 let spy;
 
 describe('getAddressTotalReceived', () => {

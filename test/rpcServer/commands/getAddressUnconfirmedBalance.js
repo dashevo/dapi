@@ -1,8 +1,11 @@
-const { expect } = require('chai');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const getAddressUnconfirmedBalanceFactory = require('../../../lib/rpcServer/commands/getAddressUnconfirmedBalance.js');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
+chai.use(chaiAsPromised);
+const { expect } = chai;
 let spy;
 
 describe('getAddressUnconfirmedBalance', () => {

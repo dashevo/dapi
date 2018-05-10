@@ -1,8 +1,10 @@
 const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const getUserDapSpaceFactory = require('../../../lib/rpcServer/commands/getUserDapSpace');
 const dashDriveFixture = require('../../fixtures/dashDriveFixture');
 
+chai.use(chaiAsPromised);
 const { expect } = chai;
 let spy;
 
@@ -32,7 +34,10 @@ describe('getUserDapSpace', () => {
     let user = await getUserDapSpace({ username: 'alice', dapId: '123' });
     expect(user).to.be.an('object');
     expect(spy.callCount).to.be.equal(1);
-    user = await getUserDapSpace({ userId: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa', dapId: '123' });
+    user = await getUserDapSpace({
+      userId: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa',
+      dapId: '123',
+    });
     expect(user).to.be.an('object');
     expect(spy.callCount).to.be.equal(2);
     user = await getUserDapSpace(['123', 'alice']);

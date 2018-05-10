@@ -1,8 +1,10 @@
 const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const getDapContractFactory = require('../../../lib/rpcServer/commands/getDapContract');
 const dashDriveFixture = require('../../fixtures/dashDriveFixture');
 
+chai.use(chaiAsPromised);
 const { expect } = chai;
 let spy;
 
