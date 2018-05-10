@@ -1,42 +1,11 @@
 {
-  "oneOf": [
-    {
-      "type": "object",
-      "properties": {
-        "username": {
-          "$ref": "#/definitions/username"
-        }
-      },
-      "required": [
-        "username"
-      ]
-    },
-    {
-      "type": "object",
-      "properties": {
-        "userId": {
-          "$ref": "#/definitions/userId"
-        }
-      },
-      "required": [
-        "userId"
-      ]
-    },
-    {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/username"
-      },
-      "minItems": 1
-    }
-  ],
-  "definitions": {
-    "username": {
+  "type": "object",
+  "properties": {
+    "usernameOrRegTxId": {
       "type": "string"
-    },
-    "userId": {
-      "type": "string",
-      "minLength": 20
     }
-  }
+  },
+  "required": [
+    "usernameOrRegTxId"
+  ]
 }

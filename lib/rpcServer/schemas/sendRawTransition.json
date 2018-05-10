@@ -1,30 +1,6 @@
 {
-  "oneOf": [
-    {
-      "type": "object",
-      "properties": {
-        "rawTransitionHeader": {
-          "$ref": "#/definitions/rawTransitionHeader"
-        },
-        "rawTransitionPacket": {
-          "$ref": "#/definitions/rawTransitionPacket"
-        }
-      },
-      "required": [
-        "rawTransitionHeader"
-      ]
-    },
-    {
-      "type": "array",
-      "items": [{
-        "$ref": "#/definitions/rawTransitionHeader"
-      }, {
-        "$ref": "#/definitions/rawTransitionPacket"
-      }],
-      "minItems": 1
-    }
-  ],
-  "definitions": {
+  "type": "object",
+  "properties": {
     "rawTransitionHeader": {
       "type": "string",
       "pattern": "^(0x|0X)?[a-fA-F0-9]+$"
@@ -33,5 +9,8 @@
       "type": "string",
       "pattern": "^(0x|0X)?[a-fA-F0-9]+$"
     }
-  }
+  },
+  "required": [
+    "rawTransitionHeader"
+  ]
 }

@@ -1,28 +1,12 @@
 {
-  "oneOf": [
-    {
-      "type": "object",
-      "properties": {
-        "nbBlocks": {
-          "$ref": "#/definitions/numberOfBlocks"
-        }
-      },
-      "required": [
-        "nbBlocks"
-      ]
-    },
-    {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/numberOfBlocks"
-      },
-      "minItems": 1
-    }
-  ],
-  "definitions": {
-    "numberOfBlocks": {
+  "type": "object",
+  "properties": {
+    "nbBlocks": {
       "type": "integer",
       "minimum": 0
     }
-  }
+  },
+  "required": [
+    "nbBlocks"
+  ]
 }

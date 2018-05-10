@@ -1,67 +1,15 @@
 {
-  "oneOf": [
-    {
-      "allOf": [
-        {
-          "type": "object",
-          "properties": {
-            "dapId": {
-              "$ref": "#/definitions/dapId"
-            }
-          },
-          "required": [
-            "dapId"
-          ]
-        }
-      ],
-      "oneOf": [
-        {
-          "type": "object",
-          "properties": {
-            "username": {
-              "$ref": "#/definitions/username"
-            }
-          },
-          "required": [
-            "username"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "userId": {
-              "$ref": "#/definitions/userId"
-            }
-          },
-          "required": [
-            "userId"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "array",
-      "items": [
-        {
-          "$ref": "#/definitions/dapId"
-        },
-        {
-          "$ref": "#/definitions/username"
-        }
-      ],
-      "minItems": 2
-    }
-  ],
-  "definitions": {
-    "username": {
+  "type": "object",
+  "properties": {
+    "dapId": {
       "type": "string"
     },
     "userId": {
-      "type": "string",
-      "minLength": 20
-    },
-    "dapId": {
       "type": "string"
     }
-  }
+  },
+  "required": [
+    "dapId",
+    "userId"
+  ]
 }

@@ -1,27 +1,11 @@
 {
-  "oneOf": [
-    {
-      "type": "object",
-      "properties": {
-        "address": {
-          "$ref": "#/definitions/address"
-        }
-      },
-      "required": [
-        "address"
-      ]
-    },
-    {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/address"
-      },
-      "minItems": 1
-    }
-  ],
-  "definitions": {
+  "type": "object",
+  "properties": {
     "address": {
       "type": "string"
     }
-  }
+  },
+  "required": [
+    "address"
+  ]
 }

@@ -2,15 +2,10 @@
   "type": "object",
   "properties": {
     "dapId": {
-      "$ref": "#/definitions/dapId"
+      "type": "string"
     }
   },
   "required": [
     "dapId"
-  ],
-  "definitions": {
-    "dapId": {
-      "type": "string"
-    }
-  }
+  ]
 }

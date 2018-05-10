@@ -1,27 +1,11 @@
 {
-  "oneOf": [
-    {
-      "type": "object",
-      "properties": {
-        "blockHash": {
-          "$ref": "#/definitions/blockHash"
-        }
-      },
-      "required": [
-        "blockHash"
-      ]
-    },
-    {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/blockHash"
-      },
-      "minItems": 1
-    }
-  ],
-  "definitions": {
+  "type": "object",
+  "properties": {
     "blockHash": {
       "type": "string"
     }
-  }
+  },
+  "required": [
+    "blockHash"
+  ]
 }

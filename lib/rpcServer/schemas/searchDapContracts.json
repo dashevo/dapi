@@ -2,15 +2,10 @@
   "type": "object",
   "properties": {
     "pattern": {
-      "$ref": "#/definitions/pattern"
+      "type": "string"
     }
   },
   "required": [
     "pattern"
-  ],
-  "definitions": {
-    "pattern": {
-      "type": "string"
-    }
-  }
+  ]
 }

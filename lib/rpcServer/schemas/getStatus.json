@@ -1,25 +1,6 @@
 {
-  "oneOf": [
-    {
-      "type": "object",
-      "properties": {
-        "query": {
-          "$ref": "#/definitions/query"
-        }
-      },
-      "required": [
-        "query"
-      ]
-    },
-    {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/query"
-      },
-      "minItems": 1
-    }
-  ],
-  "definitions": {
+  "type": "object",
+  "properties": {
     "query": {
       "type": "string",
       "enum": [
@@ -29,5 +10,8 @@
         "getLastBlockHash"
       ]
     }
-  }
+  },
+  "required": [
+    "query"
+  ]
 }

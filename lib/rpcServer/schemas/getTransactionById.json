@@ -1,27 +1,11 @@
 {
-  "oneOf": [
-    {
-      "type": "object",
-      "properties": {
-        "txid": {
-          "$ref": "#/definitions/txId"
-        }
-      },
-      "required": [
-        "txid"
-      ]
-    },
-    {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/txId"
-      },
-      "minItems": 1
-    }
-  ],
-  "definitions": {
-    "txId": {
+  "type": "object",
+  "properties": {
+    "txid": {
       "type": "string"
     }
-  }
+  },
+  "required": [
+    "txid"
+  ]
 }
