@@ -9,14 +9,13 @@ let spy;
 describe('getDapContract', () => {
   describe('#factory', () => {
     it('should return a function', () => {
-      throw new Error("Todo");
-      const getUserDapContext = getDapContractFactory(dashDriveFixture);
-      expect(getUserDapContext).to.be.a('function');
+      const getDapContract = getDapContractFactory(dashDriveFixture);
+      expect(getDapContract).to.be.a('function');
     });
   });
 
   before(() => {
-    spy = sinon.spy(dashDriveFixture, 'getDapContext');
+    spy = sinon.spy(dashDriveFixture, 'getDapContract');
   });
 
   beforeEach(() => {
@@ -28,42 +27,25 @@ describe('getDapContract', () => {
   });
 
   it('Should return DAP contract', async () => {
-    const getUserDapContext = getDapContractFactory(dashDriveFixture);
+    const getDapContract = getDapContractFactory(dashDriveFixture);
     expect(spy.callCount).to.be.equal(0);
-    let user = await getUserDapContext({ username: 'alice', dapId: '123' });
-    expect(user).to.be.an('object');
+    let contract = await getDapContract({ dapId: '123' });
+    expect(contract).to.be.an('object');
     expect(spy.callCount).to.be.equal(1);
-    user = await getUserDapContext({ userId: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa', dapId: '123' });
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(2);
-    user = await getUserDapContext(['123', 'alice']);
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(3);
-    user = await getUserDapContext(['123', 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa']);
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(4);
   });
 
   it('Should throw an error if arguments are not valid', async () => {
-    const getUserDapContext = getDapContractFactory(dashDriveFixture);
+    const getDapContract = getDapContractFactory(dashDriveFixture);
     expect(spy.callCount).to.be.equal(0);
-    await expect(getUserDapContext({ username: 123 })).to.be.rejectedWith('should be string');
+    await expect(getDapContract({ dapId: 123 })).to.be.rejectedWith('should be string');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getUserDapContext({ userId: 123 })).to.be.rejected;
+    await expect(getDapContract({})).to.be.rejectedWith('should have required property');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getUserDapContext({})).to.be.rejectedWith('should have required property');
+    await expect(getDapContract()).to.be.rejectedWith('should be object');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getUserDapContext({ dapId: '123' })).to.be.rejectedWith('should have required property');
+    await expect(getDapContract([123])).to.be.rejected;
     expect(spy.callCount).to.be.equal(0);
-    await expect(getUserDapContext({ dapId: 123, username: 'alice' })).to.be.rejectedWith('should be string');
-    expect(spy.callCount).to.be.equal(0);
-    await expect(getUserDapContext()).to.be.rejectedWith('should be object');
-    expect(spy.callCount).to.be.equal(0);
-    await expect(getUserDapContext([123, 'alice'])).to.be.rejected;
-    expect(spy.callCount).to.be.equal(0);
-    await expect(getUserDapContext(['123', 123])).to.be.rejected;
-    expect(spy.callCount).to.be.equal(0);
-    await expect(getUserDapContext([-1])).to.be.rejected;
+    await expect(getDapContract([-1])).to.be.rejected;
     expect(spy.callCount).to.be.equal(0);
   });
 });
