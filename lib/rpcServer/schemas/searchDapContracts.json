@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "pattern": {
+      "$ref": "#/definitions/pattern"
+    }
+  },
+  "required": [
+    "pattern"
+  ],
+  "definitions": {
+    "pattern": {
+      "type": "string"
+    }
+  }
+}

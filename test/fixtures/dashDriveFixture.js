@@ -3,4 +3,5 @@ module.exports = {
   async getDapSpace(dapId, userNameOrId) { return {}; },
   async getDapContext(dapId, usernameOrId) { return {}; },
   async getDapContract(dapId) { return {}; },
+  async searchDapContracts(pattern) { return []; },
 };
