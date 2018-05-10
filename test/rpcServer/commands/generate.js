@@ -39,7 +39,7 @@ describe('generate', () => {
     expect(spy.callCount).to.be.equal(2);
   });
 
-  it('Should throw an error if arguments is not valid', async () => {
+  it('Should throw an error if arguments are not valid', async () => {
     const getBlockHash = generateFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
     await expect(getBlockHash({ amount: -1 })).to.be.rejectedWith('should be >= 0');

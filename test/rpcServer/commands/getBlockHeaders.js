@@ -37,7 +37,7 @@ describe('getBlockHeaders', () => {
     expect(spy.callCount).to.be.equal(2);
   });
 
-  it('Should throw an error if arguments is not valid', async () => {
+  it('Should throw an error if arguments are not valid', async () => {
     const getBlocks = getBlockHeadersFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
     await expect(getBlocks({ limit: -1, offset: 10 })).to.be.rejectedWith('limit should be >= 0');

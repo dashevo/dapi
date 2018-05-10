@@ -40,7 +40,7 @@ describe('estimateFee', () => {
     expect(spy.callCount).to.be.equal(2);
   });
 
-  it('Should throw an error if arguments is not valid', async () => {
+  it('Should throw an error if arguments are not valid', async () => {
     const estimateFee = estimateFeeFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
     await expect(estimateFee({ nbBlocks: -1 })).to.be.rejectedWith('should be >= 0');

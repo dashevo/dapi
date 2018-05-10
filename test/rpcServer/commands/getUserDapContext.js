@@ -2,6 +2,7 @@ const chai = require('chai');
 const sinon = require('sinon');
 const getUserDapContextFactory = require('../../../lib/rpcServer/commands/getUserDapContext');
 const dashDriveFixture = require('../../fixtures/dashDriveFixture');
+const userIndexFixture = require('../../fixtures/userIndexFixture');
 
 const { expect } = chai;
 let spy;
@@ -9,7 +10,7 @@ let spy;
 describe('getUserDapContext', () => {
   describe('#factory', () => {
     it('should return a function', () => {
-      const getUserDapContext = getUserDapContextFactory(dashDriveFixture);
+      const getUserDapContext = getUserDapContextFactory(dashDriveFixture, userIndexFixture);
       expect(getUserDapContext).to.be.a('function');
     });
   });
@@ -27,7 +28,7 @@ describe('getUserDapContext', () => {
   });
 
   it('Should return blockchain user', async () => {
-    const getUserDapContext = getUserDapContextFactory(dashDriveFixture);
+    const getUserDapContext = getUserDapContextFactory(dashDriveFixture, userIndexFixture);
     expect(spy.callCount).to.be.equal(0);
     let user = await getUserDapContext({ username: 'alice', dapId: '123' });
     expect(user).to.be.an('object');
@@ -43,8 +44,8 @@ describe('getUserDapContext', () => {
     expect(spy.callCount).to.be.equal(4);
   });
 
-  it('Should throw an error if arguments is not valid', async () => {
-    const getUserDapContext = getUserDapContextFactory(dashDriveFixture);
+  it('Should throw an error if arguments are not valid', async () => {
+    const getUserDapContext = getUserDapContextFactory(dashDriveFixture, userIndexFixture);
     expect(spy.callCount).to.be.equal(0);
     await expect(getUserDapContext({ username: 123 })).to.be.rejectedWith('should be string');
     expect(spy.callCount).to.be.equal(0);

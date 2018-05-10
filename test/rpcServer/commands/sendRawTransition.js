@@ -13,6 +13,11 @@ const updateHeader = new TransitionHeader()
   .setMerkleRoot(updatePacket.getMerkleRoot().toString('hex'))
   .sign(new PrivateKey(testKey));
 
+const closeHeader = new TransitionHeader()
+  .setAction(TransitionHeader.CONSTANTS.ACTIONS.CLOSE_ACCOUNT)
+  .sign(new PrivateKey(testKey))
+  .serialize();
+
 let spy;
 let stub;
 let driveSpy;
@@ -51,10 +56,10 @@ describe('sendRawTransition', () => {
   it('Should return a string', async () => {
     const sendRawTransition = sendRawTransitionFactory(coreAPIFixture, dashDriveFixture);
     expect(spy.callCount).to.be.equal(0);
-    let tsid = await sendRawTransition([validCloseTransitionHeader]);
+    let tsid = await sendRawTransition([closeHeader]);
     expect(tsid).to.be.a('string');
     expect(spy.callCount).to.be.equal(1);
-    tsid = await sendRawTransition({ rawTransitionHeader: validCloseTransitionHeader });
+    tsid = await sendRawTransition({ rawTransitionHeader: closeHeader });
     expect(tsid).to.be.a('string');
     expect(spy.callCount).to.be.equal(2);
     // We are surpassing this test for now, since Andy still working on TransitionPacket format

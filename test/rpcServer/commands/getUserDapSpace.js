@@ -43,7 +43,7 @@ describe('getUserDapSpace', () => {
     expect(spy.callCount).to.be.equal(4);
   });
 
-  it('Should throw an error if arguments is not valid', async () => {
+  it('Should throw an error if arguments are not valid', async () => {
     const getUserDapSpace = getUserDapSpaceFactory(dashDriveFixture);
     expect(spy.callCount).to.be.equal(0);
     await expect(getUserDapSpace({ username: 123 })).to.be.rejectedWith('should be string');
