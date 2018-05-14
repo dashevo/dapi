@@ -68,7 +68,9 @@ describe('getUserDapSpace', () => {
     await expect(getUserDapSpace(['123', 123])).to.be.rejected;
     expect(spy.callCount).to.be.equal(0);
     // todo
-    // await expect(getUserDapSpace({ username: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa' })).to.be.rejectedWith('should be integer');
+    // await expect(getUserDapSpace({
+    // username: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa'
+    // })).to.be.rejectedWith('should be integer');
     // expect(spy.callCount).to.be.equal(0);
     // todo
     // await expect(getUserDapSpace({ userId: 'alice' })).to.be.rejectedWith('should be integer');

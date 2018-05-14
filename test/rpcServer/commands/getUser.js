@@ -57,7 +57,9 @@ describe('getUser', () => {
     await expect(getUser()).to.be.rejectedWith('should be object');
     expect(spy.callCount).to.be.equal(0);
     // todo
-    // await expect(getUser({ username: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa' })).to.be.rejectedWith('should be integer');
+    // await expect(getUser({
+    // username: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa'
+    // })).to.be.rejectedWith('should be integer');
     // expect(spy.callCount).to.be.equal(0);
     // todo
     // await expect(getUser({ userId: 'alice' })).to.be.rejectedWith('should be integer');
