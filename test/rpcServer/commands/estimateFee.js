@@ -32,12 +32,9 @@ describe('estimateFee', () => {
   it('Should return a number', async () => {
     const estimateFee = estimateFeeFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let fee = await estimateFee([1]);
+    const fee = await estimateFee({ nbBlocks: 1 });
     expect(fee).to.be.a('number');
     expect(spy.callCount).to.be.equal(1);
-    fee = await estimateFee({ nbBlocks: 1 });
-    expect(fee).to.be.a('number');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw an error if arguments are not valid', async () => {

@@ -32,27 +32,18 @@ describe('getUserDapContext', () => {
   it('Should return blockchain user', async () => {
     const getUserDapContext = getUserDapContextFactory(dashDriveFixture, userIndexFixture);
     expect(spy.callCount).to.be.equal(0);
-    let user = await getUserDapContext({ username: 'alice', dapId: '123' });
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(1);
-    user = await getUserDapContext({
+    const userContext = await getUserDapContext({
       userId: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa',
       dapId: '123',
     });
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(2);
-    user = await getUserDapContext(['123', 'alice']);
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(3);
-    user = await getUserDapContext(['123', 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa']);
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(4);
+    expect(userContext).to.be.an('object');
+    expect(spy.callCount).to.be.equal(1);
   });
 
   it('Should throw an error if arguments are not valid', async () => {
     const getUserDapContext = getUserDapContextFactory(dashDriveFixture, userIndexFixture);
     expect(spy.callCount).to.be.equal(0);
-    await expect(getUserDapContext({ username: 123 })).to.be.rejectedWith('should be string');
+    await expect(getUserDapContext({ username: 123 })).to.be.rejectedWith('should have required property \'dapId\'');
     expect(spy.callCount).to.be.equal(0);
     await expect(getUserDapContext({ userId: 123 })).to.be.rejected;
     expect(spy.callCount).to.be.equal(0);

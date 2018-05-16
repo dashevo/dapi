@@ -37,12 +37,6 @@ describe('getUser', () => {
     user = await getUser({ userId: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa' });
     expect(user).to.be.an('object');
     expect(spy.callCount).to.be.equal(2);
-    user = await getUser(['alice']);
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(3);
-    user = await getUser(['beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa']);
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(4);
   });
 
   it('Should throw an error if arguments are not valid', async () => {
@@ -50,7 +44,7 @@ describe('getUser', () => {
     expect(spy.callCount).to.be.equal(0);
     await expect(getUser({ username: 123 })).to.be.rejectedWith('should be string');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getUser({ userId: 123 })).to.be.rejected;
+    await expect(getUser({ userId: 123 })).to.be.rejectedWith('should be string');
     expect(spy.callCount).to.be.equal(0);
     await expect(getUser({})).to.be.rejectedWith('should have required property');
     expect(spy.callCount).to.be.equal(0);

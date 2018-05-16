@@ -31,12 +31,9 @@ describe('getBlockHash', () => {
   it('Should return block hash', async () => {
     const getBlockHash = getBlockHashFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let blockHash = await getBlockHash([1]);
+    const blockHash = await getBlockHash({ height: 100 });
     expect(blockHash).to.be.a('string');
     expect(spy.callCount).to.be.equal(1);
-    blockHash = await getBlockHash({ height: 100 });
-    expect(blockHash).to.be.a('string');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw an error if arguments are not valid', async () => {

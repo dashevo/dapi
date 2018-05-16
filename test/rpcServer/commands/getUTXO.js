@@ -31,12 +31,9 @@ describe('getUTXO', () => {
   it('Should return an array of unspent outputs', async () => {
     const getUTXO = getUTXOFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let UTXO = await getUTXO(['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w']);
+    const UTXO = await getUTXO({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
     expect(UTXO).to.be.an('array');
     expect(spy.callCount).to.be.equal(1);
-    UTXO = await getUTXO({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
-    expect(UTXO).to.be.an('array');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw if arguments are not valid', async () => {

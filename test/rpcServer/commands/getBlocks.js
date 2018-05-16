@@ -31,12 +31,9 @@ describe('getBlocks', () => {
   it('Should return array of blocks', async () => {
     const getBlocks = getBlocksFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let blocks = await getBlocks([1, '123']);
+    const blocks = await getBlocks({ limit: 2, blockDate: '123' });
     expect(blocks).to.be.an('array');
     expect(spy.callCount).to.be.equal(1);
-    blocks = await getBlocks({ limit: 2, blockDate: '123' });
-    expect(blocks).to.be.an('array');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw an error if arguments are not valid', async () => {

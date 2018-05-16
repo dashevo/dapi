@@ -38,16 +38,11 @@ describe('getStatus', () => {
   it('Should return result if valid query passed', async () => {
     const getStatus = getStatusFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let results = await Promise.all(validQueries.map(query => getStatus([query])));
+    const results = await Promise.all(validQueries.map(query => getStatus({ query })));
     results.forEach((result) => {
       expect(result).to.be.an('object');
     });
     expect(spy.callCount).to.be.equal(4);
-    results = await Promise.all(validQueries.map(query => getStatus({ query })));
-    results.forEach((result) => {
-      expect(result).to.be.an('object');
-    });
-    expect(spy.callCount).to.be.equal(8);
   });
 
   it('Should throw if arguments are not valid', async () => {

@@ -31,14 +31,10 @@ describe('generate', () => {
   it('Should return an array of block hashes', async () => {
     const generate = generateFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let blockHashes = await generate([10]);
+    const blockHashes = await generate({ amount: 10 });
     expect(blockHashes).to.be.an('array');
     expect(blockHashes.length).to.be.equal(10);
     expect(spy.callCount).to.be.equal(1);
-    blockHashes = await generate({ amount: 10 });
-    expect(blockHashes).to.be.an('array');
-    expect(blockHashes.length).to.be.equal(10);
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw an error if arguments are not valid', async () => {

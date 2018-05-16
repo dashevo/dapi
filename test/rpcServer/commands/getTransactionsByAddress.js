@@ -31,12 +31,9 @@ describe('getTransactionsByAddress', () => {
   it('Should return an array', async () => {
     const getTransactionsByAddress = getTransactionsByAddressFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let transactions = await getTransactionsByAddress(['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w']);
+    const transactions = await getTransactionsByAddress({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
     expect(transactions).to.be.an('array');
     expect(spy.callCount).to.be.equal(1);
-    transactions = await getTransactionsByAddress({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
-    expect(transactions).to.be.an('array');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw if arguments are not valid', async () => {

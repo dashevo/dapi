@@ -31,12 +31,9 @@ describe('getTransactionById', () => {
   it('Should return an object', async () => {
     const getTransactionById = getTransactionByIdFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let rawBlock = await getTransactionById(['beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa']);
-    expect(rawBlock).to.be.an('object');
+    const transaction = await getTransactionById({ txid: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa' });
+    expect(transaction).to.be.an('object');
     expect(spy.callCount).to.be.equal(1);
-    rawBlock = await getTransactionById({ txid: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa' });
-    expect(rawBlock).to.be.an('object');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw if arguments are not valid', async () => {

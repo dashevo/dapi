@@ -31,12 +31,9 @@ describe('getBalance', () => {
   it('Should return a number', async () => {
     const getBalance = getBalanceFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let balance = await getBalance(['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w']);
+    const balance = await getBalance({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
     expect(balance).to.be.an('number');
     expect(spy.callCount).to.be.equal(1);
-    balance = await getBalance({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
-    expect(balance).to.be.an('number');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw if arguments are not valid', async () => {

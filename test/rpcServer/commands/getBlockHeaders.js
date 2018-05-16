@@ -31,12 +31,9 @@ describe('getBlockHeaders', () => {
   it('Should return array of blocks', async () => {
     const getBlockHeaders = getBlockHeadersFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let blockHeaders = await getBlockHeaders([1, 2]);
+    const blockHeaders = await getBlockHeaders({ limit: 2, offset: 1 });
     expect(blockHeaders).to.be.an('array');
     expect(spy.callCount).to.be.equal(1);
-    blockHeaders = await getBlockHeaders({ limit: 2, offset: 1 });
-    expect(blockHeaders).to.be.an('array');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw an error if arguments are not valid', async () => {

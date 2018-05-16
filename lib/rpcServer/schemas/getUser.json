@@ -1,11 +1,23 @@
 {
   "type": "object",
   "properties": {
-    "usernameOrRegTxId": {
+    "username": {
+      "type": "string"
+    },
+    "userId": {
       "type": "string"
     }
   },
-  "required": [
-    "usernameOrRegTxId"
+  "oneOf": [
+    {
+      "required": [
+        "username"
+      ]
+    },
+    {
+      "required": [
+        "userId"
+      ]
+    }
   ]
 }

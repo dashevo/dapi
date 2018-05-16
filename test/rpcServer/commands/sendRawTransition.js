@@ -60,12 +60,9 @@ describe('sendRawTransition', () => {
   it('Should return a string', async () => {
     const sendRawTransition = sendRawTransitionFactory(coreAPIFixture, dashDriveFixture);
     expect(spy.callCount).to.be.equal(0);
-    let tsid = await sendRawTransition([closeHeader]);
+    const tsid = await sendRawTransition({ rawTransitionHeader: closeHeader });
     expect(tsid).to.be.a('string');
     expect(spy.callCount).to.be.equal(1);
-    tsid = await sendRawTransition({ rawTransitionHeader: closeHeader });
-    expect(tsid).to.be.a('string');
-    expect(spy.callCount).to.be.equal(2);
     // We are surpassing this test for now, since Andy still working on TransitionPacket format
     // tsid = await sendRawTransition({
     //   rawTransitionHeader: updateHeader.serialize(),

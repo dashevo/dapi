@@ -32,12 +32,9 @@ describe('getAddressTotalSent', () => {
   it('Should return a number', async () => {
     const getAddressTotalSent = getAddressTotalSentFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let summary = await getAddressTotalSent(['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w']);
-    expect(summary).to.be.an('number');
+    const totalSent = await getAddressTotalSent({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
+    expect(totalSent).to.be.an('number');
     expect(spy.callCount).to.be.equal(1);
-    summary = await getAddressTotalSent({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
-    expect(summary).to.be.an('number');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw if arguments are not valid', async () => {

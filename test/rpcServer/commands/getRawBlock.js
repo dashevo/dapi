@@ -31,12 +31,9 @@ describe('getRawBlock', () => {
   it('Should return an object', async () => {
     const getRawBlock = getRawBlockFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let rawBlock = await getRawBlock(['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w']);
+    const rawBlock = await getRawBlock({ blockHash: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
     expect(rawBlock).to.be.an('object');
     expect(spy.callCount).to.be.equal(1);
-    rawBlock = await getRawBlock({ blockHash: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
-    expect(rawBlock).to.be.an('object');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw if arguments are not valid', async () => {

@@ -31,12 +31,9 @@ describe('getAddressSummary', () => {
   it('Should return an object', async () => {
     const getAddressSummary = getAddressSummaryFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let summary = await getAddressSummary(['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w']);
+    const summary = await getAddressSummary({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
     expect(summary).to.be.an('object');
     expect(spy.callCount).to.be.equal(1);
-    summary = await getAddressSummary({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
-    expect(summary).to.be.an('object');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw if arguments are not valid', async () => {

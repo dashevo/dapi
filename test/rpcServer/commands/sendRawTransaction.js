@@ -33,12 +33,9 @@ describe('sendRawTransaction', () => {
   it('Should return a string', async () => {
     const sendRawTransaction = sendRawTransactionFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let txid = await sendRawTransaction([validHexTransaction]);
+    const txid = await sendRawTransaction({ rawTransaction: validHexTransaction });
     expect(txid).to.be.a('string');
     expect(spy.callCount).to.be.equal(1);
-    txid = await sendRawTransaction({ rawTransaction: validHexTransaction });
-    expect(txid).to.be.a('string');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw if arguments are not valid', async () => {

@@ -31,12 +31,9 @@ describe('getAddressUnconfirmedBalance', () => {
   it('Should return a number', async () => {
     const getAddressUnconfirmedBalance = getAddressUnconfirmedBalanceFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
-    let summary = await getAddressUnconfirmedBalance(['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w']);
-    expect(summary).to.be.an('number');
+    const unconfirmedBalance = await getAddressUnconfirmedBalance({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
+    expect(unconfirmedBalance).to.be.an('number');
     expect(spy.callCount).to.be.equal(1);
-    summary = await getAddressUnconfirmedBalance({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
-    expect(summary).to.be.an('number');
-    expect(spy.callCount).to.be.equal(2);
   });
 
   it('Should throw if arguments are not valid', async () => {

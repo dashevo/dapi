@@ -31,27 +31,18 @@ describe('getUserDapSpace', () => {
   it('Should return blockchain user', async () => {
     const getUserDapSpace = getUserDapSpaceFactory(dashDriveFixture);
     expect(spy.callCount).to.be.equal(0);
-    let user = await getUserDapSpace({ username: 'alice', dapId: '123' });
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(1);
-    user = await getUserDapSpace({
+    const userSpace = await getUserDapSpace({
       userId: 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa',
       dapId: '123',
     });
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(2);
-    user = await getUserDapSpace(['123', 'alice']);
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(3);
-    user = await getUserDapSpace(['123', 'beef56cc3cff03a48d078fd7839c05ec16f12f1919ac366596bb5e025f78a2aa']);
-    expect(user).to.be.an('object');
-    expect(spy.callCount).to.be.equal(4);
+    expect(userSpace).to.be.an('object');
+    expect(spy.callCount).to.be.equal(1);
   });
 
   it('Should throw an error if arguments are not valid', async () => {
     const getUserDapSpace = getUserDapSpaceFactory(dashDriveFixture);
     expect(spy.callCount).to.be.equal(0);
-    await expect(getUserDapSpace({ username: 123 })).to.be.rejectedWith('should be string');
+    await expect(getUserDapSpace({ username: 123 })).to.be.rejectedWith('should have required property \'dapId\'');
     expect(spy.callCount).to.be.equal(0);
     await expect(getUserDapSpace({ userId: 123 })).to.be.rejected;
     expect(spy.callCount).to.be.equal(0);
