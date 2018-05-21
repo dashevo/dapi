@@ -14,6 +14,7 @@
     "@dashevo/dashcore-lib": "git+ssh://git@github.com/dashevo/bitcore-lib-dash-private.git#develop",
     "@dashevo/dashcore-p2p": "^1.1.6",
     "@dashevo/quorums": "git+ssh://git@github.com/dashevo/quorums-dash.git",
+    "ajv": "^6.4.0",
     "bitcoind-rpc-dash": "git+ssh://git@github.com/dashevo/bitcoind-rpc-dash-private.git#develop",
     "bloom-filter": "^0.2.0",
     "bluebird": "^3.4.6",
