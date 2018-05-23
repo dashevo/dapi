@@ -27,7 +27,7 @@
     "lodash": "^4.17.4",
     "node-cache": "^4.1.1",
     "object-hash": "^1.3.0",
-    "orbit-db": "^0.17.3",
+    "orbit-db": "git+ssh://git@github.com/dashevo/orbit-db.git#develop",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5",
     "zeromq": "^4.6.0"
