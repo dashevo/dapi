@@ -17,7 +17,7 @@ describe('getBlockHeaders', () => {
   });
 
   before(() => {
-    spy = sinon.spy(coreAPIFixture, 'getBlocks');
+    spy = sinon.spy(coreAPIFixture, 'getBlockHeaders');
   });
 
   beforeEach(() => {
