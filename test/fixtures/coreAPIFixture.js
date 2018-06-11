@@ -23,5 +23,4 @@ module.exports = {
   async sendRawIxTransaction(rawTransaction) { return 'txid'; },
   async generate(amount) { return new Array(amount); },
   async sendRawTransition(rawTransitionHeader) { return 'tsid'; },
-  async loadBloomFilter(filter) { return new Promise((resolve, reject) => { resolve(true); }); },
 };
