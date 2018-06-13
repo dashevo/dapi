@@ -20,6 +20,7 @@ module.exports = {
   async getUser(usernameOrUserId) { return {}; },
   async getUTXO(address) { return []; },
   async sendRawTransaction(rawTransaction) { return 'txid'; },
+  async sendRawIxTransaction(rawTransaction) { return 'txid'; },
   async generate(amount) { return new Array(amount); },
   async sendRawTransition(rawTransitionHeader) { return 'tsid'; },
 };
