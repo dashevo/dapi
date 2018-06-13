@@ -14,6 +14,7 @@
     "@dashevo/dashcore-lib": "git+ssh://git@github.com/dashevo/bitcore-lib-dash-private.git#develop",
     "@dashevo/dashcore-p2p": "^1.1.6",
     "@dashevo/quorums": "git+ssh://git@github.com/dashevo/quorums-dash.git",
+    "@dashevo/dapi-db": "~0.19.9",
     "ajv": "^6.4.0",
     "bitcoind-rpc-dash": "git+ssh://git@github.com/dashevo/bitcoind-rpc-dash-private.git#develop",
     "bloom-filter": "^0.2.0",
@@ -27,7 +28,6 @@
     "lodash": "^4.17.4",
     "node-cache": "^4.1.1",
     "object-hash": "^1.3.0",
-    "orbit-db": "git+ssh://git@github.com/dashevo/orbit-db.git#develop",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5",
     "zeromq": "^4.6.0"
