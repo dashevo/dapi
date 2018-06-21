@@ -4,7 +4,7 @@
   "description": "Dash Decentralized API (DAPI)",
   "scripts": {
     "start": "node index.js",
-    "test": "nyc --check-coverage --lines=65 --branches=11 --functions=48 mocha test/ --recursive",
+    "test": "nyc --check-coverage --lines=59 --branches=11 --functions=41 mocha test/ --recursive",
     "spvtest": "node test_integration/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
