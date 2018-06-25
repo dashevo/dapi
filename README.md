@@ -61,7 +61,7 @@ bitcore-node-dash start
 ## Payment API
 
 When started, DAPI will listen on the port 3000.  
-Many routes mimic Insight-API, therefore you might want to check the [Insight-API Documentation](https://github.com/dashevo/insight-api-dash)
+Many routes mimic Insight-API, therefore you might want to check the [Insight-API Documentation](https://github.com/dashevo/insight-api)
 
 ### Blocks
 ##### Blocks list
