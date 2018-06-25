@@ -1,8 +1,14 @@
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+
+chai.use(chaiAsPromised);
+const { expect } = chai;
+
 const assert = require('assert');
 const Logger = require('../lib/log/Logger');
 
 // TODO: Write unit tests
-xdescribe('Utils - Utils', () => {
+describe('Utils - Utils', () => {
   const logger = new Logger();
   const logger2 = new Logger('test.log');
   it('should be able to start a logger', () => {
@@ -10,32 +16,36 @@ xdescribe('Utils - Utils', () => {
     assert.equal(typeof logger, 'object'); // bogus placeholder
     assert.equal(typeof logger2, 'object'); // bogus placeholder
   });
-  it('should display log correctly', () => {
-    // fixme How to test stdout ?
-    const log = () => {
-      logger.log("Test d'un log");
 
-      logger.log('fatal', 'This is a specified fatal thing!');
-      logger.fatal('This is a fatal thing!');
+  // TODO: fixme How to test stdout ?
 
-      logger.log('error', 'This is an error (log/err)');
-      logger.error('This is also an error');
+  it('should not be able to start a logger with invalid level', () => {
+    expect(() => new Logger(options = { level: 'FAKE' })).to.throw('Logger: No log level matches FAKE');
+  });
 
-      logger.log('warn', 'This is a warning');
-      logger.warn('This is also a warning');
+  it('should not be able to start log one item', () => {
+    logger.info('dfsf');
+  });
 
-      logger.log('notice', 'This is a important simple information');
-      logger.notice('This is also a important simple information');
+  it('should not be able to start log many items', () => {
+    logger.info('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
+    logger.debug('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
+    logger.verbose('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
+    logger.warn('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
+    logger.debug('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
+    logger.fatal('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
+  });
 
-      logger.log('info', 'This is a simple information');
-      logger.info('This is also a simple information');
+  it('should not send log in file', () => {
+    logger2.info('dfsf');
+  });
 
-      logger.log('debug', 'This is a debug thing');
-      logger.debug('This is also a debug thing');
-
-      logger.log('verbose', 'This is a verbose useless thing');
-      logger.verbose('This is also a verbose useless thing');
-    };
-    assert.equal(typeof log, 'function'); // bogus placeholder
+  it('should not be able to send logs in file', () => {
+    logger2.info('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
+    logger2.debug('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
+    logger2.verbose('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
+    logger2.warn('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
+    logger2.debug('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
+    logger.fatal('dfsf', 1, true, [1, 'edsd'], '', 'jdfs');
   });
 });
