@@ -20,7 +20,7 @@ describe('Utils - Utils', () => {
   // TODO: fixme How to test stdout ?
 
   it('should not be able to start a logger with invalid level', () => {
-    expect(() => new Logger(options = { level: 'FAKE' })).to.throw('Logger: No log level matches FAKE');
+    expect(() => new Logger({ level: 'FAKE' })).to.throw('Logger: No log level matches FAKE');
   });
 
   it('should not be able to start log one item', () => {

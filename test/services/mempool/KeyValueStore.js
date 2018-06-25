@@ -11,7 +11,6 @@ describe('KeyValueStore', () => {
   it('should call someFunction()', () => {
     const spy = sinon.spy(KeyValueStore);
     const inst = new KeyValueStore(5001);
-    console.log(spy.calledOnce);
   });
 
   ['port', 22, true, 33333, -1, 65537].forEach((port) => {
@@ -38,7 +37,7 @@ describe('KeyValueStore', () => {
 
   it('error when change hasBeenInitialized by force', async () => {
     const ks = new KeyValueStore(5551);
-    ks.init(key = 'message');
+    ks.init('message');
     ks.hasBeenInitialized = true;
     expect(() => ks.getValue('no_value')).to.throw('Cannot read property \'get\' of undefined');
   });

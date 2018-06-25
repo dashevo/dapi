@@ -22,7 +22,6 @@ xdescribe('Insight - Integration', () => { // 5975
   describe('#getCurrentBlockHeight', () => {
     it('should return address', () => insight.getCurrentBlockHeight().then((blockHeight) => {
       expect(blockHeight).to.be.a('number');
-      console.log(blockHeight);
     }));
   });
 
@@ -30,7 +29,6 @@ xdescribe('Insight - Integration', () => { // 5975
     const txHash = '50622f66236671501c0e80f388d6cf1e81158de8526f4acc9db00adf3c524077';
     it('should return address', () => insight.getBestBlockHeight().then((blockHeight) => {
       expect(blockHeight).to.be.a('number');
-      console.log(blockHeight);
     }));
   });
 });
