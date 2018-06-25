@@ -249,8 +249,7 @@ describe('Insight', () => {
 
     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-      it('Should return error if Invalid address: Checksum mismatch',
-        () => expect(insight.getAddressTotalReceived(ad)).to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
+      it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getAddressTotalReceived(ad)).to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
     });
 
 
@@ -292,8 +291,8 @@ describe('Insight', () => {
 
     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-      it('Should return error if Invalid address: Checksum mismatch',
-        () => expect(insight.getAddressTotalSent(ad)).to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
+      it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getAddressTotalSent(ad))
+        .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
     });
 
 
@@ -335,8 +334,8 @@ describe('Insight', () => {
 
     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-      it('Should return error if Invalid address: Checksum mismatch',
-        () => expect(insight.getAddressUnconfirmedBalance(ad)).to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
+      it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getAddressUnconfirmedBalance(ad))
+        .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
     });
 
 
@@ -378,8 +377,8 @@ describe('Insight', () => {
 
     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-      it('Should return error if Invalid address: Checksum mismatch',
-        () => expect(insight.getAddressSummary(ad)).to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
+      it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getAddressSummary(ad))
+        .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
     });
 
 
@@ -420,8 +419,8 @@ describe('Insight', () => {
 
     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-      it('Should return error if Invalid address: Checksum mismatch',
-        () => expect(insight.getTransactionsByAddress(ad)).to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
+      it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getTransactionsByAddress(ad))
+        .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
     });
 
 
@@ -462,8 +461,8 @@ describe('Insight', () => {
 
     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-      it('Should return error if Invalid address: Checksum mismatch',
-        () => expect(insight.getBalance(ad)).to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
+      it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getBalance(ad))
+        .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
     });
 
 
@@ -504,8 +503,8 @@ describe('Insight', () => {
 
     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-      it('Should return error if Invalid address: Checksum mismatch',
-        () => expect(insight.getUTXO(ad)).to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
+      it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getUTXO(ad))
+        .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
     });
 
 
@@ -565,8 +564,8 @@ describe('Insight', () => {
     // and results for 42 will be set
     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-      it('Should return error if Invalid address: Checksum mismatch',
-        () => expect(insight.getHashFromHeight(ad)).to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
+      it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getHashFromHeight(ad))
+        .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
     });
 
     [23498217349279, false, 'fakjfndkjlanmfdas', '0x'].forEach((ad) => {
@@ -614,15 +613,9 @@ describe('Insight', () => {
         .withArgs(`${URI}/status?q=getInfo`)
         .returns(new Promise(resolve => resolve(testStatus.info.blocks)));
       requestStub
-        .withArgs(`${URI}/status?q=getDifficulty`).returns(
-          new Promise(resolve => resolve({ difficulty: testStatus.info.blocks.info.difficulty })),
-        );
+        .withArgs(`${URI}/status?q=getDifficulty`).returns(new Promise(resolve => resolve({ difficulty: testStatus.info.blocks.info.difficulty })));
       requestStub
-        .withArgs(`${URI}/status?q=getBestBlockHash`).returns(
-          new Promise(resolve => resolve(
-            { bestblockhash: testHashFromHeight.blockHash.blockHash },
-          )),
-        );
+        .withArgs(`${URI}/status?q=getBestBlockHash`).returns(new Promise(resolve => resolve({ bestblockhash: testHashFromHeight.blockHash.blockHash })));
       // TODO: https://dashpay.atlassian.net/browse/EV-941
       requestStub
         .withArgs(`${URI}/status?q=getLastBlockHash`)
@@ -709,8 +702,8 @@ describe('Insight', () => {
 
     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-      it('Should return error if Invalid address: Checksum mismatch',
-        () => expect(insight.estimateFee(ad)).to.be.rejectedWith('Expected type number, got null. Code:-3'));
+      it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.estimateFee(ad))
+        .to.be.rejectedWith('Expected type number, got null. Code:-3'));
     });
 
 
@@ -758,7 +751,8 @@ describe('Insight', () => {
     });
 
     [false, 'fakjfndkjlanmfdas'].forEach((ad) => {
-      it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getBlockHeaders(ad)).to.be.rejectedWith('Block not found. Code:-5'));
+      it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getBlockHeaders(ad))
+        .to.be.rejectedWith('Block not found. Code:-5'));
     });
 
     [2313123213123332134].forEach((ad) => {
