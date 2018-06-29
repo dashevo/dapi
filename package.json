@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "nyc --check-coverage --reporter=html --reporter=text --lines=77 --branches=49 --functions=71 mocha test/ --recursive",
-    "spvtest": "node test/integration/",
+    "test:integration": "node test/integration/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
