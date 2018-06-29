@@ -14,7 +14,7 @@ const testKey = 'cNfg1KdmEXySkwK5XyydmgoKLbMaCiRyqPEtXZPw1aq8XMd5U5GF';
 const updatePacket = new TransitionPacket()
   .addObject({ type: 'dapobjectbase', idx: 1, rev: 1 });
 const updateHeader = new TransitionHeader()
-  .setMerkleRoot(updatePacket.getMerkleRoot().toString('hex'))
+  .setHashSTPacket(updatePacket.getMerkleRoot().toString('hex'))
   .sign(new PrivateKey(testKey));
 
 const closeHeader = new TransitionHeader()
