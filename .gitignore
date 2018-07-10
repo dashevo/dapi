@@ -8,3 +8,4 @@ test/rpc
 /vmn/stack.log
 /vmn/stack-db.json
 /.nyc_output
+coverage/
