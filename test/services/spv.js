@@ -1,20 +1,22 @@
 const assert = require('assert');
-const { SpvService, getCorrectedHash, clearDisconnectedClientBloomFilters } =
-  require('../../lib/services/spv');
+const { clearDisconnectedClientBloomFilters } = require('../../lib/services/spv');
+const { getCorrectedHash } = require('../../lib/utils');
+
+// Todo: move to utils tests
+describe('getCorrectedHash', () => {
+  it('should return a corrected reversed hash object', () => {
+    const buffer =
+      Buffer.from([
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      ]);
+    const expected = '0101010101010101010101010101010101010101010101010101010101010100';
+    const actual = getCorrectedHash(buffer);
+    assert.equal(actual, expected);
+  });
+});
 
 describe('SPV', () => {
-  describe('getCorrectedHash', () => {
-    it('should return a corrected reversed hash object', () => {
-      const buffer =
-        Buffer.from([
-          0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        ]);
-      const expected = '0101010101010101010101010101010101010101010101010101010101010100';
-      const actual = getCorrectedHash(buffer);
-      assert.equal(actual, expected);
-    });
-  });
   describe('clearDisconnectedClientBloomFilters', () => {
     it('should return an empty array when the incoming clients array is empty', () => {
       const expected = [];
