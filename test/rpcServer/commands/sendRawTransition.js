@@ -4,21 +4,26 @@ const sinon = require('sinon');
 const sendRawTransitionFactory = require('../../../lib/rpcServer/commands/sendRawTransition');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 const dashDriveFixture = require('../../fixtures/dashDriveFixture');
-const { TransitionPacket, TransitionHeader } = require('@dashevo/dashcore-lib').StateTransition;
+const { Transaction } = require('@dashevo/dashcore-lib');
 const { PrivateKey } = require('@dashevo/dashcore-lib');
+const Schema = require('@dashevo/dash-schema');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
+const headerTransaction = new Transaction().setType(Transaction.TYPES.SUB_TX_TRANSITION);
+const packet = Schema.createPacket(objectsToUpdate);
+const packetHash = Schema.hash(packet);
+const rawHeader = headerTransaction.extraPayload.setHash
+
 const testKey = 'cNfg1KdmEXySkwK5XyydmgoKLbMaCiRyqPEtXZPw1aq8XMd5U5GF';
-const updatePacket = new TransitionPacket()
-  .addObject({ type: 'dapobjectbase', idx: 1, rev: 1 });
-const updateHeader = new TransitionHeader()
+const updatePacket = new Transaction();// .addObject({ type: 'dapobjectbase', idx: 1, rev: 1 });
+const updateHeader = new Transaction()
   .setHashSTPacket(updatePacket.getMerkleRoot().toString('hex'))
   .sign(new PrivateKey(testKey));
 
-const closeHeader = new TransitionHeader()
-  .setAction(TransitionHeader.CONSTANTS.ACTIONS.CLOSE_ACCOUNT)
+const closeHeader = new Transaction()
+  .setAction(Transaction.CONSTANTS.ACTIONS.CLOSE_ACCOUNT)
   .sign(new PrivateKey(testKey))
   .serialize();
 
@@ -63,13 +68,6 @@ describe('sendRawTransition', () => {
     const tsid = await sendRawTransition({ rawTransitionHeader: closeHeader });
     expect(tsid).to.be.a('string');
     expect(spy.callCount).to.be.equal(1);
-    // We are surpassing this test for now, since Andy still working on TransitionPacket format
-    // tsid = await sendRawTransition({
-    //   rawTransitionHeader: updateHeader.serialize(),
-    //   rawTransitionPacket: updatePacket.serialize().toString('hex'),
-    // });
-    // expect(tsid).to.be.a('string');
-    // expect(spy.callCount).to.be.equal(3);
   });
 
   it('Should throw if arguments are not valid', async () => {
