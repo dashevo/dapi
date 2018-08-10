@@ -1,23 +1,20 @@
 const assert = require('assert');
-const { spvService } = require('../../lib/services/corep2p');
-const { getCorrectedHash } = require('../../lib/utils');
-const { clearDisconnectedClientBloomFilters } = require('../../lib/services/corep2p/utils');
-
-// Todo: move to utils tests
-describe('getCorrectedHash', () => {
-  it('should return a corrected reversed hash object', () => {
-    const buffer =
-      Buffer.from([
-        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-      ]);
-    const expected = '0101010101010101010101010101010101010101010101010101010101010100';
-    const actual = getCorrectedHash(buffer);
-    assert.equal(actual, expected);
-  });
-});
+const { SpvService, getCorrectedHash, clearDisconnectedClientBloomFilters } =
+  require('../../lib/services/spv');
 
 describe('SPV', () => {
+  describe('getCorrectedHash', () => {
+    it('should return a corrected reversed hash object', () => {
+      const buffer =
+        Buffer.from([
+          0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        ]);
+      const expected = '0101010101010101010101010101010101010101010101010101010101010100';
+      const actual = getCorrectedHash(buffer);
+      assert.equal(actual, expected);
+    });
+  });
   describe('clearDisconnectedClientBloomFilters', () => {
     it('should return an empty array when the incoming clients array is empty', () => {
       const expected = [];
@@ -39,9 +36,9 @@ describe('SPV', () => {
       ];
       const expected = [client(currentTime)];
       const actual =
-      clearDisconnectedClientBloomFilters({
-        clients, currentTime, hasDisconnectedThresholdInMsec,
-      });
+        clearDisconnectedClientBloomFilters({
+          clients, currentTime, hasDisconnectedThresholdInMsec,
+        });
       // TODO: How do you get assert to compare nested arrays correctly?
       assert.deepEqual(actual[0].filter, expected[0].filter);
     });
