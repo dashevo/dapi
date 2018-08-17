@@ -33,7 +33,7 @@ describe('findDataForBlock', () => {
     it('should return a promise', async () => {
       const findDataForBlock = getSpvDataFactory(spvServiceFixture);
       expect(spy.callCount).to.be.equal(0);
-      const res = await findDataForBlock({ todo, todo });
+      const res = await findDataForBlock({ filter: BloomFilter.create(1, 0.1, 1, 1), blockHash: '' });
       expect(res).to.be.an('object');
       expect(spy.callCount).to.be.equal(1);
     });
