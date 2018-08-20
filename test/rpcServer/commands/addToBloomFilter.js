@@ -33,9 +33,10 @@ describe('addToBloomFilter', () => {
     it('promise should resolve to true', async () => {
       const addToBloomFilter = addToBloomFilterFactory(spvServiceFixture);
       expect(spy.callCount).to.be.equal(0);
-      const res = await addToBloomFilter(
-        { originalFilter: BloomFilter.create(10, 0.01), element: {} },
-      );
+      const res = await addToBloomFilter({
+        originalFilter: BloomFilter.create(10, 0.01),
+        element: {},
+      });
       expect(res).to.be.equal(true);
       expect(spy.callCount).to.be.equal(1);
     });
@@ -47,9 +48,8 @@ describe('addToBloomFilter', () => {
       expect(spy.callCount).to.be.equal(0);
       await expect(addToBloomFilter({})).to.be.rejectedWith('should have required property \'originalFilter\'');
       expect(spy.callCount).to.be.equal(0);
-      await expect(addToBloomFilter({ originalFilter: {} })).to.be.rejectedWith(
-        'should have required property \'element\'',
-      );
+      const expectedError = 'should have required property \'element\'';
+      await expect(addToBloomFilter({ originalFilter: {} })).to.be.rejectedWith(expectedError);
       expect(spy.callCount).to.be.equal(0);
     });
   });
