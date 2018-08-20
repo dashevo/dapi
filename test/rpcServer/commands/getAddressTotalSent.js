@@ -1,9 +1,9 @@
 const chai = require('chai');
 const sinon = require('sinon');
+const chaiAsPromised = require('chai-as-promised');
 const getAddressTotalSentFactory = require('../../../lib/rpcServer/commands/getAddressTotalSent');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
-const chaiAsPromised = require('chai-as-promised');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
