@@ -1,11 +1,11 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
+const { TransitionPacket, TransitionHeader } = require('@dashevo/dashcore-lib').StateTransition;
+const { PrivateKey } = require('@dashevo/dashcore-lib');
 const sendRawTransitionFactory = require('../../../lib/rpcServer/commands/sendRawTransition');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 const dashDriveFixture = require('../../fixtures/dashDriveFixture');
-const { TransitionPacket, TransitionHeader } = require('@dashevo/dashcore-lib').StateTransition;
-const { PrivateKey } = require('@dashevo/dashcore-lib');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
