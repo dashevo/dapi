@@ -1,8 +1,8 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const sinon = require('sinon');
 const KeyValueStore = require('../../../lib/services/mempool/KeyValueStore');
 
-const sinon = require('sinon');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;

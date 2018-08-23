@@ -1,8 +1,8 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
-const clearBloomFilterFactory = require('../../../lib/rpcServer/commands/clearBloomFilter');
 const BloomFilter = require('bloom-filter');
+const clearBloomFilterFactory = require('../../../lib/rpcServer/commands/clearBloomFilter');
 const spvServiceFixture = require('../../fixtures/spvServiceFixture');
 
 chai.use(chaiAsPromised);
