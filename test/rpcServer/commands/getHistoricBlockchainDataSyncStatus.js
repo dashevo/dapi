@@ -1,8 +1,7 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
-const getHistoricBlockchainDataSyncStatusFactory =
-  require('../../../lib/rpcServer/commands/getHistoricBlockchainDataSyncStatus.js');
+const getHBDSSFactory = require('../../../lib/rpcServer/commands/getHistoricBlockchainDataSyncStatus.js');
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
 chai.use(chaiAsPromised);
@@ -12,8 +11,7 @@ let spy;
 describe('getBestBlockHeight', () => {
   describe('#factory', () => {
     it('should return a function', () => {
-      const getHistoricBlockchainDataSyncStatus =
-        getHistoricBlockchainDataSyncStatusFactory(coreAPIFixture);
+      const getHistoricBlockchainDataSyncStatus = getHBDSSFactory(coreAPIFixture);
       expect(getHistoricBlockchainDataSyncStatus).to.be.a('function');
     });
   });
@@ -31,8 +29,7 @@ describe('getBestBlockHeight', () => {
   });
 
   it('Should return an object', async () => {
-    const getHistoricBlockchainDataSyncStatus =
-      getHistoricBlockchainDataSyncStatusFactory(coreAPIFixture);
+    const getHistoricBlockchainDataSyncStatus = getHBDSSFactory(coreAPIFixture);
     expect(spy.callCount).to.be.equal(0);
     const bestBlockHeight = await getHistoricBlockchainDataSyncStatus(['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w']);
     expect(bestBlockHeight).to.be.an('object');
