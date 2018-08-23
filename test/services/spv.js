@@ -86,12 +86,12 @@ describe('SPV', () => {
     });
     it('should SpvService has getData function', () => {
       const spvService = new SpvService();
-      const res = spvService.getData;
+      const res = spvService.getSpvData;
       expect(res).to.be.a('function');
     });
     it('should not SpvService call getData function without filter', () => {
       const spvService = new SpvService();
-      expect(() => spvService.getData()).to.throw('Cannot set property \'lastSeen\' of undefined');
+      expect(() => spvService.getSpvData()).to.throw('Cannot set property \'lastSeen\' of undefined');
     });
     it('should SpvService has getBlockHashes function', () => {
       const spvService = new SpvService();
