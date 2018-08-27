@@ -20,136 +20,21 @@
   </a>
 </div>
 
-## Developer Notes
-//QDEVTEMP comments refers to temporary code in order to simulate a _testnet_ of dapi nodes to makes testing easier.
-
 ## Table of Content
 - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Install DAPI](#install-dapi)
-- [Quorum API](#quorum-api)
-- [Payment API](#payment-api)
-    - [Blocks](#blocks)
-    - [Transactions](#transactions)
-    - [Addresses](#addresses)
-    - [Auth](#auth)
-    - [Utils](#utils)
-- [License](https://github.com/dashevo/dapi/blob/master/LICENSE)
+    - [Installation](#installation)
 
 ## Getting Started
 
-###  Prerequisites
-##### IPFS Deamon
+### Installation
 
-Install IPFS binaries from https://ipfs.io/docs/install/  
-In a terminal window execute $ _ipfs daemon --enable-pubsub-experiment_  
+DAPI requires [Insight-API](https://github.com/dashevo/insight-api) and the latest version of [Dashcore](https://github.com/dashevo/dash/tree/evo) with evolution features.
 
-**alternatively follow docker installation at https://github.com/dashevo/dashdrive/blob/master/docs/dev-setup.md**  
+1. **Install core.** You can use the [docker image](103738324493.dkr.ecr.us-west-2.amazonaws.com/dashevo/dashcore:evo) or clone code from [the repository](https://github.com/dashevo/dash/tree/evo), switch to the `evo` branch, and build it by yourself.
+2. **Configure core.** DAPI needs Dashcore's ZMQ interface to be exposed and all indexes enabled. You can find the example config for Dashcore [here](/doc/dependencies_configs/dash.conf). To start dashcore process with this config, copy it somewhere to your system, and then run `./src/dashd -conf=/path/to/your/config`.
+3. **Install Insight-API.** You can use [docker image]() or clone the [repo]().
+4. **Configure Insight-API.**
 
-### Install DAPI
+### Configuration
 
-```bashl
-npm install dapi@latest
-bitcore-node-dash start
-```
-
-## Quorum API
-```
-  /quorum
-```
-
-## Payment API
-
-When started, DAPI will listen on the port 3000.  
-Many routes mimic Insight-API, therefore you might want to check the [Insight-API Documentation](https://github.com/dashevo/insight-api)
-
-### Blocks
-##### Blocks list
-```
-  /blocks
-```
-##### Block
-```
-  /block/:hash
-```
-##### Block Index
-```
-  /block-index/:height
-```
-##### Raw Block
-```
-  /rawblock/:blockHash
-```
-
-### Transactions
-##### Transaction
-```
-  /tx/:txid
-```
-##### Send transaction
-```
-  /tx/send
-```
-##### Send Instant Transaction
-```
-  /tx/sendix
-```
-
-### Addresses
-##### Get Address
-```
-  /addr/:addr
-```
-##### Get Address property 
-```
-  /addr/:addr/balance
-  /addr/:addr/totalReceived
-  /addr/:addr/totalSent
-  /addr/:addr/unconfirmedBalance
-  /addr/:addr/utxo
-```
-##### Get Addresses property 
-:addrs are comma separated
-```
-  /addrs/:addrs/utxo
-  /addrs/:addrs/tx
-```
-
-### Auth
-##### Challenge
-```
-  /auth/challenge/:identifier
-```
-### Utils
-##### Estimate fee
-```
-  /utils/estimatefee
-```
-##### Currency
-```
-  /currency
-```
-##### Status
-```
-  /status
-```
-##### Sync
-```
-  /sync
-```
-##### Peer
-```
-  /peer
-```
-##### Version
-```
-  /version
-```
-##### Masternodes List
-```
-  /masternodes/list
-```
-
-
-
-
+### Running
