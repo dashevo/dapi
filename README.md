@@ -33,9 +33,9 @@
 
 DAPI requires [Insight-API](https://github.com/dashevo/insight-api) and the latest version of [Dashcore](https://github.com/dashevo/dash/tree/evo) with evolution features.
 
-1. **Install core.** You can use the [docker image](103738324493.dkr.ecr.us-west-2.amazonaws.com/dashevo/dashcore:evo) or clone code from [the repository](https://github.com/dashevo/dash/tree/evo), switch to the `evo` branch, and build it by yourself.
+1. **Install core.** You can use the docker image (`103738324493.dkr.ecr.us-west-2.amazonaws.com/dashevo/dashcore:evo`) or clone code from [the repository](https://github.com/dashevo/dash/tree/evo), switch to the `evo` branch, and build it by yourself.
 2. **Configure core.** DAPI needs Dashcore's ZMQ interface to be exposed and all indexes enabled. You can find the example config for Dashcore [here](/doc/dependencies_configs/dash.conf). To start dashcore process with this config, copy it somewhere to your system, and then run `./src/dashd -conf=/path/to/your/config`.
-3. **Install Insight-API.** You can use [docker image](103738324493.dkr.ecr.us-west-2.amazonaws.com/dashevo/evoinsight:latest) or install it manually.
+3. **Install Insight-API.** You can use docker image (`103738324493.dkr.ecr.us-west-2.amazonaws.com/dashevo/evoinsight:latest`) or install it manually.
     1. To install it manually, clone the [dashcore-node repo](https://github.com/dashevo/dashcore-node). `cd` to that repo, run `npm i`
     2. Install Insight-API service. Run `./bin/dashcore-node install https://github.com/dashevo/insight-api/` from the repo directory
     3. Copy [config file](/doc/dependencies_configs/dashcore-node.json) to the repo directory
