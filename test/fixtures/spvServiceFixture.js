@@ -3,4 +3,7 @@ module.exports = {
   async addToBloomFilter(filter) { return new Promise((resolve, reject) => { resolve(true); }); },
   async clearBloomFilter(filter) { return new Promise((resolve, reject) => { resolve(true); }); },
   async getSpvData(filter) { return { transactions: [], merkleblocks: [] }; },
+  async findDataForBlock(filter, blockHash) {
+    return new Promise((resolve, reject) => { resolve({}); });
+  },
 };

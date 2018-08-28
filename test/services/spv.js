@@ -36,7 +36,7 @@ describe('SPV', () => {
     });
     it('should not SpvService call initListeners function without filter', () => {
       const spvService = new SpvService();
-      expect(() => spvService.initListeners()).to.throw('Cannot set property \'lastSeen\' of undefined');
+      expect(() => spvService.initListeners()).to.throw('Object argument required.');
     });
     it('should SpvService has hasPeerInClients function', () => {
       const spvService = new SpvService();
@@ -45,7 +45,7 @@ describe('SPV', () => {
     });
     it('should not SpvService call hasPeerInClients function without filter', () => {
       const spvService = new SpvService();
-      expect(() => spvService.hasPeerInClients()).to.throw('Cannot set property \'lastSeen\' of undefined');
+      expect(() => spvService.hasPeerInClients()).to.throw('Object argument required.');
     });
     it('should SpvService has getPeerFromClients function', () => {
       const spvService = new SpvService();
@@ -54,7 +54,7 @@ describe('SPV', () => {
     });
     it('should not SpvService call getPeerFromClients function without filter', () => {
       const spvService = new SpvService();
-      expect(() => spvService.getPeerFromClients()).to.throw('Cannot set property \'lastSeen\' of undefined');
+      expect(() => spvService.getPeerFromClients()).to.throw('Object argument required.');
     });
     it('should SpvService has loadBloomFilter function', () => {
       const spvService = new SpvService();
@@ -73,7 +73,7 @@ describe('SPV', () => {
     });
     it('should not SpvService call clearBoomFilter function without filter', () => {
       const spvService = new SpvService();
-      expect(() => spvService.clearBoomFilter()).to.throw('Cannot set property \'lastSeen\' of undefined');
+      expect(() => spvService.clearBoomFilter()).to.throw('Object argument required.');
     });
     it('should SpvService has addToBloomFilter function', () => {
       const spvService = new SpvService();
@@ -93,23 +93,14 @@ describe('SPV', () => {
       const spvService = new SpvService();
       expect(() => spvService.getSpvData()).to.throw('Cannot set property \'lastSeen\' of undefined');
     });
-    it('should SpvService has getBlockHashes function', () => {
+    it('should SpvService has findDataForBlock function', () => {
       const spvService = new SpvService();
-      const res = spvService.getBlockHashes;
+      const res = spvService.findDataForBlock;
       expect(res).to.be.a('function');
     });
-    it('should not SpvService call getBlockHashes function without filter', () => {
+    it('should not SpvService call findDataForBlock function without filter', () => {
       const spvService = new SpvService();
-      expect(() => spvService.getBlockHashes()).to.throw('Cannot set property \'lastSeen\' of undefined');
-    });
-    it('should SpvService has getMerkleBlocks function', () => {
-      const spvService = new SpvService();
-      const res = spvService.getMerkleBlocks;
-      expect(res).to.be.a('function');
-    });
-    it('should not SpvService call getMerkleBlocks function without filter', () => {
-      const spvService = new SpvService();
-      expect(() => spvService.getMerkleBlocks()).to.throw('Cannot set property \'lastSeen\' of undefined');
+      expect(() => spvService.findDataForBlock()).to.throw('Cannot set property \'lastSeen\' of undefined');
     });
   });
   describe('getCorrectedHash', () => {
