@@ -60,4 +60,4 @@ Send following json to your DAPI instance:
 
 ### Available RPCs
 
-All available RPC commands located [here](/lib/rpcServer/commands). 
+All available RPC commands can be found [here](/lib/rpcServer/commands). 
