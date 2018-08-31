@@ -52,11 +52,12 @@ DAPI is configured via environment variables. So, in order to change the DAPI po
 
 ### Making basic requests
 
-DAPI uses JSON-RPC 2.0 as the main interface. If you want to confirm that DAPI is functioning and synced, you can request the best block height. 
+DAPI uses [JSON-RPC 2.0](https://www.jsonrpc.org/specification) as the main interface. If you want to confirm that DAPI is functioning and synced, you can request the best block height. 
 Send the following json to your DAPI instance: 
 ```json
-{"jsonrpc": "2.0","method": "getBestBlockHeight"}
+{"jsonrpc": "2.0","method": "getBestBlockHeight", "id": 1}
 ```
+Note that you always need to specify an id, otherwise the server will respond you with an empty body, as mentioned in the [spec](https://www.jsonrpc.org/specification#notification). 
 
 ### Available RPCs
 
