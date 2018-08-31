@@ -65,43 +65,43 @@ All available RPC commands can be found [here](/lib/rpcServer/commands).
 
 ### Table of Contents
 
-[addToBloomFilter](#addToBloomFilter)
-[clearBloomFilter]
-[estimateFee]
-[findDataForBlock]
-[Generate]
-[getAddressSummary]
-[getAddressTotalReceived]
-[getAddressTotalSent]
-[getAddressUnconfirmedBalance]
-[getAuthChallenge]
-[getBalance]
-[getBestBlockHeight]
-[getBlockHash]
-[getBlockHeaders]
-[getBlocks]
-[getCurrency]
-[getDapContract]
-[getHistoricBlockchainDataSyncStatus]
-[getMNList]
-[getMnListDiff]
-[getMNUpdateList]
-[getPeerDataSyncStatus]
-[getRawBlock]
-[getSpvData]
-[getStatus]
-[getTransactionById]
-[getTransactionsByAddress]
-[getUser]
-[getUserDapContext]
-[getUserDapSpace]
-[getUTXO]
-[getVersion]
-[loadBloomFilter]
-[searchDapContracts]
-[searchUsers]
-[sendRawTransaction]
-[sendRawTransition]
+- [addToBloomFilter](#addToBloomFilter)
+- [clearBloomFilter](#clearBloomFilter)
+- [estimateFee](#estimateFee)
+- [findDataForBlock](#findDataForBlock)
+- [generate](#generate)
+- [getAddressSummary](#getAddressSummary)
+- [getAddressTotalReceived](#getAddressTotalReceived)
+- [getAddressTotalSent](#getAddressTotalSent)
+- [getAddressUnconfirmedBalance](#getAddressUnconfirmedBalance)
+- [getAuthChallenge](#getAuthChallenge)
+- [getBalance](#getBalance)
+- [getBestBlockHeight](#getBestBlockHeight)
+- [getBlockHash](#getBlockHash)
+- [getBlockHeaders](#getBlockHeaders)
+- [getBlocks](#getBlocks)
+- [getCurrency](#getCurrency)
+- [getDapContract](#getDapContract)
+- [getHistoricBlockchainDataSyncStatus](#getHistoricBlockchainDataSyncStatus)
+- [getMNList](#getMNList)
+- [getMnListDiff](#getMnListDiff)
+- [getMNUpdateList](#getMNUpdateList)
+- [getPeerDataSyncStatus](#getPeerDataSyncStatus)
+- [getRawBlock](#getRawBlock)
+- [getSpvData](#getSpvData)
+- [getStatus](#getStatus)
+- [getTransactionById](#getTransactionById)
+- [getTransactionsByAddress](#getTransactionsByAddress)
+- [getUser](#getUser)
+- [getUserDapContext](#getUserDapContext)
+- [getUserDapSpace](#getUserDapSpace)
+- [getUTXO](#getUTXO)
+- [getVersion](#getVersion)
+- [loadBloomFilter](#loadBloomFilter)
+- [searchDapContracts](#searchDapContracs)
+- [searchUsers](#searchUsers)
+- [sendRawTransaction](#sendRawTransaction)
+- [sendRawTransition](#sendRawTransition)
 
 ### addToBloomFilter
 
@@ -118,6 +118,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### clearBloomFilter
@@ -137,6 +138,7 @@ clears bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### estimateFee
 
 Adds something to bloom filter
@@ -152,6 +154,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### findDataForBlock
@@ -171,6 +174,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### generate
 
 Adds something to bloom filter
@@ -188,22 +192,6 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
-### getAddressSummary
-
-Adds something to bloom filter
-
-##### Params
-
-| name    | type   | description                            |
-|---------|--------|----------------------------------------|
-| packet  | string | ST Packet object serialized using CBOR |
-
-##### Response
-
-| name    | type   | description                            |
-|---------|--------|----------------------------------------|
-| packet  | string | ST Packet object serialized using CBOR |
-
 
 ### getAddressSummary
 
@@ -220,6 +208,25 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getAddressSummary
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getAddressTotalReceived
@@ -239,6 +246,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getAddressTotalSent
 
 Adds something to bloom filter
@@ -254,6 +262,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getAddressUnconfirmedBalance
@@ -273,6 +282,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getAuthChallenge
 
 Adds something to bloom filter
@@ -288,6 +298,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getBalance
@@ -307,6 +318,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getBestBlockHeight
 
 Adds something to bloom filter
@@ -322,6 +334,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getBlockHash
@@ -341,6 +354,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getBlockHeaders
 
 Adds something to bloom filter
@@ -356,6 +370,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getBlocks
@@ -375,6 +390,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getCurrency
 
 Adds something to bloom filter
@@ -390,6 +406,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getDapContract
@@ -409,6 +426,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getHistoricBlockchainDataSyncStatus
 
 Adds something to bloom filter
@@ -424,6 +442,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getMNList
@@ -443,6 +462,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getMnListDiff
 
 Adds something to bloom filter
@@ -458,6 +478,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getMNUpdateList
@@ -477,6 +498,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getPeerDataSyncStatus
 
 Adds something to bloom filter
@@ -492,6 +514,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getRawBlock
@@ -511,6 +534,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getSpvData
 
 Adds something to bloom filter
@@ -526,6 +550,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getStatus
@@ -545,6 +570,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getTransactionById
 
 Adds something to bloom filter
@@ -560,6 +586,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getTransactionsByAddress
@@ -579,6 +606,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getUser
 
 Adds something to bloom filter
@@ -594,6 +622,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getUserDapContext
@@ -613,6 +642,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getUserDapSpace
 
 Adds something to bloom filter
@@ -628,6 +658,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### getUTXO
@@ -647,6 +678,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### getVersion
 
 Adds something to bloom filter
@@ -662,6 +694,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### loadBloomFilter
@@ -681,6 +714,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### searchDapContracts
 
 Adds something to bloom filter
@@ -696,6 +730,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### searchUsers
@@ -715,6 +750,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### sendRawIxTransaction
 
 Adds something to bloom filter
@@ -732,6 +768,7 @@ Adds something to bloom filter
 | packet  | string | ST Packet object serialized using CBOR |
 
 
+
 ### sendRawTransaction
 
 Adds something to bloom filter
@@ -747,6 +784,7 @@ Adds something to bloom filter
 | name    | type   | description                            |
 |---------|--------|----------------------------------------|
 | packet  | string | ST Packet object serialized using CBOR |
+
 
 
 ### sendRawTransition
