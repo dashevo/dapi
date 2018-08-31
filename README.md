@@ -26,6 +26,7 @@
     - [Running](#running)
     - [Configuration](#configuration)
     - [Making requests](#making-basic-requests)
+- [API Reference](#api-reference)
 
 ## Getting Started
 
@@ -39,7 +40,7 @@ DAPI requires [Insight-API](https://github.com/dashevo/insight-api) and the late
     1. To install it manually, clone the [dashcore-node repo](https://github.com/dashevo/dashcore-node). `cd` to that repo, run `npm i`
     2. Install Insight-API service. Run `./bin/dashcore-node install https://github.com/dashevo/insight-api/` from the repo directory
     3. Copy [config file](/doc/dependencies_configs/dashcore-node.json) to the repo directory
-    4. Run `./bin/dashcore-node start`  
+    4. Run `./bin/dashcore-node start`
 4. Clone this repo, switch to `develop`, run `npm i`
 
 ### Running
@@ -59,6 +60,753 @@ Send the following json to your DAPI instance:
 ```
 Note that you always need to specify an id, otherwise the server will respond you with an empty body, as mentioned in the [spec](https://www.jsonrpc.org/specification#notification). 
 
-### Available RPCs
+## API Reference
 
-All available RPC commands can be found [here](/lib/rpcServer/commands). 
+All available RPC commands can be found [here](/lib/rpcServer/commands).
+
+### Table of Contents
+
+- [addToBloomFilter](#addToBloomFilter)
+- [clearBloomFilter](#clearBloomFilter)
+- [estimateFee](#estimateFee)
+- [findDataForBlock](#findDataForBlock)
+- [generate](#generate)
+- [getAddressSummary](#getAddressSummary)
+- [getAddressTotalReceived](#getAddressTotalReceived)
+- [getAddressTotalSent](#getAddressTotalSent)
+- [getAddressUnconfirmedBalance](#getAddressUnconfirmedBalance)
+- [getAuthChallenge](#getAuthChallenge)
+- [getBalance](#getBalance)
+- [getBestBlockHeight](#getBestBlockHeight)
+- [getBlockHash](#getBlockHash)
+- [getBlockHeaders](#getBlockHeaders)
+- [getBlocks](#getBlocks)
+- [getCurrency](#getCurrency)
+- [getDapContract](#getDapContract)
+- [getHistoricBlockchainDataSyncStatus](#getHistoricBlockchainDataSyncStatus)
+- [getMNList](#getMNList)
+- [getMnListDiff](#getMnListDiff)
+- [getMNUpdateList](#getMNUpdateList)
+- [getPeerDataSyncStatus](#getPeerDataSyncStatus)
+- [getRawBlock](#getRawBlock)
+- [getSpvData](#getSpvData)
+- [getStatus](#getStatus)
+- [getTransactionById](#getTransactionById)
+- [getTransactionsByAddress](#getTransactionsByAddress)
+- [getUser](#getUser)
+- [getUserDapContext](#getUserDapContext)
+- [getUserDapSpace](#getUserDapSpace)
+- [getUTXO](#getUTXO)
+- [getVersion](#getVersion)
+- [loadBloomFilter](#loadBloomFilter)
+- [searchDapContracts](#searchDapContracs)
+- [searchUsers](#searchUsers)
+- [sendRawTransaction](#sendRawTransaction)
+- [sendRawTransition](#sendRawTransition)
+
+### addToBloomFilter
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### clearBloomFilter
+
+clears bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### estimateFee
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### findDataForBlock
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### generate
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getAddressSummary
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getAddressSummary
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getAddressTotalReceived
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getAddressTotalSent
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getAddressUnconfirmedBalance
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getAuthChallenge
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getBalance
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getBestBlockHeight
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getBlockHash
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getBlockHeaders
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getBlocks
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getCurrency
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getDapContract
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getHistoricBlockchainDataSyncStatus
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getMNList
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getMnListDiff
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getMNUpdateList
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getPeerDataSyncStatus
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getRawBlock
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getSpvData
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getStatus
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getTransactionById
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getTransactionsByAddress
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getUser
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getUserDapContext
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getUserDapSpace
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getUTXO
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### getVersion
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### loadBloomFilter
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### searchDapContracts
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### searchUsers
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### sendRawIxTransaction
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### sendRawTransaction
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+### sendRawTransition
+
+Adds something to bloom filter
+
+##### Params
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+##### Response
+
+| name    | type   | description                            |
+|---------|--------|----------------------------------------|
+| packet  | string | ST Packet object serialized using CBOR |
+
+
+
+
+
+
+
