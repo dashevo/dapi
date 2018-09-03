@@ -1,85 +1,34 @@
 const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const sinon = require('sinon');
-const sendRawTransitionFactory = require('../../../lib/rpcServer/commands/sendRawTransition');
-const coreAPIFixture = require('../../fixtures/coreAPIFixture');
-const dashDriveFixture = require('../../fixtures/dashDriveFixture');
-const { Transaction } = require('@dashevo/dashcore-lib');
-const { PrivateKey } = require('@dashevo/dashcore-lib');
 const Schema = require('@dashevo/dash-schema');
+const { PrivateKey, Transaction } = require('@dashevo/dashcore-lib');
 
-chai.use(chaiAsPromised);
 const { expect } = chai;
 
-const headerTransaction = new Transaction().setType(Transaction.TYPES.SUB_TX_TRANSITION);
-const packet = Schema.createPacket(objectsToUpdate);
-const packetHash = Schema.hash(packet);
-const rawHeader = headerTransaction.extraPayload.setHash
-
-const testKey = 'cNfg1KdmEXySkwK5XyydmgoKLbMaCiRyqPEtXZPw1aq8XMd5U5GF';
-const updatePacket = new Transaction();// .addObject({ type: 'dapobjectbase', idx: 1, rev: 1 });
-const updateHeader = new Transaction()
-  .setHashSTPacket(updatePacket.getMerkleRoot().toString('hex'))
-  .sign(new PrivateKey(testKey));
-
-const closeHeader = new Transaction()
-  .setAction(Transaction.CONSTANTS.ACTIONS.CLOSE_ACCOUNT)
-  .sign(new PrivateKey(testKey))
-  .serialize();
-
-let spy;
-let stub;
-let driveSpy;
-
-const validCloseTransitionHeader = '00000100038096980000000000fece053ccfee6b0e96083af22882ab3a5d420eb033c6adce5f9d70cca7258d3e0000000000000000000000000000000000000000000000000000000000000000411fcc335a9f4e07354662839d65d426a972c27c982ffc9d9c2ddc33f32332dd537e43b55785d07a3eba9431ccd83af7b080c8f725a99f45e06edfe01f7c70b6bcaf00';
-const validUpdateTransitionHeader = '00000100018096980000000000fece053ccfee6b0e96083af22882ab3a5d420eb033c6adce5f9d70cca7258d3e0000000000000000000000000000000000000000000000000000000000000000fece053ccfee6b0e96083af22882ab3a5d420eb033c6adce5f9d70cca7258d3e411f1f582cd27c6b03bf460a05bb8903de6be2bbb07c07bf64f1e53821716793d0ad5fe3c236b3c8f8c8e76cbb5dda3ed6430121ffac866b44c4d776ac82fce09e5900';
+const { createStateTransition } = require('../../../lib/rpcServer/commands/sendRawTransition');
 
 describe('sendRawTransition', () => {
-  describe('#factory', () => {
-    it('should return a function', () => {
-      const sendRawTransition = sendRawTransitionFactory(coreAPIFixture, dashDriveFixture);
-      expect(sendRawTransition).to.be.a('function');
+  describe('#createStateTransition', () => {
+    it('should throw an error when no stateTransitionDataPacket given as an argument');
+    it('should throw an error when the hash of the data packet does not match the hash in header');
+    it('should return a stateTransition', () => {
+      const rawTransitionHeader = '03000c00000000000000ac01003c0a168a4d512742516a80a94293ad86ab2cb547415e8b96719a89f91048dfd03c0a168a4d512742516a80a94293ad86ab2cb547415e8b96719a89f91048dfd0e8030000000000003a0a168a4d512742516a80a94293ad86ab2cb547415e8b96719a89f91048dfa0411f3ae683b0a3ac3c3342ab30e646df344e8c3648902b48c5cb5f29c17f15a43ad93943b49c1f83a06321c6c434ae1c73d22ae83da3d39b9c5ce98a7947f5deab90';
+      const headerTransaction = new Transaction(rawTransitionHeader);
+      const packet = Schema.create.tspacket();
+      const rawTransitionDataPacket = packet;
+      // eslint-disable-next-line no-underscore-dangle
+      const packetHash = Schema.hash.tspacket(packet);
+      headerTransaction.extraPayload.setHashSTPacket(packetHash);
+      const privateKey = new PrivateKey();
+      headerTransaction.extraPayload.sign(privateKey);
+
+      const expected = {
+        headerTransaction,
+        packet,
+      };
+
+      const actual =
+        createStateTransition({ rawTransitionHeader, rawTransitionDataPacket });
+      expect(actual).to.be.deepEqual(expected);
     });
-  });
-
-  before(() => {
-    spy = sinon.spy(coreAPIFixture, 'sendRawTransition');
-    driveSpy = sinon.spy(dashDriveFixture, 'pinPacket');
-    stub = sinon.stub(coreAPIFixture, 'getUser').returns({
-      // This is valid pubkey id for transition headers from above.
-      pubkeyid: '9169981bcf104de7f8617e95cd9205ed85563990',
-    });
-  });
-
-  beforeEach(() => {
-    spy.resetHistory();
-    driveSpy.resetHistory();
-  });
-
-  after(async () => {
-    spy.restore();
-    stub.restore();
-    driveSpy.restore();
-  });
-
-  it('Should return a string', async () => {
-    const sendRawTransition = sendRawTransitionFactory(coreAPIFixture, dashDriveFixture);
-    expect(spy.callCount).to.be.equal(0);
-    const tsid = await sendRawTransition({ rawTransitionHeader: closeHeader });
-    expect(tsid).to.be.a('string');
-    expect(spy.callCount).to.be.equal(1);
-  });
-
-  it('Should throw if arguments are not valid', async () => {
-    const sendRawTransition = sendRawTransitionFactory(coreAPIFixture, dashDriveFixture);
-    expect(spy.callCount).to.be.equal(0);
-    await expect(sendRawTransition([])).to.be.rejected;
-    expect(spy.callCount).to.be.equal(0);
-    await expect(sendRawTransition({})).to.be.rejectedWith('should have required property \'rawTransitionHeader\'');
-    expect(spy.callCount).to.be.equal(0);
-    await expect(sendRawTransition({ rawTransitionHeader: 1 })).to.be.rejectedWith('rawTransitionHeader should be string');
-    expect(spy.callCount).to.be.equal(0);
-    await expect(sendRawTransition({ rawTransitionHeader: 'thisisnotvalidhex' })).to.be.rejectedWith('rawTransitionHeader should match pattern "^(0x|0X)?[a-fA-F0-9]+$"');
-    expect(spy.callCount).to.be.equal(0);
   });
 });
