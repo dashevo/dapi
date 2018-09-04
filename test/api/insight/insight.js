@@ -6,8 +6,8 @@ const request = require('request-promise-native');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-const insight = require('../../lib/api/insight');
-const config = require('../../lib/config/index');
+const insight = require('../../../lib/api/insight/index');
+const config = require('../../../lib/config/index');
 
 const URI = config.insightUri;
 

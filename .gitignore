@@ -9,4 +9,4 @@ test/rpc
 /vmn/stack-db.json
 /.nyc_output
 coverage/
-/dapidb/default/keystore/default
+dapidb/

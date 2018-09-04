@@ -1,24 +1,24 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
+const getSpvDataFactory = require('../../../lib/rpcServer/commands/findDataForBlock');
 const BloomFilter = require('bloom-filter');
-const loadBloomFilterFactory = require('../../../lib/rpcServer/commands/loadBloomFilter');
 const spvServiceFixture = require('../../fixtures/spvServiceFixture');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
 let spy;
 
-describe('loadBloomFilter', () => {
+describe('findDataForBlock', () => {
   describe('#factory', () => {
     it('should return a function', () => {
-      const loadBloomfilter = loadBloomFilterFactory(spvServiceFixture);
-      expect(loadBloomfilter).to.be.a('function');
+      const findDataForBlock = getSpvDataFactory(spvServiceFixture);
+      expect(findDataForBlock).to.be.a('function');
     });
   });
 
   before(() => {
-    spy = sinon.spy(spvServiceFixture, 'loadBloomFilter');
+    spy = sinon.spy(spvServiceFixture, 'findDataForBlock');
   });
 
   beforeEach(() => {
@@ -29,21 +29,21 @@ describe('loadBloomFilter', () => {
     spy.restore();
   });
 
-  describe('loadBloomFilter', () => {
+  describe('findDataForBlock', () => {
     it('should return a promise', async () => {
-      const loadBloomFilter = loadBloomFilterFactory(spvServiceFixture);
+      const findDataForBlock = getSpvDataFactory(spvServiceFixture);
       expect(spy.callCount).to.be.equal(0);
-      const res = await loadBloomFilter({ filter: BloomFilter.create(10, 0.01) });
-      expect(res).to.be.equal(true);
+      const res = await findDataForBlock({ filter: BloomFilter.create(1, 0.1, 1, 1), blockHash: '' });
+      expect(res).to.be.an('object');
       expect(spy.callCount).to.be.equal(1);
     });
 
     it('Should throw if arguments are not valid', async () => {
-      const loadBloomFilter = loadBloomFilterFactory(spvServiceFixture);
+      const getSpvData = getSpvDataFactory(spvServiceFixture);
       expect(spy.callCount).to.be.equal(0);
-      await expect(loadBloomFilter([])).to.be.rejected;
+      await expect(getSpvData([])).to.be.rejected;
       expect(spy.callCount).to.be.equal(0);
-      await expect(loadBloomFilter({})).to.be.rejectedWith('should have required property \'filter\'');
+      await expect(getSpvData({})).to.be.rejectedWith('should have required property \'filter\'');
       expect(spy.callCount).to.be.equal(0);
     });
   });
