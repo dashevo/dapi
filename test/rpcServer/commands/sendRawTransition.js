@@ -3,19 +3,9 @@ const chai = require('chai');
 const crypto = require('crypto');
 const Schema = require('@dashevo/dash-schema/dash-schema-lib');
 const { PrivateKey, Transaction } = require('@dashevo/dashcore-lib');
-
-const chaiAsPromised = require('chai-as-promised');
-const sinon = require('sinon');
-const { TransitionPacket, TransitionHeader } = require('@dashevo/dashcore-lib').StateTransition;
-const { PrivateKey } = require('@dashevo/dashcore-lib');
-const sendRawTransitionFactory = require('../../../lib/rpcServer/commands/sendRawTransition');
-const coreAPIFixture = require('../../fixtures/coreAPIFixture');
-const dashDriveFixture = require('../../fixtures/dashDriveFixture');
-
 const { createStateTransition } = require('../../../lib/rpcServer/commands/sendRawTransition');
 
 const { expect } = chai;
-
 const hash = crypto.createHash('sha256');
 
 describe('sendRawTransition', () => {
