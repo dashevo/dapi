@@ -14,6 +14,7 @@ module.exports = {
     return {};
   },
   async getMasternodesList() { return [{ ip: '127.0.0.1' }]; },
+  async getPeerDataSyncStatus() { return ''; },
   async getMnListDiff() {
     return {
       baseBlockHash: '0000000000000000000000000000000000000000000000000000000000000000',
