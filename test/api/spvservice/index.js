@@ -33,7 +33,7 @@ describe('spvservice/index', () => {
       expect(res).to.be.a('undefined');
     });
 
-    it('should be undefined with invalid  clearBloomFilter function', () => {
+    it('should be undefined with invalid clearBloomFilter function', () => {
       const res = index.clearBloomFilter('filter');
       expect(res).to.be.a('undefined');
     });

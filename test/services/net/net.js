@@ -5,7 +5,7 @@ const { expect } = chai;
 
 describe('services/net/net', () => {
   describe('#factory', () => {
-    it('should create Net instanse', () => {
+    it('should create Net instance', () => {
       const res = new Net();
       expect(res).to.be.instanceof(Net);
     });
