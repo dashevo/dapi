@@ -5,33 +5,33 @@ const getPeerDataSyncStatusFactory = require('../../../lib/rpcServer/commands/ge
 const coreAPIFixture = require('../../fixtures/coreAPIFixture');
 
 chai.use(chaiAsPromised);
-const {expect} = chai;
+const { expect } = chai;
 let spy;
 
 describe('getMNList', () => {
-    describe('#factory', () => {
-        it('should return a function', () => {
-            const getMNList = getPeerDataSyncStatusFactory(coreAPIFixture);
-            expect(getMNList).to.be.a('function');
-        });
+  describe('#factory', () => {
+    it('should return a function', () => {
+      const getMNList = getPeerDataSyncStatusFactory(coreAPIFixture);
+      expect(getMNList).to.be.a('function');
     });
+  });
 
-    before(() => {
-        spy = sinon.spy(coreAPIFixture, 'getPeerDataSyncStatus');
-    });
+  before(() => {
+    spy = sinon.spy(coreAPIFixture, 'getPeerDataSyncStatus');
+  });
 
-    beforeEach(() => {
-        spy.resetHistory();
-    });
+  beforeEach(() => {
+    spy.resetHistory();
+  });
 
-    after(() => {
-        spy.restore();
-    });
+  after(() => {
+    spy.restore();
+  });
 
-    it('should return a peerDataSyncStatus list', async () => {
-        const getPeerDataSyncStatus = getPeerDataSyncStatusFactory(coreAPIFixture);
-        expect(spy.callCount).to.be.equal(0);
-        const peerDataSyncStatus = await getPeerDataSyncStatus();
-        expect(spy.callCount).to.be.equal(1);
-    });
+  it('should return a peerDataSyncStatus list', async () => {
+    const getPeerDataSyncStatus = getPeerDataSyncStatusFactory(coreAPIFixture);
+    expect(spy.callCount).to.be.equal(0);
+    const peerDataSyncStatus = await getPeerDataSyncStatus();
+    expect(spy.callCount).to.be.equal(1);
+  });
 });
