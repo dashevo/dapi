@@ -8,11 +8,13 @@ module.exports = {
   async getBestBlockHeight() { return 243789; },
   async getBlockHash() { return 'hash'; },
   async getBlockHeaders() { return [{}]; },
+  async getBlockHeader() { return {}; },
   async getBlocks(blockDate, limit) { return [{}]; },
   async getHistoricBlockchainDataSyncStatus() {
     return {};
   },
   async getMasternodesList() { return [{ ip: '127.0.0.1' }]; },
+  async getPeerDataSyncStatus() { return ''; },
   async getMnListDiff() {
     return {
       baseBlockHash: '0000000000000000000000000000000000000000000000000000000000000000',
