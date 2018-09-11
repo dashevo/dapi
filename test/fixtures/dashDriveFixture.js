@@ -2,6 +2,6 @@ module.exports = {
   async pinPacket(header, packet) { return 'tsid'; },
   async getDapSpace(dapId, userNameOrId) { return {}; },
   async getDapContext(dapId, usernameOrId) { return {}; },
-  async getDapContract(dapId) { return {}; },
+  async fetchDapContract(dapId) { return {}; },
   async searchDapContracts(pattern) { return []; },
 };
