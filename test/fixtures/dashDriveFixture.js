@@ -1,7 +1,9 @@
-module.exports = {
-  async pinPacket(header, packet) { return 'tsid'; },
-  async getDapSpace(dapId, userNameOrId) { return {}; },
-  async getDapContext(dapId, usernameOrId) { return {}; },
-  async fetchDapContract(dapId) { return {}; },
-  async searchDapContracts(pattern) { return []; },
-};
+const AbstractDashDriveAdapter = require('../../lib/api/dashDriveAdapter/AbstractDashDriveAdapter');
+
+// Create a class, so JSDoc would work properly in our tests
+class DashDriveFixture extends AbstractDashDriveAdapter {
+  addSTPacket(packet) { return Promise.resolve('tsid'); }
+  fetchDapContract(dapId) { return Promise.resolve({}); }
+}
+
+module.exports = new DashDriveFixture();
