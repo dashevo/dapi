@@ -3,9 +3,15 @@
   "properties": {
     "dapId": {
       "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "options": {
+      "type": "object"
     }
   },
   "required": [
-    "dapId"
+    "dapId", "type", "options"
   ]
 }
