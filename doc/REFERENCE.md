@@ -20,7 +20,7 @@
 - [getBlockHeaders](#getblockheaders)
 - [getBlocks](#getblocks)
 - [getCurrency](#getcurrency)
-- [getDapContract](#getdapcontract)
+- [fetchDapContract](#fetchdapcontract)
 - [getHistoricBlockchainDataSyncStatus](#gethistoricblockchaindatasyncstatus)
 - [getMNList](#getmnlist)
 - [getMnListDiff](#getmnlistdiff)
@@ -293,7 +293,7 @@ Returns info for blocks.
 
 ---
 
-### getDapContract
+### fetchDapContract
 
 Returns user's Dap space.
 
