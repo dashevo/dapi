@@ -34,7 +34,7 @@
 
 #### Installing dependencies
 
-DAPI is targeted to work with the LTS node.js. At the moment this is node 8.
+DAPI targets the latest LTS release of Node.js. Currently, this is Node v8.11.
 
 DAPI requires [Insight-API](https://github.com/dashevo/insight-api) and the latest version of [dashcore](https://github.com/dashevo/dash/tree/evo) with evolution features.
 
@@ -48,18 +48,18 @@ DAPI requires [Insight-API](https://github.com/dashevo/insight-api) and the late
 
 #### Installing DAPI
 
-There are two ways to install DAPI: the first is to use DAPI [docker image](103738324493.dkr.ecr.us-west-2.amazonaws.com/dashevo/dapi).
+There are two ways to install DAPI: the first is to use the DAPI [docker image](103738324493.dkr.ecr.us-west-2.amazonaws.com/dashevo/dapi).
 
-The second is to use the following instruction to install DAPI manually:
+The second is to use the following instructions to install DAPI manually:
 
 1. Clone this repo, switch to `develop`
-2. Right now DAPI has some dependencies that are private to @dashevo org on npm. You will need an npm user that has 
-    a read access to this packages. You can go two different ways from here:
+2. Right now DAPI has some dependencies that are private to the @dashevo org on npm. You will need an npm user that has 
+    read access to this packages. You can gain access in two different ways:
         1. Register an npm user. 
             - Ask someone with access to the @dashevo org to add you to that organization on npm
             - Follow [the guide on npm tokens](https://docs.npmjs.com/getting-started/working_with_tokens) to obtain a read-only token
         2. Ask someone who has an access to @dashevo org to give you a read-only token
-3. Follow [the guide on using npm tokens for deploys](https://docs.npmjs.com/private-modules/ci-server-config)    
+3. Follow [the guide on using npm tokens for deployments](https://docs.npmjs.com/private-modules/ci-server-config)    
 4. Run `npm i`
     
 ### Running
