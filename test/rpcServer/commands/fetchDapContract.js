@@ -1,23 +1,23 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
-const searchDapContractsFactory = require('../../../lib/rpcServer/commands/searchDapContracts');
+const getDapContractFactory = require('../../../lib/rpcServer/commands/fetchDapContract');
 const dashDriveFixture = require('../../fixtures/dashDriveFixture');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
 let spy;
 
-describe('searchDapContracts', () => {
+describe('fetchDapContract', () => {
   describe('#factory', () => {
     it('should return a function', () => {
-      const getDapContract = searchDapContractsFactory(dashDriveFixture);
+      const getDapContract = getDapContractFactory(dashDriveFixture);
       expect(getDapContract).to.be.a('function');
     });
   });
 
   before(() => {
-    spy = sinon.spy(dashDriveFixture, 'searchDapContracts');
+    spy = sinon.spy(dashDriveFixture, 'fetchDapContract');
   });
 
   beforeEach(() => {
@@ -28,18 +28,18 @@ describe('searchDapContracts', () => {
     spy.restore();
   });
 
-  it('Should return an array', async () => {
-    const getDapContract = searchDapContractsFactory(dashDriveFixture);
+  it('Should return search results', async () => {
+    const getDapContract = getDapContractFactory(dashDriveFixture);
     expect(spy.callCount).to.be.equal(0);
-    const contractList = await getDapContract({ pattern: 'Dash' });
-    expect(contractList).to.be.an('array');
+    const contract = await getDapContract({ dapId: '123' });
+    expect(contract).to.be.an('object');
     expect(spy.callCount).to.be.equal(1);
   });
 
   it('Should throw an error if arguments are not valid', async () => {
-    const getDapContract = searchDapContractsFactory(dashDriveFixture);
+    const getDapContract = getDapContractFactory(dashDriveFixture);
     expect(spy.callCount).to.be.equal(0);
-    await expect(getDapContract({ pattern: 123 })).to.be.rejectedWith('should be string');
+    await expect(getDapContract({ dapId: 123 })).to.be.rejectedWith('should be string');
     expect(spy.callCount).to.be.equal(0);
     await expect(getDapContract({})).to.be.rejectedWith('should have required property');
     expect(spy.callCount).to.be.equal(0);
