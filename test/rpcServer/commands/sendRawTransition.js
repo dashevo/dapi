@@ -3,12 +3,25 @@ const chai = require('chai');
 const crypto = require('crypto');
 const Schema = require('@dashevo/dash-schema/dash-schema-lib');
 const { PrivateKey, Transaction } = require('@dashevo/dashcore-lib');
-const { createStateTransition } = require('../../../lib/rpcServer/commands/sendRawTransition');
+const { createStateTransition, doubleSha256 } = require('../../../lib/rpcServer/commands/sendRawTransition');
 
 const { expect } = chai;
 const hash = crypto.createHash('sha256');
 
 describe('sendRawTransition', () => {
+  describe('#doubleSha256', () => {
+    it('should return a doubleSha256 hex digest string given a String', () => {
+      const expected = '464472b56079ded3d359b17935624bdb8487b6a64856090725277ddb5fb5576a';
+      const actual = doubleSha256('data');
+      expect(actual).to.equal(expected);
+    });
+    it('should return a doubleSha256 hex digest string given a Buffer', () => {
+      const dataBuffer = Buffer.from('data');
+      const expected = '464472b56079ded3d359b17935624bdb8487b6a64856090725277ddb5fb5576a';
+      const actual = doubleSha256(dataBuffer);
+      expect(actual).to.equal(expected);
+    });
+  });
   describe('#createStateTransition', () => {
     it('should throw an error when no stateTransitionDataPacket given as an argument');
     it('should throw an error when the hash of the data packet does not match the hash in header');
@@ -32,7 +45,8 @@ describe('sendRawTransition', () => {
       };
 
       const rawTransitionDataPacket = Schema.serialize.encode(transitionDataPacket).toString('hex');
-      const packetHash = hash.update(rawTransitionDataPacket).digest('hex');
+      const rawTransitionDataPacketHexBuffer = Buffer.from(rawTransitionDataPacket, 'hex');
+      const packetHash = doubleSha256(rawTransitionDataPacketHexBuffer);
       const headerTransaction = new Transaction(rawTransitionHeader);
 
       headerTransaction.extraPayload.setHashSTPacket(packetHash);
