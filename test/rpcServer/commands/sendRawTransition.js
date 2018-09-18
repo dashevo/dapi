@@ -11,13 +11,13 @@ const hash = crypto.createHash('sha256');
 describe('sendRawTransition', () => {
   describe('#doubleSha256', () => {
     it('should return a doubleSha256 hex digest string given a String', () => {
-      const expected = 'c8549d3fc9d8688b9315d15eedae5c9e93bd08d7268d584a73d6c933a3261407';
+      const expected = '464472b56079ded3d359b17935624bdb8487b6a64856090725277ddb5fb5576a';
       const actual = doubleSha256('data');
       expect(actual).to.equal(expected);
     });
     it('should return a doubleSha256 hex digest string given a Buffer', () => {
       const dataBuffer = Buffer.from('data');
-      const expected = 'c8549d3fc9d8688b9315d15eedae5c9e93bd08d7268d584a73d6c933a3261407';
+      const expected = '464472b56079ded3d359b17935624bdb8487b6a64856090725277ddb5fb5576a';
       const actual = doubleSha256(dataBuffer);
       expect(actual).to.equal(expected);
     });
