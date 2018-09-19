@@ -9,7 +9,7 @@ REPO_URL="103738324493.dkr.ecr.us-west-2.amazonaws.com"
 IMAGE_NAME="dashevo/dapi"
 
 # 1. build image:
-docker build -t "${IMAGE_NAME}:latest" -t "${IMAGE_NAME}:${VERSION}" .
+docker build -t "${IMAGE_NAME}:latest" -t "${IMAGE_NAME}:${VERSION}" --build-arg npm_token=$NPM_TOKEN  .
 
 # 2. After the build completes, tag your image so you can push the image to this repository:
 docker tag "${IMAGE_NAME}:latest" "${REPO_URL}/${IMAGE_NAME}:latest"
