@@ -19,7 +19,8 @@ before_script:
   - npm run lint
 deploy:
   skip_cleanup: true
-  all_branches: true
   provider: script
   script: /bin/bash deploy.sh
+  on:
+    all_branches: true
 
