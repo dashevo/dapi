@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # 0. authenticate your Docker client to your registry:
-eval $(aws ecr get-login --no-include-email)
+eval $(~/.local/bin/aws ecr get-login --no-include-email)
 
 # 0.5. set the current version:
 VERSION="1.0.0"

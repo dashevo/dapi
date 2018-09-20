@@ -22,8 +22,9 @@ before_install:
 before_script:
   - npm run lint
 deploy:
+  skip_cleanup: true
   provider: script
-  script: deploy.sh
+  script: /bin/bash deploy.sh
   on:
     repo: dashevo/dapi
     branch: develop
