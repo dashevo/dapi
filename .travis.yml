@@ -1,6 +1,9 @@
 os: linux
 language: node_js
-
+branches:
+  only:
+    - develop
+    - master
 node_js:
   - '8'
 install:
@@ -19,9 +22,7 @@ before_install:
 before_script:
   - npm run lint
 deploy:
-  - chmod +x ./deploy.sh
   provider: script
-  script: ./deploy.sh
+  script: /bin/bash deploy.sh
   on:
     repo: dashevo/dapi
-    branch: develop
