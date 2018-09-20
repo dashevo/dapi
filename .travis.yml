@@ -22,6 +22,4 @@ deploy:
   script: bash deploy.sh
   on:
     repo: dashevo/dapi
-    branches:
-      only:
-        - develop
+    branch: develop
