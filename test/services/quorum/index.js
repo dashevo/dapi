@@ -59,7 +59,7 @@ describe('services/node/peer', () => {
     });
     it('should getQuorum rejected with invalid settings', async () => {
       const res = quorumService.getQuorum();
-      await expect(res).to.be.rejectedWith('Dash JSON-RPC: Request Error: connect ECONNREFUSED 127.0.0.1:30002');
+      await expect(res).to.be.rejectedWith('ECONNREFUSED 127.0.0.1:3001');
     });
     it('should quorum has isValidQuorum function', () => {
       const res = quorumService.isValidQuorum;
