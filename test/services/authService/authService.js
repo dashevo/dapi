@@ -57,6 +57,9 @@ describe('services/node/peer', () => {
       expect(res).to.be.a('function');
     });
     it('should not AuthService call resolveChallenge function without data', () => {
+      // TODO: post a ticket
+      // TypeError: Cannot read property 'filter' of undefined
+      //     at getUserObj.then.then (../dapi/lib/services/authService/authService.js:50:37)
       const authService = new AuthService();
       const res = authService.resolveChallenge();
       expect(res).to.be.a('promise');
