@@ -32,6 +32,7 @@
     "bloom-filter": "^0.2.0",
     "bluebird": "^3.4.6",
     "crypto": "0.0.3",
+    "dotenv": "^6.0.0",
     "eventemitter2": "^4.1.0",
     "extend": "^3.0.1",
     "ipfs-api": "^14.0.4",
