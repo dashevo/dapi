@@ -23,8 +23,8 @@
   },
   "dependencies": {
     "@dashevo/dapi-db": "~0.19.9",
-    "@dashevo/dash-schema": "^3.0.0-alpha.1",
-    "@dashevo/dashcore-lib": "1.0.0-alpha.10",
+    "@dashevo/dash-schema": "^3.0.0-alpha.2",
+    "@dashevo/dashcore-lib": "1.0.0-alpha.14",
     "@dashevo/dashcore-p2p": "^1.1.6",
     "@dashevo/dashd-rpc": "^1.1.0",
     "@dashevo/quorums": "^1.0.2",
