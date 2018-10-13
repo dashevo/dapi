@@ -39,10 +39,24 @@ module.exports = {
     return {
       quorum: [
         {
-          proRegTxHash: 'f7737beb39779971e9bc59632243e13fc5fc9ada93b69bf48c2d4c463296cd5a',
-          service: '207.154.244.13:19999',
-          keyIDOperator: '43ce12751c4ba45dcdfe2c16cefd61461e17a54d',
-          keyIDVoting: '43ce12751c4ba45dcdfe2c16cefd61461e17a54d',
+          proRegTxHash: '3450cdbaa92432dd19672738342cb4f2467f1a8b142c31142ea39e14f3ab8c18',
+          service: '165.227.144.38:19999',
+          keyIDOperator: 'e6be850bfe045d2cd2b0e5789010b1a910dd7d27',
+          keyIDVoting: 'e6be850bfe045d2cd2b0e5789010b1a910dd7d27',
+          isValid: true,
+        },
+        {
+          proRegTxHash: '47b3adaa8ed42c6c67abb317e631cf674381cd8fd87033bcb92f3e2d21d08360',
+          service: '159.89.110.184:19999',
+          keyIDOperator: '4d5fce2325deb034ae75a625a3e2f09395e27bf7',
+          keyIDVoting: '4d5fce2325deb034ae75a625a3e2f09395e27bf7',
+          isValid: true,
+        },
+        {
+          proRegTxHash: '049d0c6dd63bb50c0bfee9106ad7ce5f9b4e9ef4487552cd4638317b3b05ffee',
+          service: '142.93.170.82:19999',
+          keyIDOperator: 'cfdee11fc2b4ebf6e1cafb262269de4919698942',
+          keyIDVoting: 'cfdee11fc2b4ebf6e1cafb262269de4919698942',
           isValid: true,
         },
       ],

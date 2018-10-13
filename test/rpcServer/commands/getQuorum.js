@@ -41,10 +41,10 @@ describe('fetchDapContract', () => {
     const { proofs } = contract;
 
     expect(quorum.isValid).to.be.equal(true);
-    expect(quorum.keyIDOperator).to.be.equal('43ce12751c4ba45dcdfe2c16cefd61461e17a54d');
-    expect(quorum.keyIDVoting).to.be.equal('43ce12751c4ba45dcdfe2c16cefd61461e17a54d');
-    expect(quorum.proRegTxHash).to.be.equal('f7737beb39779971e9bc59632243e13fc5fc9ada93b69bf48c2d4c463296cd5a');
-    expect(quorum.service).to.be.equal('207.154.244.13:19999');
+    expect(quorum.keyIDOperator).to.be.equal('e6be850bfe045d2cd2b0e5789010b1a910dd7d27');
+    expect(quorum.keyIDVoting).to.be.equal('e6be850bfe045d2cd2b0e5789010b1a910dd7d27');
+    expect(quorum.proRegTxHash).to.be.equal('3450cdbaa92432dd19672738342cb4f2467f1a8b142c31142ea39e14f3ab8c18');
+    expect(quorum.service).to.be.equal('165.227.144.38:19999');
     expect(proofs.merkleHashes).to.be.an('array');
     expect(proofs.merkleFlags).to.be.equal(0x1d);
   });
