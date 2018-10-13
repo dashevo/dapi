@@ -34,4 +34,18 @@ module.exports = {
   async sendRawIxTransaction(rawTransaction) { return 'txid'; },
   async generate(amount) { return new Array(amount); },
   async sendRawTransition(rawTransitionHeader) { return 'tsid'; },
+  // Todo: not yet final spec so it may change
+  async getQuorum() {
+    return {
+      quorum: [
+        {
+          proRegTxHash: 'f7737beb39779971e9bc59632243e13fc5fc9ada93b69bf48c2d4c463296cd5a',
+          service: '207.154.244.13:19999',
+          keyIDOperator: '43ce12751c4ba45dcdfe2c16cefd61461e17a54d',
+          keyIDVoting: '43ce12751c4ba45dcdfe2c16cefd61461e17a54d',
+          isValid: true,
+        },
+      ],
+    };
+  },
 };
