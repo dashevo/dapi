@@ -46,6 +46,11 @@ module.exports = {
           isValid: true,
         },
       ],
+      proofs: {
+        merkleHashes: ['71e9bc59632243e13f2d4c463296cd5a7737beb397799fc5fc9ada93b69bf48c'],
+        merkleFlags: 0x1d,
+      }
+      ,
     };
   },
 };

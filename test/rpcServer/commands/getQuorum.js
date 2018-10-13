@@ -38,12 +38,15 @@ describe('fetchDapContract', () => {
 
 
     const quorum = contract.quorum[0];
+    const { proofs } = contract;
 
     expect(quorum.isValid).to.be.equal(true);
     expect(quorum.keyIDOperator).to.be.equal('43ce12751c4ba45dcdfe2c16cefd61461e17a54d');
     expect(quorum.keyIDVoting).to.be.equal('43ce12751c4ba45dcdfe2c16cefd61461e17a54d');
     expect(quorum.proRegTxHash).to.be.equal('f7737beb39779971e9bc59632243e13fc5fc9ada93b69bf48c2d4c463296cd5a');
     expect(quorum.service).to.be.equal('207.154.244.13:19999');
+    expect(proofs.merkleHashes).to.be.an('array');
+    expect(proofs.merkleFlags).to.be.equal(0x1d);
   });
 
   it('Should throw an error if arguments are not valid', async () => {
