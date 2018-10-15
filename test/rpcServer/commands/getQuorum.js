@@ -37,14 +37,14 @@ describe('fetchDapContract', () => {
     expect(spy.callCount).to.be.equal(1);
 
 
-    const quorum = contract.quorum[0];
+    const quorumMember = contract.quorum[0];
     const { proofs } = contract;
 
-    expect(quorum.isValid).to.be.equal(true);
-    expect(quorum.keyIDOperator).to.be.equal('e6be850bfe045d2cd2b0e5789010b1a910dd7d27');
-    expect(quorum.keyIDVoting).to.be.equal('e6be850bfe045d2cd2b0e5789010b1a910dd7d27');
-    expect(quorum.proRegTxHash).to.be.equal('3450cdbaa92432dd19672738342cb4f2467f1a8b142c31142ea39e14f3ab8c18');
-    expect(quorum.service).to.be.equal('165.227.144.38:19999');
+    expect(quorumMember.isValid).to.be.equal(true);
+    expect(quorumMember.keyIDOperator).to.be.equal('e6be850bfe045d2cd2b0e5789010b1a910dd7d27');
+    expect(quorumMember.keyIDVoting).to.be.equal('e6be850bfe045d2cd2b0e5789010b1a910dd7d27');
+    expect(quorumMember.proRegTxHash).to.be.equal('3450cdbaa92432dd19672738342cb4f2467f1a8b142c31142ea39e14f3ab8c18');
+    expect(quorumMember.service).to.be.equal('165.227.144.38:19999');
     expect(proofs.merkleHashes).to.be.an('array');
     expect(proofs.merkleFlags).to.be.equal(0x1d);
   });
