@@ -29,16 +29,16 @@ describe('fetchDapContract', () => {
   });
 
   it('Should return assigned quorum with proofs', async () => {
-    const getQuorumContract = getQuorumFactory(coreApiFixture);
+    const qFactory = getQuorumFactory(coreApiFixture);
     expect(spy.callCount).to.be.equal(0);
     const randomId = 'c4ba45dcdfe2461e17a54d43ce12751c16cefd61';
-    const contract = await getQuorumContract({ regTxId: randomId });
-    expect(contract).to.be.an('object');
+    const qResult = await qFactory({ regTxId: randomId });
+    expect(qResult).to.be.an('object');
     expect(spy.callCount).to.be.equal(1);
 
 
-    const quorumMember = contract.quorum[0];
-    const { proofs } = contract;
+    const quorumMember = qResult.quorum[0];
+    const { proofs } = qResult;
 
     expect(quorumMember.isValid).to.be.equal(true);
     expect(quorumMember.keyIDOperator).to.be.equal('e6be850bfe045d2cd2b0e5789010b1a910dd7d27');
