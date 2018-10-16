@@ -1,13 +1,21 @@
+/* eslint-disable global-require */
+process.on('unhandledRejection', (up) => { throw up; });
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 
 chai.use(chaiAsPromised);
-const quorumService = require('../../../lib/services/quorum/index');
+const proxyquire = require('proxyquire');
 const ZmqClient = require('../../../lib/api/dashcore/ZmqClient');
 
 const { expect } = chai;
 
-describe('services/node/peer', () => {
+describe('services/quorum/index', () => {
+  const config = require('../../../lib/config');
+  config.dashcore.rpc.port = 12345;
+  proxyquire('../../../lib/api/dashcore/rpc', { '../../config': config });
+  require('../../../lib/api/dashcore/rpc');
+  const quorumService = require('../../../lib/services/quorum/index');
+
   describe('#factory', () => {
     it('should quorum has start function', () => {
       const res = quorumService.start;
@@ -47,7 +55,7 @@ describe('services/node/peer', () => {
     });
     it('should getQuorumHash rejected with invalid settings', async () => {
       const res = quorumService.getQuorumHash();
-      await expect(res).to.be.rejectedWith('Dash JSON-RPC: Request Error: connect ECONNREFUSED 127.0.0.1:30002');
+      await expect(res).to.be.rejectedWith('Dash JSON-RPC: Request Error: connect ECONNREFUSED 127.0.0.1:12345');
     });
     it('should quorum has getQuorum function', () => {
       const res = quorumService.getQuorum;
@@ -59,7 +67,7 @@ describe('services/node/peer', () => {
     });
     it('should getQuorum rejected with invalid settings', async () => {
       const res = quorumService.getQuorum();
-      await expect(res).to.be.rejectedWith('ECONNREFUSED 127.0.0.1:3001');
+      await expect(res).to.be.rejectedWith('Dash JSON-RPC: Request Error: connect ECONNREFUSED 127.0.0.1:12345');
     });
     it('should quorum has isValidQuorum function', () => {
       const res = quorumService.isValidQuorum;

@@ -63,7 +63,7 @@ describe('SPV', () => {
     });
     it('should SpvService call loadBloomFilter function without filter', () => {
       const spvService = new SpvService();
-      const res = spvService.loadBloomFilter();
+      const res = spvService.loadBloomFilter('fakeFilter');
       expect(res).to.be.a('promise');
     });
     it('should SpvService has clearBoomFilter function', () => {
