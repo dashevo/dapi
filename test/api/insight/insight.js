@@ -76,7 +76,8 @@
 //         difficulty: 4.656542373906925e-10,
 //         testnet: false,
 //         relayfee: 0.00001,
-//         errors: "Warning: Unknown block versions being mined! It's possible unknown rules are in effect",
+//         errors:
+// "Warning: Unknown block versions being mined! It's possible unknown rules are in effect",
 //         network: 'testnet',
 //       },
 //     },
@@ -176,7 +177,8 @@
 //       expect(user.state).to.be.equal(validUserData.result.state);
 //     });
 //
-//     it('Should return error if user not found', () => expect(insight.getUser('Bob')).to.be.rejectedWith('user Alice not found. Code:-1'));
+//     it('Should return error if user not found', () => expect(insight.getUser('Bob'))
+// .to.be.rejectedWith('user Alice not found. Code:-1'));
 //   });
 //
 //   describe('#getBestBlockHeight', () => {
@@ -217,7 +219,8 @@
 //     });
 //
 //     [-1, 123456789].forEach((bh) => {
-//       it('Should return error if blockHeight  out of range', () => expect(insight.getBlockHash(bh)).to.be.rejectedWith('Block height out of range. Code:-8'));
+//       it('Should return error if blockHeight  out of range',
+// () => expect(insight.getBlockHash(bh)).to.be.rejectedWith('Block height out of range. Code:-8'));
 //     });
 //
 //
@@ -226,7 +229,8 @@
 //         'Should return error if blockHeight  out of range',
 //         () => {
 //           requestStub.rejects(new Error('JSON value is not an integer as expected. Code:-1'));
-//           expect(insight.getBlockHash(bh)).to.be.rejectedWith('JSON value is not an integer as expected. Code:-1');
+//           expect(insight.getBlockHash(bh))
+// .to.be.rejectedWith('JSON value is not an integer as expected. Code:-1');
 //         },
 //       );
 //     });
@@ -249,7 +253,9 @@
 //
 //     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
 //       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-//       it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getAddressTotalReceived(ad)).to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
+//       it('Should return error if Invalid address: Checksum mismatch',
+// () => expect(insight.getAddressTotalReceived(ad))
+// .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
 //     });
 //
 //
@@ -258,7 +264,8 @@
 //         'Should return error if Invalid address: Input string too short',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Input string too short. Code:1'));
-//           expect(insight.getAddressTotalReceived(ad)).to.be.rejectedWith('Invalid address: Input string too short. Code:1');
+//           expect(insight.getAddressTotalReceived(ad))
+// .to.be.rejectedWith('Invalid address: Input string too short. Code:1');
 //         },
 //       );
 //     });
@@ -268,7 +275,8 @@
 //         'Should return error if Invalid address: Non-base58 character',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Non-base58 character. Code:1'));
-//           expect(insight.getAddressTotalReceived(ad)).to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
+//           expect(insight.getAddressTotalReceived(ad))
+// .to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
 //         },
 //       );
 //     });
@@ -291,7 +299,8 @@
 //
 //     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
 //       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-//       it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getAddressTotalSent(ad))
+//       it('Should return error if Invalid address: Checksum mismatch',
+// () => expect(insight.getAddressTotalSent(ad))
 //         .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
 //     });
 //
@@ -301,7 +310,8 @@
 //         'Should return error if Invalid address: Input string too short',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Input string too short. Code:1'));
-//           expect(insight.getAddressTotalReceived(ad)).to.be.rejectedWith('Invalid address: Input string too short. Code:1');
+//           expect(insight.getAddressTotalReceived(ad))
+// .to.be.rejectedWith('Invalid address: Input string too short. Code:1');
 //         },
 //       );
 //     });
@@ -311,7 +321,8 @@
 //         'Should return error if Invalid address: Non-base58 character',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Non-base58 character. Code:1'));
-//           expect(insight.getAddressTotalSent(ad)).to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
+//           expect(insight.getAddressTotalSent(ad))
+// .to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
 //         },
 //       );
 //     });
@@ -334,7 +345,8 @@
 //
 //     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
 //       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-//       it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getAddressUnconfirmedBalance(ad))
+//       it('Should return error if Invalid address: Checksum mismatch',
+// () => expect(insight.getAddressUnconfirmedBalance(ad))
 //         .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
 //     });
 //
@@ -344,7 +356,8 @@
 //         'Should return error if Invalid address: Input string too short',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Input string too short. Code:1'));
-//           expect(insight.getAddressUnconfirmedBalance(ad)).to.be.rejectedWith('Invalid address: Input string too short. Code:1');
+//           expect(insight.getAddressUnconfirmedBalance(ad))
+// .to.be.rejectedWith('Invalid address: Input string too short. Code:1');
 //         },
 //       );
 //     });
@@ -354,7 +367,8 @@
 //         'Should return error if blockHeight Invalid address: Non-base58 characte',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Non-base58 character. Code:1'));
-//           expect(insight.getAddressUnconfirmedBalance(ad)).to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
+//           expect(insight.getAddressUnconfirmedBalance(ad))
+// .to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
 //         },
 //       );
 //     });
@@ -377,7 +391,8 @@
 //
 //     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
 //       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-//       it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getAddressSummary(ad))
+//       it('Should return error if Invalid address: Checksum mismatch',
+// () => expect(insight.getAddressSummary(ad))
 //         .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
 //     });
 //
@@ -387,7 +402,8 @@
 //         'Should return error if Invalid address: Input string too short',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Input string too short. Code:1'));
-//           expect(insight.getAddressSummary(ad)).to.be.rejectedWith('Invalid address: Input string too short. Code:1');
+//           expect(insight.getAddressSummary(ad))
+// .to.be.rejectedWith('Invalid address: Input string too short. Code:1');
 //         },
 //       );
 //     });
@@ -397,7 +413,8 @@
 //         'Should return error if blockHeight Invalid address: Non-base58 character',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Non-base58 character. Code:1'));
-//           expect(insight.getAddressSummary(ad)).to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
+//           expect(insight.getAddressSummary(ad))
+// .to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
 //         },
 //       );
 //     });
@@ -419,7 +436,8 @@
 //
 //     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
 //       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-//       it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getTransactionsByAddress(ad))
+//       it('Should return error if Invalid address: Checksum mismatch',
+// () => expect(insight.getTransactionsByAddress(ad))
 //         .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
 //     });
 //
@@ -429,7 +447,8 @@
 //         'Should return error if Invalid address: Input string too short',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Input string too short. Code:1'));
-//           expect(insight.getTransactionsByAddress(ad)).to.be.rejectedWith('Invalid address: Input string too short. Code:1');
+//           expect(insight.getTransactionsByAddress(ad))
+// .to.be.rejectedWith('Invalid address: Input string too short. Code:1');
 //         },
 //       );
 //     });
@@ -439,7 +458,8 @@
 //         'Should return error if blockHeight Invalid address: Non-base58 character',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Non-base58 character. Code:1'));
-//           expect(insight.getTransactionsByAddress(ad)).to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
+//           expect(insight.getTransactionsByAddress(ad))
+// .to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
 //         },
 //       );
 //     });
@@ -461,7 +481,8 @@
 //
 //     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
 //       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-//       it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getBalance(ad))
+//       it('Should return error if Invalid address: Checksum mismatch',
+// () => expect(insight.getBalance(ad))
 //         .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
 //     });
 //
@@ -471,7 +492,8 @@
 //         'Should return error if Invalid address: Input string too short',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Input string too short. Code:1'));
-//           expect(insight.getBalance(ad)).to.be.rejectedWith('Invalid address: Input string too short. Code:1');
+//           expect(insight.getBalance(ad))
+// .to.be.rejectedWith('Invalid address: Input string too short. Code:1');
 //         },
 //       );
 //     });
@@ -481,7 +503,8 @@
 //         'Should return error if blockHeight Invalid address: Non-base58 character',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Non-base58 character. Code:1'));
-//           expect(insight.getBalance(ad)).to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
+//           expect(insight.getBalance(ad))
+// .to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
 //         },
 //       );
 //     });
@@ -503,7 +526,8 @@
 //
 //     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
 //       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-//       it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getUTXO(ad))
+//       it('Should return error if Invalid address: Checksum mismatch',
+// () => expect(insight.getUTXO(ad))
 //         .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
 //     });
 //
@@ -513,7 +537,8 @@
 //         'Should return error if Invalid address: Input string too short',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Input string too short. Code:1'));
-//           expect(insight.getUTXO(ad)).to.be.rejectedWith('Invalid address: Input string too short. Code:1');
+//           expect(insight.getUTXO(ad))
+// .to.be.rejectedWith('Invalid address: Input string too short. Code:1');
 //         },
 //       );
 //     });
@@ -523,7 +548,8 @@
 //         'Should return error if blockHeight Invalid address: Non-base58 character',
 //         () => {
 //           requestStub.rejects(new Error('Invalid address: Non-base58 character. Code:1'));
-//           expect(insight.getUTXO(ad)).to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
+//           expect(insight.getUTXO(ad))
+// .to.be.rejectedWith('Invalid address: Non-base58 character. Code:1');
 //         },
 //       );
 //     });
@@ -560,11 +586,13 @@
 //     });
 //
 //     // https://dashpay.atlassian.net/browse/EV-950
-//     // we can set any value like: 42c56c8ec8e2cdf97a56bf6290c43811ff59181a184b70ebbe3cb66b2970ced2
+//     // we can set any value like:
+//     //42c56c8ec8e2cdf97a56bf6290c43811ff59181a184b70ebbe3cb66b2970ced2
 //     // and results for 42 will be set
 //     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
 //       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-//       it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getHashFromHeight(ad))
+//       it('Should return error if Invalid address: Checksum mismatch',
+// () => expect(insight.getHashFromHeight(ad))
 //         .to.be.rejectedWith('Invalid address: Checksum mismatch. Code:1'));
 //     });
 //
@@ -573,7 +601,8 @@
 //         'Should return error if JSON value is not an integer as expected. Code:-1',
 //         () => {
 //           requestStub.rejects(new Error('JSON value is not an integer as expected. Code:-1'));
-//           expect(insight.getHashFromHeight(ad)).to.be.rejectedWith('JSON value is not an integer as expected. Code:-1');
+//           expect(insight.getHashFromHeight(ad))
+// .to.be.rejectedWith('JSON value is not an integer as expected. Code:-1');
 //         },
 //       );
 //     });
@@ -583,7 +612,8 @@
 //         'Should return error if Block height out of range. Code:-8',
 //         () => {
 //           requestStub.rejects(new Error('Block height out of range. Code:-8'));
-//           expect(insight.getHashFromHeight(ad)).to.be.rejectedWith('Block height out of range. Code:-8');
+//           expect(insight.getHashFromHeight(ad))
+// .to.be.rejectedWith('Block height out of range. Code:-8');
 //         },
 //       );
 //     });
@@ -613,9 +643,11 @@
 //         .withArgs(`${URI}/status?q=getInfo`)
 //         .returns(new Promise(resolve => resolve(testStatus.info.blocks)));
 //       requestStub
-//         .withArgs(`${URI}/status?q=getDifficulty`).returns(new Promise(resolve => resolve({ difficulty: testStatus.info.blocks.info.difficulty })));
+//         .withArgs(`${URI}/status?q=getDifficulty`).returns(new Promise(resolve => resolve({
+// difficulty: testStatus.info.blocks.info.difficulty })));
 //       requestStub
-//         .withArgs(`${URI}/status?q=getBestBlockHash`).returns(new Promise(resolve => resolve({ bestblockhash: testHashFromHeight.blockHash.blockHash })));
+//         .withArgs(`${URI}/status?q=getBestBlockHash`).returns(new Promise(resolve => resolve({
+// bestblockhash: testHashFromHeight.blockHash.blockHash })));
 //       // TODO: https://dashpay.atlassian.net/browse/EV-941
 //       requestStub
 //         .withArgs(`${URI}/status?q=getLastBlockHash`)
@@ -702,7 +734,8 @@
 //
 //     [testAddress.addrStr.substring(0, testAddress.addrStr.length - 1),
 //       testAddress.addrStr.substring(1, testAddress.addrStr.length), 123456789].forEach((ad) => {
-//       it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.estimateFee(ad))
+//       it('Should return error if Invalid address: Checksum mismatch',
+// () => expect(insight.estimateFee(ad))
 //         .to.be.rejectedWith('Expected type number, got null. Code:-3'));
 //     });
 //
@@ -712,7 +745,8 @@
 //         'Should return error if JSON value is not an integer as expected. Code:-1',
 //         () => {
 //           requestStub.rejects(new Error('JSON value is not an integer as expected. Code:-1'));
-//           expect(insight.estimateFee(ad)).to.be.rejectedWith('JSON value is not an integer as expected. Code:-1');
+//           expect(insight.estimateFee(ad))
+// .to.be.rejectedWith('JSON value is not an integer as expected. Code:-1');
 //         },
 //       );
 //     });
@@ -722,7 +756,8 @@
 //         'Should return error if JSON integer out of range.',
 //         () => {
 //           requestStub.rejects(new Error('JSON integer out of range. Code:-1'));
-//           expect(insight.estimateFee(ad)).to.be.rejectedWith('JSON integer out of range. Code:-1');
+//           expect(insight.estimateFee(ad))
+// .to.be.rejectedWith('JSON integer out of range. Code:-1');
 //         },
 //       );
 //     });
@@ -751,7 +786,8 @@
 //     });
 //
 //     [false, 'fakjfndkjlanmfdas'].forEach((ad) => {
-//       it('Should return error if Invalid address: Checksum mismatch', () => expect(insight.getBlockHeaders(ad))
+//       it('Should return error if Invalid address: Checksum mismatch',
+// () => expect(insight.getBlockHeaders(ad))
 //         .to.be.rejectedWith('Block not found. Code:-5'));
 //     });
 //
@@ -760,7 +796,8 @@
 //         'Should return error if JSON integer out of range',
 //         () => {
 //           requestStub.rejects(new Error('JSON integer out of range. Code:-1'));
-//           expect(insight.getBlockHeaders(ad)).to.be.rejectedWith('JSON integer out of range. Code:-1');
+//           expect(insight.getBlockHeaders(ad))
+// .to.be.rejectedWith('JSON integer out of range. Code:-1');
 //         },
 //       );
 //     });

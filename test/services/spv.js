@@ -1,7 +1,8 @@
 // const chai = require('chai');
 // const chaiAsPromised = require('chai-as-promised');
 // const assert = require('assert');
-// const { SpvService, getCorrectedHash, clearDisconnectedClientBloomFilters } = require('../../lib/services/spv');
+// const { SpvService, getCorrectedHash,
+// clearDisconnectedClientBloomFilters } = require('../../lib/services/spv');
 //
 // const { expect } = chai;
 //
@@ -18,7 +19,8 @@
 //     });
 //     it('should not SpvService call updateLastSeen function without filter', () => {
 //       const spvService = new SpvService();
-//       expect(() => spvService.updateLastSeen()).to.throw('Cannot set property \'lastSeen\' of undefined');
+//       expect(() => spvService.updateLastSeen())
+// .to.throw('Cannot set property \'lastSeen\' of undefined');
 //     });
 //     it('should SpvService has createNewClient function', () => {
 //       const spvService = new SpvService();
@@ -82,7 +84,8 @@
 //     });
 //     it('should not SpvService call addToBloomFilter function without filter', () => {
 //       const spvService = new SpvService();
-//       expect(() => spvService.addToBloomFilter()).to.throw('Cannot set property \'lastSeen\' of undefined');
+//       expect(() => spvService.addToBloomFilter())
+// .to.throw('Cannot set property \'lastSeen\' of undefined');
 //     });
 //     it('should SpvService has getData function', () => {
 //       const spvService = new SpvService();
@@ -91,7 +94,8 @@
 //     });
 //     it('should not SpvService call getData function without filter', () => {
 //       const spvService = new SpvService();
-//       expect(() => spvService.getSpvData()).to.throw('Cannot set property \'lastSeen\' of undefined');
+//       expect(() => spvService.getSpvData())
+// .to.throw('Cannot set property \'lastSeen\' of undefined');
 //     });
 //     it('should SpvService has findDataForBlock function', () => {
 //       const spvService = new SpvService();
@@ -100,7 +104,8 @@
 //     });
 //     it('should not SpvService call findDataForBlock function without filter', () => {
 //       const spvService = new SpvService();
-//       expect(() => spvService.findDataForBlock()).to.throw('Cannot set property \'lastSeen\' of undefined');
+//       expect(() => spvService.findDataForBlock())
+// .to.throw('Cannot set property \'lastSeen\' of undefined');
 //     });
 //   });
 //   describe('getCorrectedHash', () => {
@@ -120,7 +125,8 @@
 //       const actual = clearDisconnectedClientBloomFilters({ clients: [] });
 //       assert.deepEqual(actual, expected);
 //     });
-//     it('should return the list of clients remaining after removing those that have timed out', () => {
+//     it('should return the list of clients remaining after removing those that have timed out',
+// () => {
 //       const client = lastSeen => ({
 //         filter: 'filter',
 //         peer: { messages: { FilterClear: () => {} }, sendMessage: () => { } },

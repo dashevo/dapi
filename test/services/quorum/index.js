@@ -22,7 +22,8 @@
 //       expect(res).to.be.a('function');
 //     });
 //     it('should not quorum call start function without dashcoreZmqClient', () => {
-//       expect(() => quorumService.start()).to.throw('Cannot read property \'topics\' of undefined');
+//       expect(() => quorumService.start())
+// .to.throw('Cannot read property \'topics\' of undefined');
 //     });
 //     it('should quorum call start function with dashcoreZmqClient', () => {
 //       const zmqClient = new ZmqClient();
@@ -55,7 +56,8 @@
 //     });
 //     it('should getQuorumHash rejected with invalid settings', async () => {
 //       const res = quorumService.getQuorumHash();
-//       await expect(res).to.be.rejectedWith('Dash JSON-RPC: Request Error: connect ECONNREFUSED 127.0.0.1:12345');
+//       await expect(res)
+// .to.be.rejectedWith('Dash JSON-RPC: Request Error: connect ECONNREFUSED 127.0.0.1:12345');
 //     });
 //     it('should quorum has getQuorum function', () => {
 //       const res = quorumService.getQuorum;
@@ -67,7 +69,8 @@
 //     });
 //     it('should getQuorum rejected with invalid settings', async () => {
 //       const res = quorumService.getQuorum();
-//       await expect(res).to.be.rejectedWith('Dash JSON-RPC: Request Error: connect ECONNREFUSED 127.0.0.1:12345');
+//       await expect(res)
+// .to.be.rejectedWith('Dash JSON-RPC: Request Error: connect ECONNREFUSED 127.0.0.1:12345');
 //     });
 //     it('should quorum has isValidQuorum function', () => {
 //       const res = quorumService.isValidQuorum;

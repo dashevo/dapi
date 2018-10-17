@@ -23,17 +23,20 @@
 //
 //   it('.writeValue without initialization', async () => {
 //     const ks = new KeyValueStore(5001);
-//     expect(() => { ks.writeValue('key', 'value'); }).to.throw('KeyValueStore hasn\'t been initialized. Run the init() method first.');
+//     expect(() => { ks.writeValue('key', 'value'); })
+// .to.throw('KeyValueStore hasn\'t been initialized. Run the init() method first.');
 //   });
 //
 //   it('.getValue without initialization', async () => {
 //     const ks = new KeyValueStore(5001);
-//     expect(() => { ks.getValue('key'); }).to.throw('KeyValueStore hasn\'t been initialized. Run the init() method first.');
+//     expect(() => { ks.getValue('key'); })
+// .to.throw('KeyValueStore hasn\'t been initialized. Run the init() method first.');
 //   });
 //
 //   it('.contains without initialization', async () => {
 //     const ks = new KeyValueStore(5001);
-//     expect(() => { ks.contains('test'); }).to.throw('KeyValueStore hasn\'t been initialized. Run the init() method first');
+//     expect(() => { ks.contains('test'); })
+// .to.throw('KeyValueStore hasn\'t been initialized. Run the init() method first');
 //   });
 //
 //   it('error when change hasBeenInitialized by force', async () => {

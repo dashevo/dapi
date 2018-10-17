@@ -38,7 +38,8 @@
 //       expect(res).to.be.a('promise');
 //     });
 //     it('should subscribeToZmq return error when zmqClient invalid', async () => {
-//       expect(() => userIndex.subscribeToZmq('fake')).to.throw('Cannot read property \'hashblock\' of undefined');
+//       expect(() => userIndex.subscribeToZmq('fake'))
+// .to.throw('Cannot read property \'hashblock\' of undefined');
 //     });
 //     it('should subscribeToZmq be called with valid zmqClient', async () => {
 //       const zmqClient = new ZmqClient();

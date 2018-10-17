@@ -14,7 +14,8 @@
 // xdescribe('Insight - Integration', () => { // 5975
 //   // describe('#getAddress(txHash)', () => {
 //   //   const txHash = '50622f66236671501c0e80f388d6cf1e81158de8526f4acc9db00adf3c524077';
-// // it('should return address',()=>insight.getTransactionFirstInputAddress(txHash).then((address)=>{
+//   // it('should return address',
+//   // ()=>insight.getTransactionFirstInputAddress(txHash).then((address)=>{
 //   //     expect(address).to.be.a('string');
 //   //   }));
 //   // });

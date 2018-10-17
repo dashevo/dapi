@@ -24,8 +24,10 @@
 //       await expect(res.estimateFee()).to.be.rejectedWith('params should be object');
 //     });
 //     ['estimateFee', 'getAddressSummary', 'getAddressTotalReceived', 'getAddressTotalSent',
-//       'getAddressUnconfirmedBalance', 'getBalance', 'getBestBlockHeight', 'getBlockHash', 'getBlocks',
-//       'getHistoricBlockchainDataSyncStatus', 'getMNList', 'getPeerDataSyncStatus', 'getRawBlock', 'getStatus',
+//       'getAddressUnconfirmedBalance',
+// 'getBalance', 'getBestBlockHeight', 'getBlockHash', 'getBlocks',
+//       'getHistoricBlockchainDataSyncStatus',
+// 'getMNList', 'getPeerDataSyncStatus', 'getRawBlock', 'getStatus',
 //       'getTransactionById', 'getTransactionsByAddress', 'getUser', 'getUTXO', 'getBlockHeaders',
 //       'sendRawTransaction', 'sendRawTransition',
 //       'fetchDapContract', 'searchUsers', 'sendRawIxTransaction'].forEach((f) => {
@@ -35,8 +37,10 @@
 //       });
 //     });
 //     ['estimateFee', 'getAddressSummary', 'getAddressTotalReceived', 'getAddressTotalSent',
-//       'getAddressUnconfirmedBalance', 'getBalance', 'getBestBlockHeight', 'getBlockHash', 'getBlocks',
-//       'getMNList', 'getRawBlock', 'getStatus', 'getTransactionById', 'getTransactionsByAddress', 'getUser',
+//       'getAddressUnconfirmedBalance',
+// 'getBalance', 'getBestBlockHeight', 'getBlockHash', 'getBlocks',
+//       'getMNList', 'getRawBlock',
+// 'getStatus', 'getTransactionById', 'getTransactionsByAddress', 'getUser',
 //       'getUTXO', 'getBlockHeaders', 'sendRawTransaction', 'sendRawTransition',
 //       'fetchDapContract', 'searchUsers'].forEach((f) => {
 //       it('should call items from createCommands list', () => {
