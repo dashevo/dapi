@@ -1,9 +1,5 @@
 os: linux
 language: node_js
-branches:
-  only:
-    - develop
-    - master
 node_js:
   - '8'
 install:
