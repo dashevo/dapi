@@ -4,7 +4,7 @@
   "description": "Dash Decentralized API (DAPI)",
   "scripts": {
     "start": "node index.js",
-    "test": "nyc --check-coverage --lines=70 --branches=50 --functions=70 mocha --reporter=min --recursive test/",
+    "test": "nyc --check-coverage --lines=70 --branches=50 --functions=70 mocha --reporter=min --recursive test/*",
     "test:full-reporting": "nyc --check-coverage --reporter=html --reporter=text --lines=70 --branches=50 --functions=70 mocha test/ --recursive",
     "test:integration": "node test/integration/",
     "lint": "eslint .",
@@ -23,11 +23,11 @@
   },
   "dependencies": {
     "@dashevo/dapi-db": "~0.19.9",
-    "@dashevo/dash-schema": "^3.0.0-alpha.2",
+    "@dashevo/dash-schema": "^3.0.0-alpha.3",
     "@dashevo/dashcore-lib": "1.0.0-alpha.15",
     "@dashevo/dashcore-p2p": "^1.1.6",
     "@dashevo/dashd-rpc": "^1.1.0",
-    "@dashevo/quorums": "^1.0.2",
+    "@dashevo/quorums": "^1.0.3",
     "ajv": "^6.4.0",
     "bloom-filter": "^0.2.0",
     "bluebird": "^3.4.6",
@@ -54,13 +54,13 @@
     "eslint-plugin-import": "2.8.0",
     "istanbul": "^0.4.5",
     "memwatch-next": "^0.3.0",
-    "mocha": "^3.4.1",
+    "mocha": "^4.1.0",
     "nodemon": "^1.17.5",
     "nyc": "^12.0.2",
-    "should": "^11.2.1",
-    "sinon": "^4.2.0",
+    "proxyquire": "^2.1.0",
     "rewire": "^4.0.1",
-    "proxyquire": "^2.1.0"
+    "should": "^11.2.1",
+    "sinon": "^4.2.0"
   },
   "main": "index.js",
   "repository": {
