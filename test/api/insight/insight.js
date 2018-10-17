@@ -792,13 +792,13 @@ describe('Insight', () => {
 
     it('Should return getMnList', async () => {
       const getMnList = await insight.getMnList();
-      expect(getMnList).to.have.lengthOf(10);
+      expect(getMnList).to.have.lengthOf(40);
     });
 
     it('Should return getMnUpdateList', async () => {
       const getMnUpdateList = await insight.getMnUpdateList();
       expect(getMnUpdateList.type).to.be.equals('full');
-      expect(getMnUpdateList.list).to.have.lengthOf(10);
+      expect(getMnUpdateList.list).to.have.lengthOf(40);
     });
   });
 });
