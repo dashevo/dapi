@@ -23,8 +23,6 @@ describe('sendRawTransition', () => {
     });
   });
   describe('#createStateTransition', () => {
-    it('should throw an error when no stateTransitionDataPacket given as an argument');
-    it('should throw an error when the hash of the data packet does not match the hash in header');
     it('should return a stateTransition', () => {
       let rawTransitionHeader = '03000c00000000000000ac01003c0a168a4d512742516a80a94293ad86ab2cb547415e8b96719a89f91048dfd03c0a168a4d512742516a80a94293ad86ab2cb547415e8b96719a89f91048dfd0e803000000000000f10b1c3217f0982a76623ae2639305f6ad788afbfedc89b584bbcd10f8a912c3411f55df779a07a9e395413bab34a97d003bf185e7f5d6116c5a9fd8a7fee582c7f076aa48f44902740e2784cd18adf4478374f25804d082f2ae8b886425742af1d4';
       const transitionDataPacket = {
