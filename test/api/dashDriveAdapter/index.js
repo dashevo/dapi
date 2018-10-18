@@ -27,7 +27,7 @@ describe('DashDriveAdapter', () => {
 
       sinon.stub(dashDrive.client, 'request')
         .withArgs(method, { packet })
-        .returns(Promise.resolve(expectedPacketId));
+        .returns(Promise.resolve({ result: expectedPacketId }));
 
       expect(dashDrive.client.request.callCount).to.be.equal(0);
 
@@ -49,7 +49,7 @@ describe('DashDriveAdapter', () => {
 
       sinon.stub(dashDrive.client, 'request')
         .withArgs(method, { dapId })
-        .returns(Promise.resolve(expectedDapContract));
+        .returns(Promise.resolve({ result: expectedDapContract }));
 
       expect(dashDrive.client.request.callCount).to.be.equal(0);
 
@@ -75,7 +75,7 @@ describe('DashDriveAdapter', () => {
 
       sinon.stub(dashDrive.client, 'request')
         .withArgs(method, { dapId, type, options })
-        .returns(Promise.resolve(expectedDapObjects));
+        .returns(Promise.resolve({ result: expectedDapObjects }));
 
       expect(dashDrive.client.request.callCount).to.be.equal(0);
 
