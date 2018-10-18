@@ -1,1 +1,0 @@
-This directory is temporary VMN's DashDrive storage location. Needs to be removed when actual DashDrive will be available.

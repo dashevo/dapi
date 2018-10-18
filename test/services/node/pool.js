@@ -30,7 +30,7 @@ describe('services/node/peer', () => {
       delete copyPeerConfig.pubKey;
       expect(() => new Pool(copyPeerConfig)).to.throw('Peer\'s pubKey missing');
     });
-    xit('should not create Peer instance without pubKey', () => { // TODO post ticket + more tests add
+    xit('should not create Peer instance without privKey', () => { // TODO post ticket + more tests add
       const copyPeerConfig = JSON.parse(JSON.stringify(peerConfig));
       delete copyPeerConfig.privKey;
       expect(() => new Pool(copyPeerConfig)).to.throw('Peer\'s pubKey missing');

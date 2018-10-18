@@ -4,7 +4,8 @@
   "description": "Dash Decentralized API (DAPI)",
   "scripts": {
     "start": "node index.js",
-    "test": "nyc --check-coverage --reporter=html --reporter=text --lines=70 --branches=50 --functiosns=70 mocha test/ --recursive",
+    "test": "nyc --check-coverage --lines=70 --branches=50 --functions=70 mocha --reporter=min --recursive test/",
+    "test:full-reporting": "nyc --check-coverage --reporter=html --reporter=text --lines=70 --branches=50 --functions=70 mocha test/ --recursive",
     "test:integration": "node test/integration/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
@@ -22,15 +23,16 @@
   },
   "dependencies": {
     "@dashevo/dapi-db": "~0.19.9",
-    "@dashevo/dash-schema": "git+ssh://git@github.com/dashevo/dash-schema.git#v2",
-    "@dashevo/dashcore-lib": "git+ssh://git@github.com/dashevo/bitcore-lib-dash-private.git#develop",
+    "@dashevo/dash-schema": "^3.0.0-alpha.1",
+    "@dashevo/dashcore-lib": "1.0.0-alpha.10",
     "@dashevo/dashcore-p2p": "^1.1.6",
-    "@dashevo/quorums": "git+ssh://git@github.com/dashevo/quorums.git",
-    "@dashevo/dashd-rpc": "git+ssh://git@github.com/dashevo/dashd-rpc.git#develop",
+    "@dashevo/dashd-rpc": "^1.1.0",
+    "@dashevo/quorums": "^1.0.2",
     "ajv": "^6.4.0",
     "bloom-filter": "^0.2.0",
     "bluebird": "^3.4.6",
     "crypto": "0.0.3",
+    "dotenv": "^6.0.0",
     "eventemitter2": "^4.1.0",
     "extend": "^3.0.1",
     "ipfs-api": "^14.0.4",
@@ -57,7 +59,8 @@
     "nyc": "^12.0.2",
     "should": "^11.2.1",
     "sinon": "^4.2.0",
-    "rewire": "^4.0.1"
+    "rewire": "^4.0.1",
+    "proxyquire": "^2.1.0"
   },
   "main": "index.js",
   "repository": {
