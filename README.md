@@ -1,24 +1,10 @@
-<h1 align="center">DAPI</h1>
+# DAPI
 
-<div align="center">
-  <strong>A Dash decentralized API</strong>
-</div>
-<br />
-<div align="center">
-  <!-- Stability -->
-  <a href="https://nodejs.org/api/documentation.html#documentation_stability_index">
-    <img src="https://img.shields.io/badge/stability-stable-green.svg?style=flat-square"
-      alt="API stability" />
-  </a>
-  <!-- Build Status -->
-  <a href="https://travis-ci.com/dashevo/dapi">
-    <img src="https://img.shields.io/travis/dashevo/dapi/master.svg?style=flat-square" alt="Build Status" />
-  </a>
-  <!-- NPM version -->
-  <a href="https://npmjs.org/package/dapi">
-    <img src="https://img.shields.io/npm/v/dapi.svg?style=flat-square" alt="NPM version" />
-  </a>
-</div>
+> A Dash decentralized API
+
+[![Build Status](https://img.shields.io/travis/dashevo/dapi/master.svg)](https://travis-ci.org/dashevo/dapi)
+[![NPM version](https://img.shields.io/npm/v/@dashevo/dapi.svg)](https://npmjs.org/package/@dashevo/dapi)
+[![API stability](https://img.shields.io/badge/stability-stable-green.svg)](https://nodejs.org/api/documentation.html#documentation_stability_index)
 
 ## Contents
 - [Getting Started](#getting-started)
