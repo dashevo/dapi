@@ -1,6 +1,6 @@
 # DAPI
 
-[![Build Status](https://img.shields.io/travis/dashevo/dapi/master.svg)](https://travis-ci.org/dashevo/dapi)
+[![Build Status](https://travis-ci.com/dashevo/dapi.svg?token=Pzix7aqnMuGS9c6BmBz2&branch=master)](https://travis-ci.org/dashevo/dapi)
 [![NPM version](https://img.shields.io/npm/v/@dashevo/dapi.svg)](https://npmjs.org/package/@dashevo/dapi)
 [![API stability](https://img.shields.io/badge/stability-stable-green.svg)](https://nodejs.org/api/documentation.html#documentation_stability_index)
 
@@ -20,7 +20,7 @@
 
 #### Installing dependencies
 
-DAPI targets the latest LTS release of Node.js. Currently, this is Node v8.11.
+DAPI targets the latest LTS release of Node.js. Currently, this is Node v10.13.
 
 DAPI requires [Insight-API](https://github.com/dashevo/insight-api) and the latest version of [dashcore](https://github.com/dashevo/dash/tree/evo) with evolution features.
 
@@ -47,7 +47,7 @@ The second is to use the following instructions to install DAPI manually:
         2. Ask someone who has an access to @dashevo org to give you a read-only token
 3. Follow [the guide on using npm tokens for deployments](https://docs.npmjs.com/private-modules/ci-server-config)    
 4. Run `npm i`
-    
+
 ### Running
 
 After you've installed all the dependencies, you can start DAPI by running the `npm start` command inside the DAPI repo directory.
@@ -70,10 +70,3 @@ Note that you always need to specify an id, otherwise the server will respond yo
 A list of all available RPC commands, along with their various arguments and expected responses can be found [here](/doc/REFERENCE.md)
 
 Implementation of these commands can be viewed [here](/lib/rpcServer/commands).
-
-
-
-
-
-
-
