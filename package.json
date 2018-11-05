@@ -22,12 +22,12 @@
     "all": true
   },
   "dependencies": {
-    "@dashevo/dapi-db": "~0.19.9",
-    "@dashevo/dash-schema": "^3.0.0-alpha.3",
-    "@dashevo/dashcore-lib": "1.0.0-alpha.15",
-    "@dashevo/dashcore-p2p": "^1.1.6",
-    "@dashevo/dashd-rpc": "^1.1.0",
-    "@dashevo/quorums": "^1.0.3",
+    "@dashevo/dapi-db": "git+ssh://git@github.com:dashevo/dapi-db.git",
+    "@dashevo/dash-schema": "git+ssh://git@github.com:dashevo/dash-schema.git#v3.0.0-alpha.3",
+    "@dashevo/dashcore-lib": "git+ssh://git@github.com:dashevo/dashcore-lib.git#v1.0.0-alpha.15",
+    "@dashevo/dashcore-p2p": "git+ssh://git@github.com:dashevo/dashcore-p2p.git",
+    "@dashevo/dashd-rpc": "git+ssh://git@github.com:dashevo/dashd-rpc.git",
+    "@dashevo/quorums": "git+ssh://git@github.com:dashevo/quorums.git",
     "ajv": "^6.4.0",
     "bloom-filter": "^0.2.0",
     "bluebird": "^3.4.6",
