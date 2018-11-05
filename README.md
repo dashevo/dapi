@@ -8,17 +8,23 @@
 
 ## Contents
 - [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [Running](#running)
+    - [Install](#install)
+    - [Usage](#usage)
     - [Configuration](#configuration)
     - [Making requests](#making-basic-requests)
 - [API Reference](#api-reference)
 
-## Getting Started
+## Install
 
-### Installation
+Since this module contains private dependencies, please ensure you have access via GitHub and that your SSH keys are set appropriately.
 
-#### Installing dependencies
+Currently, the `develop` branch is acting as `master`. Change to it in order to run the install command below. We can remove this line from the instructions once this is fixed.
+
+```sh
+npm install
+```
+
+### Dependencies
 
 DAPI targets the latest LTS release of Node.js. Currently, this is Node v10.13.
 
@@ -32,38 +38,29 @@ DAPI requires [Insight-API](https://github.com/dashevo/insight-api) and the late
     3. Install Insight-API service. Run `./bin/dashcore-node install https://github.com/dashevo/insight-api/` from the repo directory
     4. Run `./bin/dashcore-node start`
 
-#### Installing DAPI
-
-There are two ways to install DAPI: the first is to use the DAPI [docker image](103738324493.dkr.ecr.us-west-2.amazonaws.com/dashevo/dapi).
-
-The second is to use the following instructions to install DAPI manually:
-
-1. Clone this repo, switch to `develop`
-2. Right now DAPI has some dependencies that are private to the @dashevo org on npm. You will need an npm user that has 
-    read access to this packages. You can gain access in two different ways:
-        1. Register an npm user. 
-            - Ask someone with access to the @dashevo org to add you to that organization on npm
-            - Follow [the guide on npm tokens](https://docs.npmjs.com/getting-started/working_with_tokens) to obtain a read-only token
-        2. Ask someone who has an access to @dashevo org to give you a read-only token
-3. Follow [the guide on using npm tokens for deployments](https://docs.npmjs.com/private-modules/ci-server-config)    
-4. Run `npm i`
-
-### Running
+## Usage
 
 After you've installed all the dependencies, you can start DAPI by running the `npm start` command inside the DAPI repo directory.
 
-### Configuration
+```sh
+npm start
+```
+
+## Configuration
 
 DAPI is configured via environment variables. So, in order to change the DAPI port, you need to run `RPC_SERVER_PORT=3010 npm start`. You can see the full list of available options [here](/doc/CONFIGURATION.md).
 
-### Making basic requests
+## Making basic requests
 
 DAPI uses [JSON-RPC 2.0](https://www.jsonrpc.org/specification) as the main interface. If you want to confirm that DAPI is functioning and synced, you can request the best block height. 
+
 Send the following json to your DAPI instance: 
+
 ```json
 {"jsonrpc": "2.0","method": "getBestBlockHeight", "id": 1}
 ```
-Note that you always need to specify an id, otherwise the server will respond you with an empty body, as mentioned in the [spec](https://www.jsonrpc.org/specification#notification). 
+
+Note that you always need to specify an id, otherwise the server will respond with an empty body, as mentioned in the [spec](https://www.jsonrpc.org/specification#notification). 
 
 ## API Reference
 
