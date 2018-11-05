@@ -7,12 +7,14 @@
 > A Dash decentralized API
 
 ## Contents
-- [Getting Started](#getting-started)
-    - [Install](#install)
-    - [Usage](#usage)
-    - [Configuration](#configuration)
-    - [Making requests](#making-basic-requests)
+- [Install](#install)
+  - [Dependencies](#dependencies)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Making requests](#making-basic-requests)
 - [API Reference](#api-reference)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Install
 
@@ -67,3 +69,11 @@ Note that you always need to specify an id, otherwise the server will respond wi
 A list of all available RPC commands, along with their various arguments and expected responses can be found [here](/doc/REFERENCE.md)
 
 Implementation of these commands can be viewed [here](/lib/rpcServer/commands).
+
+## Contributing
+
+Feel free to dive in! [Open an issue](https://github.com/dashevo/dapi/issues/new) or submit PRs.
+
+## License
+
+[MIT](LICENSE) &copy; Dash Core Group, Inc.
