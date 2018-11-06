@@ -4,7 +4,7 @@
 [![NPM version](https://img.shields.io/npm/v/@dashevo/dapi.svg)](https://npmjs.org/package/@dashevo/dapi)
 [![API stability](https://img.shields.io/badge/stability-stable-green.svg)](https://nodejs.org/api/documentation.html#documentation_stability_index)
 
-> A Dash decentralized API
+> A Decentralized API for Dash Masternodes
 
 ## Contents
 - [Install](#install)
