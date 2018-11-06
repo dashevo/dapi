@@ -6,7 +6,7 @@
 
 > A Decentralized API for Dash Masternodes
 
-## Contents
+## Table of Contents
 - [Install](#install)
   - [Dependencies](#dependencies)
 - [Usage](#usage)
