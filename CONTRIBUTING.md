@@ -189,15 +189,15 @@ consensus to merge a pull request (remember that discussions may have been
 spread out over GitHub, mailing list and IRC discussions). The following
 language is used within pull-request comments:
 
-  - ACK means "I have tested the code and I agree it should be merged";
-  - NACK means "I disagree this should be merged", and must be accompanied by
+  - _ACK_ means "I have tested the code and I agree it should be merged";
+  - _NACK_ means "I disagree this should be merged", and must be accompanied by
     sound technical justification (or in certain cases of copyright/patent/licensing
     issues, legal justification). NACKs without accompanying reasoning may be
     disregarded;
-  - utACK means "I have not tested the code, but I have reviewed it and it looks
+  - _utACK_ means "I have not tested the code, but I have reviewed it and it looks
     OK, I agree it can be merged";
-  - Concept ACK means "I agree in the general principle of this pull request";
-  - Nit refers to trivial, often non-blocking issues.
+  - _Concept ACK_ means "I agree in the general principle of this pull request";
+  - _Nit_ refers to trivial, often non-blocking issues.
 
 Reviewers should include the commit hash which they reviewed in their comments.
 
