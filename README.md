@@ -1,40 +1,34 @@
-<h1 align="center">DAPI</h1>
+# DAPI
 
-<div align="center">
-  <strong>A Dash decentralized API</strong>
-</div>
-<br />
-<div align="center">
-  <!-- Stability -->
-  <a href="https://nodejs.org/api/documentation.html#documentation_stability_index">
-    <img src="https://img.shields.io/badge/stability-stable-green.svg?style=flat-square"
-      alt="API stability" />
-  </a>
-  <!-- Build Status -->
-  <a href="https://travis-ci.com/dashevo/dapi">
-    <img src="https://img.shields.io/travis/dashevo/dapi/master.svg?style=flat-square" alt="Build Status" />
-  </a>
-  <!-- NPM version -->
-  <a href="https://npmjs.org/package/dapi">
-    <img src="https://img.shields.io/npm/v/dapi.svg?style=flat-square" alt="NPM version" />
-  </a>
-</div>
+[![Build Status](https://travis-ci.com/dashevo/dapi.svg?token=Pzix7aqnMuGS9c6BmBz2&branch=master)](https://travis-ci.org/dashevo/dapi)
+[![NPM version](https://img.shields.io/npm/v/@dashevo/dapi.svg)](https://npmjs.org/package/@dashevo/dapi)
+[![API stability](https://img.shields.io/badge/stability-stable-green.svg)](https://nodejs.org/api/documentation.html#documentation_stability_index)
 
-## Contents
-- [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [Running](#running)
-    - [Configuration](#configuration)
-    - [Making requests](#making-basic-requests)
+> A Decentralized API for Dash Masternodes
+
+## Table of Contents
+- [Install](#install)
+  - [Dependencies](#dependencies)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Making requests](#making-basic-requests)
 - [API Reference](#api-reference)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Getting Started
+## Install
 
-### Installation
+Since this module contains private dependencies, please ensure you have access via GitHub and that your SSH keys are set appropriately.
 
-#### Installing dependencies
+Currently, the `develop` branch is acting as `master`. Change to it in order to run the install command below. We can remove this line from the instructions once this is fixed.
 
-DAPI targets the latest LTS release of Node.js. Currently, this is Node v8.11.
+```sh
+npm install
+```
+
+### Dependencies
+
+DAPI targets the latest LTS release of Node.js. Currently, this is Node v10.13.
 
 DAPI requires [Insight-API](https://github.com/dashevo/insight-api) and the latest version of [dashcore](https://github.com/dashevo/dash/tree/evo) with evolution features.
 
@@ -46,38 +40,29 @@ DAPI requires [Insight-API](https://github.com/dashevo/insight-api) and the late
     3. Install Insight-API service. Run `./bin/dashcore-node install https://github.com/dashevo/insight-api/` from the repo directory
     4. Run `./bin/dashcore-node start`
 
-#### Installing DAPI
-
-There are two ways to install DAPI: the first is to use the DAPI [docker image](103738324493.dkr.ecr.us-west-2.amazonaws.com/dashevo/dapi).
-
-The second is to use the following instructions to install DAPI manually:
-
-1. Clone this repo, switch to `develop`
-2. Right now DAPI has some dependencies that are private to the @dashevo org on npm. You will need an npm user that has 
-    read access to this packages. You can gain access in two different ways:
-        1. Register an npm user. 
-            - Ask someone with access to the @dashevo org to add you to that organization on npm
-            - Follow [the guide on npm tokens](https://docs.npmjs.com/getting-started/working_with_tokens) to obtain a read-only token
-        2. Ask someone who has an access to @dashevo org to give you a read-only token
-3. Follow [the guide on using npm tokens for deployments](https://docs.npmjs.com/private-modules/ci-server-config)    
-4. Run `npm i`
-    
-### Running
+## Usage
 
 After you've installed all the dependencies, you can start DAPI by running the `npm start` command inside the DAPI repo directory.
 
-### Configuration
+```sh
+npm start
+```
+
+## Configuration
 
 DAPI is configured via environment variables. So, in order to change the DAPI port, you need to run `RPC_SERVER_PORT=3010 npm start`. You can see the full list of available options [here](/doc/CONFIGURATION.md).
 
-### Making basic requests
+## Making basic requests
 
 DAPI uses [JSON-RPC 2.0](https://www.jsonrpc.org/specification) as the main interface. If you want to confirm that DAPI is functioning and synced, you can request the best block height. 
+
 Send the following json to your DAPI instance: 
+
 ```json
 {"jsonrpc": "2.0","method": "getBestBlockHeight", "id": 1}
 ```
-Note that you always need to specify an id, otherwise the server will respond you with an empty body, as mentioned in the [spec](https://www.jsonrpc.org/specification#notification). 
+
+Note that you always need to specify an id, otherwise the server will respond with an empty body, as mentioned in the [spec](https://www.jsonrpc.org/specification#notification). 
 
 ## API Reference
 
@@ -85,9 +70,10 @@ A list of all available RPC commands, along with their various arguments and exp
 
 Implementation of these commands can be viewed [here](/lib/rpcServer/commands).
 
+## Contributing
 
+Feel free to dive in! [Open an issue](https://github.com/dashevo/dapi/issues/new) or submit PRs.
 
+## License
 
-
-
-
+[MIT](LICENSE) &copy; Dash Core Group, Inc.
