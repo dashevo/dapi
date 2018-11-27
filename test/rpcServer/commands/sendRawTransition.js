@@ -62,8 +62,6 @@ describe('sendRawTransition', () => {
 
       const actual = createStateTransition({ rawTransitionHeader, rawTransitionDataPacket });
 
-      expect(actual.headerTransaction.serialize()).to.be.equal(expected.headerTransaction.serialize());
-
       expect(actual).to.be.deep.equal(expected);
     });
   });
