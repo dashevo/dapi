@@ -1,6 +1,6 @@
 {
   "name": "@dashevo/dapi",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Dash Decentralized API (DAPI)",
   "scripts": {
     "start": "node index.js",
