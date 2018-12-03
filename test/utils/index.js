@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-expressions */
+// Suppressed to use chai without dirty-chai
+// TODO: Move to Jest instead of mocha/chai/sinon/nyc/etc
 const chai = require('chai');
 
 const utils = require('../../lib/utils');
