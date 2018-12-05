@@ -22,7 +22,6 @@ module.exports = {
       url: 'http://devnet-maithai.thephez.com:3000',
     },
   ],
-
   paths: {},
   components: {
     schemas: {
@@ -43,7 +42,7 @@ module.exports = {
             type: 'string',
             default: '2.0',
             description: 'JSON-RPC Version (2.0)',
-          }
+          },
         },
         discriminator: {
           propertyName: 'method_name',
