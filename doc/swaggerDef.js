@@ -17,15 +17,15 @@ module.exports = {
   servers: [
     {
       url: '{url}:{port}',
-      description: "User-defined network",
+      description: 'User-defined network',
       variables: {
         url: {
-          default: "http://dapi.dash.org"
+          default: 'http://dapi.dash.org',
         },
         port: {
           default: '3000',
         },
-      }
+      },
     },
   ],
   paths: {},
