@@ -29,33 +29,6 @@ module.exports = {
     },
   ],
   paths: {},
-  components: {
-    schemas: {
-      JsonRpcRequired: {
-        type: 'object',
-        required: [
-          'id',
-          'jsonrpc',
-        ],
-        properties: {
-          id: {
-            type: 'integer',
-            default: 1,
-            format: 'int32',
-            description: 'Request ID',
-          },
-          jsonrpc: {
-            type: 'string',
-            default: '2.0',
-            description: 'JSON-RPC Version (2.0)',
-          },
-        },
-        discriminator: {
-          propertyName: 'method_name',
-        },
-      },
-    },
-  },
   /** Readme.io swagger extensions
   * ------------------------------
   *
