@@ -60,7 +60,8 @@
     "proxyquire": "^2.1.0",
     "rewire": "^4.0.1",
     "should": "^11.2.1",
-    "sinon": "^4.2.0"
+    "sinon": "^4.2.0",
+    "swagger-jsdoc": "^3.2.6"
   },
   "main": "index.js",
   "repository": {
