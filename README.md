@@ -48,7 +48,7 @@ npm start
 
 ## Configuration
 
-DAPI is configured via environment variables. So, in order to change the DAPI port, you need to run `RPC_SERVER_PORT=3010 npm start`. You can see the full list of available options [here](/doc/CONFIGURATION.md).
+DAPI is configured directly via environment variables, or, in the presence of the `.env` dotfile, via that route instead. As an example, to change the DAPI port via environment variables, execute DAPI with arguments like so: `RPC_SERVER_PORT=3010 npm start`. You can see the full list of available options [here](/doc/CONFIGURATION.md). Also, consult the sample `.env.sample` file in this repository [here](/.env.sample).
 
 ## Making basic requests
 
