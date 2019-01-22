@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "nyc --check-coverage --lines=42 --branches=20 --functions=40 mocha --reporter=min --recursive test/",
-    "test:full-reporting": "nyc --check-coverage --reporter=html --reporter=text --lines=70 --branches=50 --functions=70 mocha test/ --recursive",
+    "test:full-reporting": "nyc --check-coverage --reporter=html --reporter=text --lines=42 --branches=20 --functions=40 mocha test/ --recursive",
     "test:integration": "node test/integration/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -41,6 +41,7 @@
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
     "zeromq": "^5.1.0"
+    "validator": "^10.10.0"
   },
   "devDependencies": {
     "assert": "^1.4.1",
