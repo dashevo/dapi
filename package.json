@@ -31,7 +31,6 @@
     "ajv": "^6.4.0",
     "bloom-filter": "^0.2.0",
     "dotenv": "^6.0.0",
-    "ipfs-api": "^14.0.4",
     "jayson": "^2.0.4",
     "lodash": "^4.17.4",
     "node-cache": "^4.1.1",
