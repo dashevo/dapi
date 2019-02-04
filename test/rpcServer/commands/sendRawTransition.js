@@ -1,5 +1,5 @@
 const chai = require('chai');
-const DPP = require('@dashevo/dpp/lib');
+const DPP = require('@dashevo/dpp');
 const { PrivateKey, Transaction } = require('@dashevo/dashcore-lib');
 const { createStateTransition, doubleSha256 } = require('../../../lib/rpcServer/commands/sendRawTransition');
 
@@ -39,7 +39,7 @@ describe('sendRawTransition', () => {
         },
       };
 
-      const rawTransitionDataPacket = DPP.serialize.encode(transitionDataPacket).toString('hex');
+      const rawTransitionDataPacket = DPP.STPacket.serialize.encode(transitionDataPacket).toString('hex');
       const rawTransitionDataPacketHexBuffer = Buffer.from(rawTransitionDataPacket, 'hex');
       const packetHash = doubleSha256(rawTransitionDataPacketHexBuffer);
       const headerTransaction = new Transaction(rawTransitionHeader);
