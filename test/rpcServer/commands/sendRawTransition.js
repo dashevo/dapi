@@ -1,5 +1,5 @@
 const chai = require('chai');
-const DPP = require('@dashevo/dpp');
+const DPP = require('@dashevo/dpp/lib');
 const { PrivateKey, Transaction } = require('@dashevo/dashcore-lib');
 const { createStateTransition, doubleSha256 } = require('../../../lib/rpcServer/commands/sendRawTransition');
 
