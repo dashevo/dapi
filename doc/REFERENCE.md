@@ -326,6 +326,20 @@ Returns historic blockchain data sync status.
 
 ---
 
+### getMempoolInfo
+
+Returns historic blockchain data sync status.
+
+*Takes no arguments*
+
+##### Response
+
+| name            | type          | description                              |
+|-----------------|---------------|------------------------------------------|
+| mempoolInfo  | promise (obj) | object containing mempool info |
+
+---
+
 ### getMNList
 
 Returns masternode list.
