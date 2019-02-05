@@ -20,18 +20,19 @@ describe('DashDriveAdapter', () => {
     it('Should call \'addStPacket\' RPC with the given parameters', async () => {
       const dashDrive = new DashDriveAdapter({ host: '127.0.0.1', port: 3000 });
 
-      const packet = 'packet';
+      const rawPacket = 'stPacket';
+      const rawTransitionHeader = 'stateTransition';
       const method = 'addSTPacket';
 
       const expectedPacketId = 'packetid';
 
       sinon.stub(dashDrive.client, 'request')
-        .withArgs(method, { packet })
+        .withArgs(method, { rawPacket, rawTransitionHeader })
         .returns(Promise.resolve({ result: expectedPacketId }));
 
       expect(dashDrive.client.request.callCount).to.be.equal(0);
 
-      const actualPacketId = await dashDrive.addSTPacket(packet);
+      const actualPacketId = await dashDrive.addSTPacket(rawPacket, rawTransitionHeader);
 
       expect(dashDrive.client.request.callCount).to.be.equal(1);
       expect(actualPacketId).to.be.equal(expectedPacketId);
