@@ -24,6 +24,7 @@
     - [getBlocks](#getblocks)
     - [getCurrency](#getcurrency)
     - [getHistoricBlockchainDataSyncStatus](#gethistoricblockchaindatasyncstatus)
+    - [getMempoolInfo](#getmempoolinfo)
     - [getMNList](#getmnlist)
     - [getMnListDiff](#getmnlistdiff)
     - [getMNUpdateList](#getmnupdatelist)
