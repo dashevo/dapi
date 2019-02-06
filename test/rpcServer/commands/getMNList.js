@@ -17,7 +17,7 @@ describe('getMNList', () => {
   });
 
   before(() => {
-    spy = sinon.spy(coreAPIFixture, 'getMasternodeList');
+    spy = sinon.spy(coreAPIFixture, 'getMasternodesList');
   });
 
   beforeEach(() => {
