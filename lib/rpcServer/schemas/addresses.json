@@ -9,7 +9,7 @@
       "minimum": 0
     },
     "to": {
-      "type": ["number"],
+      "type": ["integer"],
       "minimum": 0
     }
   },
