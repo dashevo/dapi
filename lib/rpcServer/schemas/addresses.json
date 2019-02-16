@@ -16,6 +16,6 @@
   "required": [
     "address"
   ],
-  "if": { "properties": { "from": { "minimum": 0 } } },
-  "then": { "required": [ "to" ] }
+  "if": { "properties": { "to": { "minimum": 0 } } },
+  "then": { "required": [ "from" ] }
 }
