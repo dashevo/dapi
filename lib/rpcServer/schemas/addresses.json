@@ -3,6 +3,12 @@
   "properties": {
     "address": {
       "type": ["array", "string"]
+    },
+    "from": {
+      "type": ["number"]
+    },
+    "to": {
+      "type": ["number"]
     }
   },
   "required": [
