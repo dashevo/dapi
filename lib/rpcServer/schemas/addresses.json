@@ -11,6 +11,14 @@
     "to": {
       "type": ["integer"],
       "minimum": 0
+    },
+    "fromHeight": {
+      "type": ["integer"],
+      "minimum": 0
+    },
+    "toHeight": {
+      "type": ["integer"],
+      "minimum": 0
     }
   },
   "required": [
