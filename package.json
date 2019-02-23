@@ -42,6 +42,7 @@
     "assert": "^1.4.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "dirty-chai": "^2.0.1",
     "eslint": "^5.12.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
@@ -53,6 +54,7 @@
     "rewire": "^4.0.1",
     "should": "^13.2.3",
     "sinon": "^7.2.3",
+    "sinon-chai": "^3.3.0",
     "swagger-jsdoc": "^3.2.6"
   },
   "main": "index.js",

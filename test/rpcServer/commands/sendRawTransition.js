@@ -1,53 +1,118 @@
 const chai = require('chai');
-const { PrivateKey, Transaction } = require('@dashevo/dashcore-lib');
-const { createStateTransition } = require('../../../lib/rpcServer/commands/sendRawTransition');
+const sinon = require('sinon');
+
+const chaiAsPromised = require('chai-as-promised');
+const dirtyChai = require('dirty-chai');
+const sinonChai = require('sinon-chai');
+
+const sendRawTransitionFactory = require('../../../lib/rpcServer/commands/sendRawTransition');
+
+const coreAPIFixture = require('../../fixtures/coreAPIFixture');
+const dashDriveFixture = require('../../fixtures/dashDriveFixture');
+
+chai.use(chaiAsPromised);
+chai.use(dirtyChai);
+chai.use(sinonChai);
 
 const { expect } = chai;
 
 describe('sendRawTransition', () => {
-  describe('#createStateTransition', () => {
-    it('Should send the packet to the drive and header to the core', () => {
-      let rawTransitionHeader = '03000c00000000000000ac01003c0a168a4d512742516a80a94293ad86ab2cb547415e8b96719a89f91048dfd03c0a168a4d512742516a80a94293ad86ab2cb547415e8b96719a89f91048dfd0e803000000000000f10b1c3217f0982a76623ae2639305f6ad788afbfedc89b584bbcd10f8a912c3411f55df779a07a9e395413bab34a97d003bf185e7f5d6116c5a9fd8a7fee582c7f076aa48f44902740e2784cd18adf4478374f25804d082f2ae8b886425742af1d4';
-      const transitionDataPacket = {
-        stpacket: {
-          pver: 1,
-          dapid: 'af462ee93b79b6991ebdc569f84c681c77525ad679d1c8b01087dbbbfbb3658d',
-          dapcontract: {
-            pver: 1,
-            idx: 0,
-            dapschema: {},
-            dapver: 1,
-            dapname: 'dapname',
-            meta: {
-              id: 'af462ee93b79b6991ebdc569f84c681c77525ad679d1c8b01087dbbbfbb3658d',
-            },
-          },
-        },
-      };
+  let sendRawTransactionSpy;
+  let addSTPacketSpy;
 
-      const rawTransitionDataPacket = DPP.serialize.encode(transitionDataPacket).toString('hex');
-      const rawTransitionDataPacketHexBuffer = Buffer.from(rawTransitionDataPacket, 'hex');
-      const packetHash = doubleSha256(rawTransitionDataPacketHexBuffer);
-      const headerTransaction = new Transaction(rawTransitionHeader);
-
-      headerTransaction.extraPayload.setHashSTPacket(packetHash);
-      const privateKey = new PrivateKey();
-      headerTransaction.extraPayload.sign(privateKey);
-
-      rawTransitionHeader = headerTransaction.serialize();
-
-      const expected = {
-        headerTransaction,
-        packet: transitionDataPacket,
-      };
-      // eslint-disable-next-line no-underscore-dangle
-      expected.headerTransaction._inputAmount = undefined;
-      // eslint-disable-next-line no-underscore-dangle
-      expected.headerTransaction._outputAmount = undefined;
-
-      const actual = createStateTransition({ rawTransitionHeader, rawTransitionDataPacket });
-
-      expect(actual).to.be.deep.equal(expected);
+  describe('#factory', () => {
+    it('should return a function', () => {
+      const sendRawTransaction = sendRawTransitionFactory(coreAPIFixture, dashDriveFixture);
+      expect(sendRawTransaction).to.be.a('function');
     });
+  });
+
+  before(() => {
+    sendRawTransactionSpy = sinon.spy(coreAPIFixture, 'sendRawTransaction');
+    addSTPacketSpy = sinon.spy(dashDriveFixture, 'addSTPacket');
+  });
+
+  beforeEach(() => {
+    sendRawTransactionSpy.resetHistory();
+    addSTPacketSpy.resetHistory();
+  });
+
+  after(async () => {
+    sendRawTransactionSpy.restore();
+    addSTPacketSpy.restore();
+  });
+
+  it('should return a transaction ID', async () => {
+    const rawTransitionHeader = '0AFF';
+    const rawTransitionPacket = '0BFF';
+
+    const sendRawTransition = sendRawTransitionFactory(coreAPIFixture, dashDriveFixture);
+
+    expect(addSTPacketSpy).to.have.not.been.called();
+    expect(sendRawTransactionSpy).to.have.not.been.called();
+
+    const txid = await sendRawTransition({
+      rawTransitionHeader,
+      rawTransitionPacket,
+    });
+
+    expect(txid).to.be.a('string');
+
+    expect(addSTPacketSpy).to.have.been.calledOnceWith(rawTransitionPacket, rawTransitionHeader);
+    expect(sendRawTransactionSpy).to.have.been.calledOnceWith(rawTransitionHeader);
+  });
+
+  it('should throw error if arguments are not valid', async () => {
+    const assertions = [
+      // Pass array
+      {
+        params: [],
+        message: '',
+      },
+      // Pass empty object
+      {
+        params: {},
+        message: 'should have required property \'rawTransitionHeader\'',
+      },
+      // Pass rawTransitionHeader as a number
+      {
+        params: { rawTransitionHeader: 1 },
+        message: 'rawTransitionHeader should be string',
+      },
+      // Pass rawTransitionHeader as a usual string
+      {
+        params: { rawTransitionHeader: 'string' },
+        message: 'rawTransitionHeader should match pattern "^(0x|0X)?[a-fA-F0-9]+$"',
+      },
+      // Pass rawTransitionHeader as a hex string but without rawTransitionPacket
+      {
+        params: { rawTransitionHeader: '0BFF' },
+        message: 'params should have required property \'rawTransitionPacket\'',
+      },
+      // Pass rawTransitionPacket as a number
+      {
+        params: { rawTransitionHeader: '0BFF', rawTransitionPacket: 1 },
+        message: 'rawTransitionPacket should be string',
+      },
+      // Pass rawTransitionPacket as a number
+      {
+        params: { rawTransitionHeader: '0BFF', rawTransitionPacket: 'string' },
+        message: 'rawTransitionPacket should match pattern "^(0x|0X)?[a-fA-F0-9]+$"',
+      },
+    ];
+
+    const sendRawTransition = sendRawTransitionFactory(coreAPIFixture, dashDriveFixture);
+
+    expect(addSTPacketSpy).to.have.not.been.called();
+    expect(sendRawTransactionSpy).to.have.not.been.called();
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const { params, message } of assertions) {
+      // eslint-disable-next-line no-await-in-loop
+      await expect(sendRawTransition(params)).to.be.rejectedWith(message);
+
+      expect(addSTPacketSpy).to.have.not.been.called();
+      expect(sendRawTransactionSpy).to.have.not.been.called();
+    }
   });
 });
