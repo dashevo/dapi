@@ -43,8 +43,8 @@ describe('sendRawTransition', () => {
   });
 
   it('should return a transaction ID', async () => {
-    const rawTransitionHeader = '0AFF';
-    const rawTransitionPacket = '0BFF';
+    const rawStateTransition = '0AFF';
+    const rawSTPacket = '0BFF';
 
     const sendRawTransition = sendRawTransitionFactory(coreAPIFixture, dashDriveFixture);
 
@@ -52,14 +52,14 @@ describe('sendRawTransition', () => {
     expect(sendRawTransactionSpy).to.have.not.been.called();
 
     const txid = await sendRawTransition({
-      rawTransitionHeader,
-      rawTransitionPacket,
+      rawStateTransition,
+      rawSTPacket,
     });
 
     expect(txid).to.be.a('string');
 
-    expect(addSTPacketSpy).to.have.been.calledOnceWith(rawTransitionPacket, rawTransitionHeader);
-    expect(sendRawTransactionSpy).to.have.been.calledOnceWith(rawTransitionHeader);
+    expect(addSTPacketSpy).to.have.been.calledOnceWith(rawSTPacket, rawStateTransition);
+    expect(sendRawTransactionSpy).to.have.been.calledOnceWith(rawStateTransition);
   });
 
   it('should throw error if arguments are not valid', async () => {
@@ -72,32 +72,32 @@ describe('sendRawTransition', () => {
       // Pass empty object
       {
         params: {},
-        message: 'should have required property \'rawTransitionHeader\'',
+        message: 'should have required property \'rawStateTransition\'',
       },
-      // Pass rawTransitionHeader as a number
+      // Pass rawStateTransition as a number
       {
-        params: { rawTransitionHeader: 1 },
-        message: 'rawTransitionHeader should be string',
+        params: { rawStateTransition: 1 },
+        message: 'rawStateTransition should be string',
       },
-      // Pass rawTransitionHeader as a usual string
+      // Pass rawStateTransition as a usual string
       {
-        params: { rawTransitionHeader: 'string' },
-        message: 'rawTransitionHeader should match pattern "^(0x|0X)?[a-fA-F0-9]+$"',
+        params: { rawStateTransition: 'string' },
+        message: 'rawStateTransition should match pattern "^(0x|0X)?[a-fA-F0-9]+$"',
       },
-      // Pass rawTransitionHeader as a hex string but without rawTransitionPacket
+      // Pass rawStateTransition as a hex string but without rawSTPacket
       {
-        params: { rawTransitionHeader: '0BFF' },
-        message: 'params should have required property \'rawTransitionPacket\'',
+        params: { rawStateTransition: '0BFF' },
+        message: 'params should have required property \'rawSTPacket\'',
       },
-      // Pass rawTransitionPacket as a number
+      // Pass rawSTPacket as a number
       {
-        params: { rawTransitionHeader: '0BFF', rawTransitionPacket: 1 },
-        message: 'rawTransitionPacket should be string',
+        params: { rawStateTransition: '0BFF', rawSTPacket: 1 },
+        message: 'rawSTPacket should be string',
       },
-      // Pass rawTransitionPacket as a number
+      // Pass rawSTPacket as a number
       {
-        params: { rawTransitionHeader: '0BFF', rawTransitionPacket: 'string' },
-        message: 'rawTransitionPacket should match pattern "^(0x|0X)?[a-fA-F0-9]+$"',
+        params: { rawStateTransition: '0BFF', rawSTPacket: 'string' },
+        message: 'rawSTPacket should match pattern "^(0x|0X)?[a-fA-F0-9]+$"',
       },
     ];
 

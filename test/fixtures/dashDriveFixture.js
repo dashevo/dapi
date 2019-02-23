@@ -6,7 +6,7 @@ const AbstractDashDriveAdapter = require('../../lib/api/dashDriveAdapter/Abstrac
 
 // Create a class, so JSDoc would work properly in our tests
 class DashDriveFixture extends AbstractDashDriveAdapter {
-  addSTPacket(rawTransitionPacket, rawTransitionHeader) { return Promise.resolve(); }
+  addSTPacket(rawSTPacket, rawStateTransition) { return Promise.resolve(); }
 
   fetchDapContract(dapId) { return Promise.resolve({}); }
 }
