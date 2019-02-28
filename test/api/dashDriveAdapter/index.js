@@ -47,7 +47,7 @@ describe('DashDriveAdapter', () => {
       const dashDrive = new DashDriveAdapter({ host: '127.0.0.1', port: 3000 });
 
       const dapId = 'dapid';
-      const method = 'fetchDapContract';
+      const method = 'fetchDPContract';
 
       const expectedDapContract = { dapId };
 
@@ -72,7 +72,7 @@ describe('DashDriveAdapter', () => {
       const dapId = 'dapid';
       const type = 'contact';
       const options = { where: { id: 1 } };
-      const method = 'fetchDapObjects';
+      const method = 'fetchDPObjects';
 
       const expectedDapObjects = [{ dapId, id: 1 }];
 
