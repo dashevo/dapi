@@ -42,8 +42,8 @@ describe('DashDriveAdapter', () => {
     });
   });
 
-  describe('#fetchDapContract', () => {
-    it('Should call \'fetchDapContract\' RPC with the given parameters', async () => {
+  describe('#fetchDPContract', () => {
+    it('Should call \'fetchDPContract\' RPC with the given parameters', async () => {
       const dashDrive = new DashDriveAdapter({ host: '127.0.0.1', port: 3000 });
 
       const dapId = 'dapid';
@@ -65,8 +65,8 @@ describe('DashDriveAdapter', () => {
     });
   });
 
-  describe('#fetchDapObjects', () => {
-    it('Should call \'fetchDapObjects\' RPC with the given parameters', async () => {
+  describe('#fetchDPObjects', () => {
+    it('Should call \'fetchDPObjects\' RPC with the given parameters', async () => {
       const dashDrive = new DashDriveAdapter({ host: '127.0.0.1', port: 3000 });
 
       const dapId = 'dapid';
