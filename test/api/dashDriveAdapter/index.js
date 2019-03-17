@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const chaiAsPromised = require('chai-as-promised');
 const dirtyChai = require('dirty-chai');
 
-const DashDriveAdapter = require('../../../lib/api/dashDriveAdapter');
+const DashDriveAdapter = require('../../../lib/externalApis/dashDriveAdapter');
 
 chai.use(chaiAsPromised);
 chai.use(dirtyChai);

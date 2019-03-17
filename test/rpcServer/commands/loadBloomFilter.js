@@ -3,7 +3,7 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const BloomFilter = require('bloom-filter');
 const loadBloomFilterFactory = require('../../../lib/rpcServer/commands/loadBloomFilter');
-const spvServiceFixture = require('../../fixtures/spvServiceFixture');
+const spvServiceFixture = require('../../mocks/spvServiceFixture');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;

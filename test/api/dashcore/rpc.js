@@ -4,7 +4,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
-const coreAPIFixture = require('../../fixtures/coreAPIFixture');
+const coreAPIFixture = require('../../mocks/coreAPIFixture');
 
 
 const { expect } = chai;
@@ -12,11 +12,11 @@ chai.use(chaiAsPromised);
 let spy;
 let stub;
 
-describe('api/dashcore/rpc', async () => {
+describe('externalApis/dashcore/rpc', async () => {
   const config = require('../../../lib/config');
   config.dashcore.rpc.port = 12345;
-  proxyquire('../../../lib/api/dashcore/rpc', { '../../config': config });
-  const rpc = require('../../../lib/api/dashcore/rpc');
+  proxyquire('../../../lib/externalApis/dashcore/rpc', { '../../config': config });
+  const rpc = require('../../../lib/externalApis/dashcore/rpc');
 
   describe('getHashFromHeight', () => {
     describe('#factory', () => {

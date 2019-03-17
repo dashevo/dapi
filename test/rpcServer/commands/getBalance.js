@@ -2,7 +2,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const getBalanceFactory = require('../../../lib/rpcServer/commands/getBalance.js');
-const coreAPIFixture = require('../../fixtures/coreAPIFixture');
+const coreAPIFixture = require('../../mocks/coreAPIFixture');
 
 const { expect } = chai;
 chai.use(chaiAsPromised);

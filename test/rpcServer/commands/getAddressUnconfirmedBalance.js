@@ -2,7 +2,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const getAddressUnconfirmedBalanceFactory = require('../../../lib/rpcServer/commands/getAddressUnconfirmedBalance.js');
-const coreAPIFixture = require('../../fixtures/coreAPIFixture');
+const coreAPIFixture = require('../../mocks/coreAPIFixture');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;

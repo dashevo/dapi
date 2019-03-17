@@ -2,7 +2,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const getBestBlockHashFactory = require('../../../lib/rpcServer/commands/getBestBlockHash.js');
-const coreAPIFixture = require('../../fixtures/coreAPIFixture');
+const coreAPIFixture = require('../../mocks/coreAPIFixture');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;

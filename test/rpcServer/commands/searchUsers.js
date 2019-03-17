@@ -2,7 +2,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const searchUsersFactory = require('../../../lib/rpcServer/commands/searchUsers');
-const userIndex = require('../../fixtures/userIndexFixture');
+const userIndex = require('../../mocks/userIndexFixture');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;

@@ -7,8 +7,8 @@ const sinonChai = require('sinon-chai');
 
 const sendRawTransitionFactory = require('../../../lib/rpcServer/commands/sendRawTransition');
 
-const coreAPIFixture = require('../../fixtures/coreAPIFixture');
-const dashDriveFixture = require('../../fixtures/dashDriveFixture');
+const coreAPIFixture = require('../../mocks/coreAPIFixture');
+const dashDriveFixture = require('../../mocks/dashDriveFixture');
 
 chai.use(chaiAsPromised);
 chai.use(dirtyChai);

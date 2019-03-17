@@ -4,7 +4,7 @@ process.on('unhandledRejection', (up) => {
 const BloomFilter = require('bloom-filter');
 const chai = require('chai');
 const sinon = require('sinon');
-const index = require('../../../lib/api/spvservice/index');
+const index = require('../../../lib/externalApis/spvservice/index');
 
 const { expect } = chai;
 

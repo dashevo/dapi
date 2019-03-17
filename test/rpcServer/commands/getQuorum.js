@@ -2,7 +2,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const getQuorumFactory = require('../../../lib/rpcServer/commands/getQuorum');
-const coreApiFixture = require('../../fixtures/coreAPIFixture');
+const coreApiFixture = require('../../mocks/coreAPIFixture');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;

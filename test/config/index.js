@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 const chai = require('chai');
 
-const { getConfigFixture } = require('../fixtures/config');
+const { getConfigFixture } = require('../mocks/config');
 
 const { validateConfig, validateHost, validatePort } = require('../../lib/config/validator');
 

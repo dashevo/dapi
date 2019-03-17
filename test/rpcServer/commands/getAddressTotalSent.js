@@ -2,7 +2,7 @@ const chai = require('chai');
 const sinon = require('sinon');
 const chaiAsPromised = require('chai-as-promised');
 const getAddressTotalSentFactory = require('../../../lib/rpcServer/commands/getAddressTotalSent');
-const coreAPIFixture = require('../../fixtures/coreAPIFixture');
+const coreAPIFixture = require('../../mocks/coreAPIFixture');
 
 
 chai.use(chaiAsPromised);

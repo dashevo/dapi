@@ -2,7 +2,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const fetchDapObjectsFactory = require('../../../lib/rpcServer/commands/fetchDapObjects');
-const DashDriveAdapter = require('../../../lib/api/dashDriveAdapter');
+const DashDriveAdapter = require('../../../lib/externalApis/dashDriveAdapter');
 
 const dashDriveAdapter = new DashDriveAdapter({ host: 'host', port: 1 });
 

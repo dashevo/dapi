@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 // Unused variables represent signatures for clarity
-// TODO: Why are we doing this?
 module.exports = {
   async estimateFee(numberOfBlocks) { return 1; },
   async getAddressSummary(address) { return {}; },
