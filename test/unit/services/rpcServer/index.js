@@ -3,7 +3,9 @@
 //
 // chai.use(chaiAsPromised);
 // const { expect } = chai;
-// const { createCommands, start, createRegtestCommands } = require('../../../../lib/rpcServer/index');
+// const {
+// createCommands, start, createRegtestCommands
+// } = require('../../../../lib/rpcServer/index');
 //
 // describe('lib/rpcServer/index', () => {
 //   describe('#factory', () => {
