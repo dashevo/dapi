@@ -1,9 +1,9 @@
 {
   "name": "@dashevo/dapi",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Dash Decentralized API (DAPI)",
   "scripts": {
-    "start": "node index.js",
+    "start": "node lib/app.js",
     "test": "nyc --check-coverage --lines=51 --branches=27 --functions=50 mocha --recursive test/unit",
     "test:full-reporting": "nyc --check-coverage --reporter=html --reporter=text --lines=42 --branches=20 --functions=40 mocha test/ --recursive",
     "test:integration": "node test/integration/",
