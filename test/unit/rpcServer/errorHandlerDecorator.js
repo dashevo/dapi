@@ -1,6 +1,7 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const RPCError = require('../../../lib/rpcServer/RPCError');
+const ArgumentValidationError = require('../../../lib/errors/ArgumentsValidationError');
 const errorHandlerDecorator = require('../../../lib/rpcServer/errorHandlerDecorator');
 
 chai.use(chaiAsPromised);
@@ -24,9 +25,14 @@ describe('lib/rpcServer/errorHandlerDecorator', () => {
     const decoratedFunction = errorHandlerDecorator(throwingFunction);
     return expect(decoratedFunction()).to.be.rejectedWith(RPCError, 'Some message');
   });
-  it('Should throw RPCError with same message in case if it exists ', () => {
-    const throwingFunction = async () => { throw new Error('Test message #2'); };
+  it('Should throw RPCError with same message in case of arguments validation error ', () => {
+    const throwingFunction = async () => { throw new ArgumentValidationError('Test message #2'); };
     const decoratedFunction = errorHandlerDecorator(throwingFunction);
     return expect(decoratedFunction()).to.be.rejectedWith(RPCError, 'Test message #2');
+  });
+  it('Should throw RPCError with text "Internal Error" in case if error was not recognized', () => {
+    const throwingFunction = async () => { throw new Error('Test message #3'); };
+    const decoratedFunction = errorHandlerDecorator(throwingFunction);
+    return expect(decoratedFunction()).to.be.rejectedWith(RPCError, 'Internal error');
   });
 });
