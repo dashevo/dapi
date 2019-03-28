@@ -42,12 +42,12 @@ describe('DriveAdapter', () => {
     });
   });
 
-  describe('#fetchDPContract', () => {
-    it('Should call \'fetchDPContract\' RPC with the given parameters', async () => {
+  describe('#fetchContract', () => {
+    it('Should call \'fetchContract\' RPC with the given parameters', async () => {
       const drive = new DriveAdapter({ host: '127.0.0.1', port: 3000 });
 
       const contractId = 'contractId';
-      const method = 'fetchDPContract';
+      const method = 'fetchContract';
 
       const expectedContract = { contractId };
 
@@ -65,14 +65,14 @@ describe('DriveAdapter', () => {
     });
   });
 
-  describe('#fetchDPObjects', () => {
-    it('Should call \'fetchDPObjects\' RPC with the given parameters', async () => {
+  describe('#fetchDocuments', () => {
+    it('Should call \'fetchDocuments\' RPC with the given parameters', async () => {
       const drive = new DriveAdapter({ host: '127.0.0.1', port: 3000 });
 
       const contractId = 'contractId';
       const type = 'contact';
       const options = { where: { id: 1 } };
-      const method = 'fetchDPObjects';
+      const method = 'fetchDocuments';
 
       const expectedDocuments = [{ contractId, id: 1 }];
 
