@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string"
+    },
+    "from": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483626
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 20
+    }
+  },
+  "required": [
+    "userId"
+  ]
+}
