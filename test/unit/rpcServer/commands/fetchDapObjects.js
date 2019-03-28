@@ -1,10 +1,10 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
-const fetchDapObjectsFactory = require('../../../../lib/rpcServer/commands/fetchDapObjects');
-const DashDriveAdapter = require('../../../../lib/externalApis/dashDriveAdapter');
+const fetchDocumentsFactory = require('../../../../lib/rpcServer/commands/fetchDocuments');
+const DriveAdapter = require('../../../../lib/externalApis/driveAdapter');
 
-const dashDriveAdapter = new DashDriveAdapter({ host: 'host', port: 1 });
+const driveAdapter = new DriveAdapter({ host: 'host', port: 1 });
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -12,56 +12,56 @@ const { expect } = chai;
 const expectedSearchParams = { contractId: '123', type: 'contact', options: { where: { userId: 1 } } };
 const expectedResult = [{ contractId: '123', type: 'contact', userId: 1 }];
 
-describe('fetchDapContract', () => {
+describe('fetchContract', () => {
   describe('#factory', () => {
     it('should return a function', () => {
-      const fetchDapObjects = fetchDapObjectsFactory(dashDriveAdapter);
-      expect(fetchDapObjects).to.be.a('function');
+      const fetchDocuments = fetchDocumentsFactory(driveAdapter);
+      expect(fetchDocuments).to.be.a('function');
     });
   });
 
   before(() => {
-    sinon.stub(dashDriveAdapter, 'fetchDapObjects')
+    sinon.stub(driveAdapter, 'fetchDocuments')
       .withArgs(expectedSearchParams.contractId, expectedSearchParams.type,
         expectedSearchParams.options).returns(Promise.resolve(expectedResult));
   });
 
   beforeEach(() => {
-    dashDriveAdapter.fetchDapObjects.resetHistory();
+    driveAdapter.fetchDocuments.resetHistory();
   });
 
   after(() => {
-    dashDriveAdapter.fetchDapObjects.restore();
+    driveAdapter.fetchDocuments.restore();
   });
 
   it('Should return dap objects', async () => {
-    const fetchDapObjects = fetchDapObjectsFactory(dashDriveAdapter);
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(0);
-    const dapObjects = await fetchDapObjects(expectedSearchParams);
+    const fetchDocuments = fetchDocumentsFactory(driveAdapter);
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
+    const dapObjects = await fetchDocuments(expectedSearchParams);
     expect(dapObjects).to.be.equal(expectedResult);
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(1);
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(1);
   });
 
   it('Should throw an error if arguments are not valid', async () => {
-    const fetchDapObjects = fetchDapObjectsFactory(dashDriveAdapter);
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(0);
-    await expect(fetchDapObjects({ contractId: 123 })).to.be.rejectedWith('params.contractId should be string');
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(0);
-    await expect(fetchDapObjects({ contractId: '123' })).to.be.rejectedWith('params should have required property \'type\'');
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(0);
-    await expect(fetchDapObjects({ contractId: '123', type: 1 })).to.be.rejectedWith('params.type should be string');
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(0);
-    await expect(fetchDapObjects({ contractId: '123', type: 'type' })).to.be.rejectedWith('params should have required property \'options\'');
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(0);
-    await expect(fetchDapObjects({ contractId: '123', type: 'type', options: 1 })).to.be.rejectedWith('params.options should be object');
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(0);
-    await expect(fetchDapObjects({})).to.be.rejectedWith('params should have required property \'contractId\'');
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(0);
-    await expect(fetchDapObjects()).to.be.rejectedWith('params should be object');
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(0);
-    await expect(fetchDapObjects([123])).to.be.rejected;
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(0);
-    await expect(fetchDapObjects([-1])).to.be.rejected;
-    expect(dashDriveAdapter.fetchDapObjects.callCount).to.be.equal(0);
+    const fetchDocuments = fetchDocumentsFactory(driveAdapter);
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
+    await expect(fetchDocuments({ contractId: 123 })).to.be.rejectedWith('params.contractId should be string');
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
+    await expect(fetchDocuments({ contractId: '123' })).to.be.rejectedWith('params should have required property \'type\'');
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
+    await expect(fetchDocuments({ contractId: '123', type: 1 })).to.be.rejectedWith('params.type should be string');
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
+    await expect(fetchDocuments({ contractId: '123', type: 'type' })).to.be.rejectedWith('params should have required property \'options\'');
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
+    await expect(fetchDocuments({ contractId: '123', type: 'type', options: 1 })).to.be.rejectedWith('params.options should be object');
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
+    await expect(fetchDocuments({})).to.be.rejectedWith('params should have required property \'contractId\'');
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
+    await expect(fetchDocuments()).to.be.rejectedWith('params should be object');
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
+    await expect(fetchDocuments([123])).to.be.rejected;
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
+    await expect(fetchDocuments([-1])).to.be.rejected;
+    expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
   });
 });
