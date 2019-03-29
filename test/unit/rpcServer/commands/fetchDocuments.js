@@ -37,8 +37,8 @@ describe('fetchDocuments', () => {
   it('Should return dap objects', async () => {
     const fetchDocuments = fetchDocumentsFactory(driveAdapter);
     expect(driveAdapter.fetchDocuments.callCount).to.be.equal(0);
-    const dapObjects = await fetchDocuments(expectedSearchParams);
-    expect(dapObjects).to.be.equal(expectedResult);
+    const documents = await fetchDocuments(expectedSearchParams);
+    expect(documents).to.be.equal(expectedResult);
     expect(driveAdapter.fetchDocuments.callCount).to.be.equal(1);
   });
 
