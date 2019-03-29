@@ -12,7 +12,7 @@ const { expect } = chai;
 const expectedSearchParams = { contractId: '123', type: 'contact', options: { where: { userId: 1 } } };
 const expectedResult = [{ contractId: '123', type: 'contact', userId: 1 }];
 
-describe('fetchContract', () => {
+describe('fetchDocuments', () => {
   describe('#factory', () => {
     it('should return a function', () => {
       const fetchDocuments = fetchDocumentsFactory(driveAdapter);
