@@ -45,7 +45,7 @@ describe('getBlockHeaders', () => {
     expect(spy.callCount).to.be.equal(0);
     await expect(getBlocks({ limit: 0.5, offset: 10 })).to.be.rejectedWith('limit should be integer');
     expect(spy.callCount).to.be.equal(0);
-    await expect(getBlocks({ limit: 27, offset: 10 })).to.be.rejectedWith('limit should be <= 25');
+    await expect(getBlocks({ limit: 2007, offset: 10 })).to.be.rejectedWith('limit should be <= 2000');
     expect(spy.callCount).to.be.equal(0);
     await expect(getBlocks({})).to.be.rejectedWith('should have required property');
     expect(spy.callCount).to.be.equal(0);
