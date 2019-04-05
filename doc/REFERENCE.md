@@ -290,7 +290,7 @@ Returns block headers
 |-------------|--------------------|-----------------------------------------------------|
 | args.offset   | number or string | block height/hash starting point                    |
 | args.limit    | number           | number of block headers to return (opt.)            |
-| args.verbose  | number           | set true to get headers as deserialized json (opt.) |
+| args.verbose  | boolean          | set true to get headers as deserialized json (opt.) |
 
 ##### Response
 
