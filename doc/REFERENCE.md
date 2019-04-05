@@ -286,10 +286,11 @@ Returns block headers
 
 ##### Params
 
-| name        | type   | description                            |
-|-------------|--------|----------------------------------------|
-| args.offset | number | block height starting point            |
-| args.limit  | number | number of block headers to return      |
+| name        | type   | description                                           |
+|-------------|--------|-------------------------------------------------------|
+| args.offset   | number | block height starting point                         |
+| args.limit    | number | number of block headers to return (opt.)            |
+| args.verbose  | number | set true to get headers as deserialized json (opt.) |
 
 ##### Response
 
