@@ -4,17 +4,17 @@ const dotenv = require('dotenv');
 // Load config from .env
 dotenv.config();
 
-const config = require('./config');
-const { validateConfig } = require('./config/validator');
-const log = require('./log');
-const rpcServer = require('./rpcServer/server');
-const QuorumService = require('./services/quorum');
-const ZmqClient = require('./externalApis/dashcore/ZmqClient');
-const DriveAdapter = require('./externalApis/driveAdapter');
-const { SpvService } = require('./services/spv');
-const insightAPI = require('./externalApis/insight');
-const dashCoreRpcClient = require('./externalApis/dashcore/rpc');
-const userIndex = require('./services/userIndex');
+const config = require('../lib/config');
+const { validateConfig } = require('../lib/config/validator');
+const log = require('../lib/log');
+const rpcServer = require('../lib/rpcServer/server');
+const QuorumService = require('../lib/services/quorum');
+const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
+const DriveAdapter = require('../lib/externalApis/driveAdapter');
+const { SpvService } = require('../lib/services/spv');
+const insightAPI = require('../lib/externalApis/insight');
+const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
+const userIndex = require('../lib/services/userIndex');
 
 async function main() {
   /* Application start */
@@ -79,7 +79,7 @@ async function main() {
 
   // Display message that everything is ok
   log.info(`Insight uri is ${config.insightUri}`);
-  log.info(`DAPI node is up and running in ${config.livenet ? 'livenet' : 'testnet'} mode`);
+  log.info(`DAPI API process is up and running in ${config.livenet ? 'livenet' : 'testnet'} mode`);
   log.info(`Network is ${config.network}`);
 }
 

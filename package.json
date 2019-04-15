@@ -1,9 +1,10 @@
 {
   "name": "@dashevo/dapi",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "A Decentralized API for Dash Masternodes",
   "scripts": {
-    "start": "node lib/app.js",
+    "api": "node scripts/api.js",
+    "spv": "node scripts/spv.js",
     "test": "nyc --check-coverage --lines=51 --branches=27 --functions=50 mocha --recursive test/unit",
     "test:full-reporting": "nyc --check-coverage --reporter=html --reporter=text --lines=42 --branches=20 --functions=40 mocha test/ --recursive",
     "test:integration": "node test/integration/",
@@ -57,7 +58,7 @@
     "sinon-chai": "^3.3.0",
     "swagger-jsdoc": "^3.2.6"
   },
-  "main": "lib/app.js",
+  "main": "scripts/app.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dashevo/dapi.git"

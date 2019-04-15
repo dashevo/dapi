@@ -15,5 +15,3 @@ RUN npm ci
 COPY . /dapi
 
 EXPOSE 3000
-
-CMD ["node", "/dapi/lib/app.js"]
