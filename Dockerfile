@@ -24,15 +24,14 @@ LABEL description="DAPI Node.JS"
 RUN apk update && apk add --no-cache zeromq-dev
 
 # Copy NPM modules
-COPY package.json package-lock.json /
+COPY package.json package-lock.json ./
 COPY --from=0 /node_modules/ /node_modules
 
 ENV PATH /node_modules/.bin:$PATH
 
 # Copy project files
 WORKDIR /usr/src/app
-
-COPY . .
+COPY . ./
 
 ARG NODE_ENV=production
 ENV NODE_ENV ${NODE_ENV}
