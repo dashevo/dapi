@@ -34,6 +34,7 @@
     "bloom-filter": "^0.2.0",
     "cbor": "^4.1.5",
     "dotenv": "^6.0.0",
+    "grpc": "^1.20.0",
     "jayson": "^2.0.4",
     "lodash": "^4.17.4",
     "node-cache": "^4.1.1",
@@ -51,12 +52,12 @@
     "istanbul": "^0.4.5",
     "mocha": "^4.1.0",
     "nodemon": "^1.18.9",
-    "nyc": "^13.3.0",
+    "nyc": "^14.0.0",
     "proxyquire": "^2.1.0",
     "should": "^13.2.3",
     "sinon": "^7.2.3",
     "sinon-chai": "^3.3.0",
-    "swagger-jsdoc": "^3.2.6"
+    "swagger-jsdoc": "^3.2.9"
   },
   "main": "scripts/app.js",
   "repository": {

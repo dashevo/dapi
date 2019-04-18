@@ -1,13 +1,17 @@
-require('dotenv').config();
+const dotenv = require('dotenv');
+const grpc = require('grpc');
 
 const config = require('../lib/config');
 const { validateConfig } = require('../lib/config/validator');
 const log = require('../lib/log');
+const createServer = require('../lib/grpcServer/createServer');
 
 const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
 
 async function main() {
   /* Application start */
+  dotenv.config();
+
   const configValidationResult = validateConfig(config);
   if (!configValidationResult.isValid) {
     configValidationResult.validationErrors.forEach(log.error);
@@ -26,12 +30,13 @@ async function main() {
   await dashCoreZmqClient.start();
   log.info('Connection to ZMQ established.');
 
-  // log.info('Starting SPV service');
-  // const spvService = new SpvService();
-  // log.info(`SPV service running with ${spvService.clients.length} connected clients`);
+  const grpcServer = createServer();
+
+  grpcServer.bind('0.0.0.0:50051', grpc.ServerCredentials.createInsecure());
+  grpcServer.start();
 
   // Display message that everything is ok
-  log.info(`DAPI SPV process is up and running in ${config.livenet ? 'livenet' : 'testnet'} mode`);
+  log.info(`DAPI TxFilterStream process is up and running in ${config.livenet ? 'livenet' : 'testnet'} mode`);
   log.info(`Network is ${config.network}`);
 }
 

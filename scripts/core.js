@@ -79,7 +79,7 @@ async function main() {
 
   // Display message that everything is ok
   log.info(`Insight uri is ${config.insightUri}`);
-  log.info(`DAPI API process is up and running in ${config.livenet ? 'livenet' : 'testnet'} mode`);
+  log.info(`DAPI Core process is up and running in ${config.livenet ? 'livenet' : 'testnet'} mode`);
   log.info(`Network is ${config.network}`);
 }
 
