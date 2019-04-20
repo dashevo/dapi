@@ -30,10 +30,20 @@ async function main() {
   // await dashCoreZmqClient.start();
   // log.info('Connection to ZMQ established.');
 
+  // Start RPC server
+  log.info('Starting GRPC server');
+
   const grpcServer = createServer();
 
-  grpcServer.bind('0.0.0.0:50051', grpc.ServerCredentials.createInsecure());
+  grpcServer.bind(
+    `0.0.0.0:${config.grpcServer.port}`,
+    grpc.ServerCredentials.createInsecure(),
+  );
+
   grpcServer.start();
+
+  log.info(`GRPC server is listening on port ${config.grpcServer.port}`);
+
 
   // Display message that everything is ok
   log.info(`DAPI TxFilterStream process is up and running in ${config.livenet ? 'livenet' : 'testnet'} mode`);

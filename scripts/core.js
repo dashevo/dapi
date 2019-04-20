@@ -66,7 +66,7 @@ async function main() {
   // Start RPC server
   log.info('Starting RPC server');
   rpcServer.start({
-    port: config.server.port,
+    port: config.rpcServer.port,
     networkType: config.network,
     spvService,
     insightAPI,
@@ -75,7 +75,7 @@ async function main() {
     userIndex,
     log,
   });
-  log.info(`RPC server is listening on port ${config.server.port}`);
+  log.info(`RPC server is listening on port ${config.rpcServer.port}`);
 
   // Display message that everything is ok
   log.info(`Insight uri is ${config.insightUri}`);
