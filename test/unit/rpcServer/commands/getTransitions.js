@@ -67,9 +67,15 @@ describe('getTransitions', () => {
 
   it('Should paginate', async () => {
     const getTransitions = getTransitionsFactory(coreAPI);
-    const firstTwoTransitions = await getTransitions({ userId: getValidUserId(), from: 0, limit: 2 });
-    const secondTransition = await getTransitions({ userId: getValidUserId(), from: 1, limit: 1 });
-    const lastTwoTransitions = await getTransitions({ userId: getValidUserId(), from: 1, limit: 2 });
+    const firstTwoTransitions = await getTransitions({
+      userId: getValidUserId(), from: 0, limit: 2,
+    });
+    const secondTransition = await getTransitions({
+      userId: getValidUserId(), from: 1, limit: 1,
+    });
+    const lastTwoTransitions = await getTransitions({
+      userId: getValidUserId(), from: 1, limit: 2,
+    });
     expect(firstTwoTransitions).to.be.deep.equal({
       totalCount: 3,
       transitions: [
