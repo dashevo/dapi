@@ -3,7 +3,7 @@
   "version": "0.5.0",
   "description": "A Decentralized API for Dash Masternodes",
   "scripts": {
-    "core": "node scripts/core.js.js",
+    "core": "node scripts/core.js",
     "tx-filter-stream": "node scripts/tx-filter-stream.js",
     "test": "nyc --check-coverage --lines=51 --branches=27 --functions=50 mocha --recursive test/unit",
     "test:full-reporting": "nyc --check-coverage --reporter=html --reporter=text --lines=42 --branches=20 --functions=40 mocha test/ --recursive",
