@@ -1,7 +1,7 @@
 {
   "name": "@dashevo/dapi",
   "version": "0.4.2",
-  "description": "A Decentralized API for Dash Masternodes",
+  "description": "A decentralized API for the Dash network",
   "scripts": {
     "start": "node lib/app.js",
     "test": "nyc --check-coverage --lines=51 --branches=27 --functions=50 mocha --recursive test/unit",
