@@ -2,6 +2,7 @@
   "type": "object",
   "properties": {
     "address": {
+      "type": ["array", "string"],
       "oneOf": [
         { "type": "string",  "maxLength": 34, "minLength": 26},
         { "type": "array" }
