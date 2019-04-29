@@ -1,0 +1,37 @@
+{
+    "type": "object",
+    "getUTXOFromToRange1000": true,
+    "properties": {
+    "address": {
+        "type": ["array", "string"],
+            "oneOf": [
+            { "type": "string",  "maxLength": 34, "minLength": 26},
+            { "type": "array" }
+        ]
+    },
+    "noTxList": {
+        "type": ["boolean"]
+    },
+    "from": {
+        "type": ["integer"],
+            "minimum": 0
+    },
+    "to": {
+        "type": ["integer"],
+            "minimum": 0
+    },
+    "fromHeight": {
+        "type": ["integer"],
+            "minimum": 0
+    },
+    "toHeight": {
+        "type": ["integer"],
+            "minimum": 0
+    },
+    "if": { "properties": { "from": { "minimum": 10 } } },
+    "then": false
+},
+    "required": [
+    "address"
+]
+}
