@@ -1,6 +1,7 @@
 const EventEmitter = require('events');
 const chai = require('chai');
 const userIndex = require('../../../lib/services/userIndex');
+const wait = require('../../../lib/utils/wait');
 
 const { expect } = chai;
 
@@ -40,7 +41,10 @@ const zmqMock = new EventEmitter();
 zmqMock.topics = { hashblock: 'hashblock' };
 
 describe('userIndex', () => {
-  it('Should not throw out of range error', () => {
+  it('Should not throw out of range error', async () => {
     userIndex.start({ dashCoreRpcClient: rpcMock, dashCoreZmqClient: zmqMock, log: console });
+    await wait(10);
+    zmqMock.emit(zmqMock.topics.hashblock, '4');
+    await wait(10);
   });
 });
