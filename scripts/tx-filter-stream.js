@@ -20,15 +20,19 @@ async function main() {
   }
 
   // Subscribe to events from dashcore
-  // const dashCoreZmqClient = new ZmqClient(config.dashcore.zmq.host, config.dashcore.zmq.port);
+  const dashCoreZmqClient = new ZmqClient(config.dashcore.zmq.host, config.dashcore.zmq.port);
   // // Bind logs on ZMQ connection events
-  // dashCoreZmqClient.on(ZmqClient.events.DISCONNECTED, log.warn);
-  // dashCoreZmqClient.on(ZmqClient.events.CONNECTION_DELAY, log.warn);
-  // dashCoreZmqClient.on(ZmqClient.events.MONITOR_ERROR, log.warn);
+  dashCoreZmqClient.on(ZmqClient.events.DISCONNECTED, log.warn);
+  dashCoreZmqClient.on(ZmqClient.events.CONNECTION_DELAY, log.warn);
+  dashCoreZmqClient.on(ZmqClient.events.MONITOR_ERROR, log.warn);
   // // Wait until zmq connection is established
-  // log.info(`Connecting to dashcore ZMQ on ${dashCoreZmqClient.connectionString}`);
-  // await dashCoreZmqClient.start();
-  // log.info('Connection to ZMQ established.');
+  log.info(`Connecting to dashcore ZMQ on ${dashCoreZmqClient.connectionString}`);
+  await dashCoreZmqClient.start();
+  log.info('Connection to ZMQ established.');
+
+  dashCoreZmqClient.on('newTx', testTransactionAgainstFilterCollection);
+
+  dashCoreZmqClient.on('newBlock', emitBlockEventOnFilterCollection);
 
   // Start RPC server
   log.info('Starting GRPC server');
