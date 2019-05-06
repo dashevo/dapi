@@ -6,7 +6,7 @@ const { validateConfig } = require('../lib/config/validator');
 const log = require('../lib/log');
 const createServer = require('../lib/grpcServer/createServer');
 
-// const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
+const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
 
 async function main() {
   /* Application start */
