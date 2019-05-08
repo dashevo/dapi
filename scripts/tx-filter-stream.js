@@ -7,6 +7,8 @@ const log = require('../lib/log');
 const createServer = require('../lib/grpcServer/createServer');
 
 const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
+const testTransactionAgainstFilterCollection = require('../lib/transactionsFilter/testTransactionAgainstFilter');
+const emitBlockEventToFilterCollectionFactory = require('../lib/transactionsFilter/emitBlockEventToFilterCollectionFactory');
 
 async function main() {
   /* Application start */
@@ -30,9 +32,11 @@ async function main() {
   await dashCoreZmqClient.start();
   log.info('Connection to ZMQ established.');
 
+  const emitBlockToFilterCollection = emitBlockEventToFilterCollectionFactory();
+
   dashCoreZmqClient.on('newTx', testTransactionAgainstFilterCollection);
 
-  dashCoreZmqClient.on('newBlock', emitBlockEventOnFilterCollection);
+  dashCoreZmqClient.on('newBlock', emitBlockToFilterCollection);
 
   // Start RPC server
   log.info('Starting GRPC server');
