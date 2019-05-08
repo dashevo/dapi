@@ -5,10 +5,12 @@ const config = require('../lib/config');
 const { validateConfig } = require('../lib/config/validator');
 const log = require('../lib/log');
 const createServer = require('../lib/grpcServer/createServer');
+const BloomFilterCollection = require('../lib/bloomFilter/BloomFilterCollection');
 
 const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
-const testTransactionAgainstFilterCollection = require('../lib/transactionsFilter/testTransactionAgainstFilter');
+const testTransactionAgainstFilterCollectionFactory = require('../lib/transactionsFilter/testTransactionAgainstFilterCollectionFactory');
 const emitBlockEventToFilterCollectionFactory = require('../lib/transactionsFilter/emitBlockEventToFilterCollectionFactory');
+const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
 
 async function main() {
   /* Application start */
@@ -32,7 +34,15 @@ async function main() {
   await dashCoreZmqClient.start();
   log.info('Connection to ZMQ established.');
 
-  const emitBlockToFilterCollection = emitBlockEventToFilterCollectionFactory();
+  const bloomFilterCollection = new BloomFilterCollection();
+  const emitBlockToFilterCollection = emitBlockEventToFilterCollectionFactory(
+    bloomFilterCollection,
+    dashCoreRpcClient.getBlock,
+  );
+  const testTransactionAgainstFilterCollection = testTransactionAgainstFilterCollectionFactory(
+    bloomFilterCollection,
+    dashCoreRpcClient.getRawTransaction,
+  );
 
   dashCoreZmqClient.on('newTx', testTransactionAgainstFilterCollection);
 
