@@ -45,13 +45,12 @@ async function main() {
   );
 
   dashCoreZmqClient.on('newTx', testTransactionAgainstFilterCollection);
-
   dashCoreZmqClient.on('newBlock', emitBlockToFilterCollection);
 
-  // Start RPC server
+  // Start GRPC server
   log.info('Starting GRPC server');
 
-  const grpcServer = createServer();
+  const grpcServer = createServer(bloomFilterCollection);
 
   grpcServer.bind(
     `0.0.0.0:${config.grpcServer.port}`,
