@@ -6,7 +6,6 @@ const { validateConfig } = require('../lib/config/validator');
 const log = require('../lib/log');
 
 const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
-const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
 
 const createServerFactory = require('../lib/grpcServer/createServerFactory');
 const BloomFilterCollection = require('../lib/bloomFilter/BloomFilterCollection');
@@ -41,16 +40,14 @@ async function main() {
   const bloomFilterCollection = new BloomFilterCollection();
   const emitBlockToFilterCollection = emitBlockEventToFilterCollectionFactory(
     bloomFilterCollection,
-    dashCoreRpcClient,
   );
   const testTransactionAgainstFilterCollection = testTransactionAgainstFilterCollectionFactory(
     bloomFilterCollection,
-    dashCoreRpcClient,
   );
 
-  dashCoreZmqClient.on(dashCoreZmqClient.topics.hashtx, testTransactionAgainstFilterCollection);
-  dashCoreZmqClient.on(dashCoreZmqClient.topics.hashtxlock, testTransactionAgainstFilterCollection);
-  dashCoreZmqClient.on(dashCoreZmqClient.topics.hashblock, emitBlockToFilterCollection);
+  dashCoreZmqClient.on(dashCoreZmqClient.topics.rawtx, testTransactionAgainstFilterCollection);
+  dashCoreZmqClient.on(dashCoreZmqClient.topics.rawtxlock, testTransactionAgainstFilterCollection);
+  dashCoreZmqClient.on(dashCoreZmqClient.topics.rawblock, emitBlockToFilterCollection);
 
   // Start GRPC server
   log.info('Starting GRPC server');
