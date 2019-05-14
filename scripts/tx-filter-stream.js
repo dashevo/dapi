@@ -8,7 +8,7 @@ const log = require('../lib/log');
 const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
 
 const createServerFactory = require('../lib/grpcServer/createServerFactory');
-const BloomFilterEmitterCollection = require('../lib/bloomFilter/BloomFilterEmitterCollection');
+const BloomFilterEmitterCollection = require('../lib/bloomFilter/emitter/BloomFilterEmitterCollection');
 
 const testTransactionAgainstFilterCollectionFactory = require('../lib/transactionsFilter/testTransactionAgainstFilterCollectionFactory');
 const emitBlockEventToFilterCollectionFactory = require('../lib/transactionsFilter/emitBlockEventToFilterCollectionFactory');
