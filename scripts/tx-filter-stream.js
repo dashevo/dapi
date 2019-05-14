@@ -8,7 +8,7 @@ const log = require('../lib/log');
 const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
 
 const createServerFactory = require('../lib/grpcServer/createServerFactory');
-const BloomFilterCollection = require('../lib/bloomFilter/BloomFilterCollection');
+const BloomFilterEmitterCollection = require('../lib/bloomFilter/BloomFilterEmitterCollection');
 
 const testTransactionAgainstFilterCollectionFactory = require('../lib/transactionsFilter/testTransactionAgainstFilterCollectionFactory');
 const emitBlockEventToFilterCollectionFactory = require('../lib/transactionsFilter/emitBlockEventToFilterCollectionFactory');
@@ -37,12 +37,12 @@ async function main() {
   await dashCoreZmqClient.start();
   log.info('Connection to ZMQ established.');
 
-  const bloomFilterCollection = new BloomFilterCollection();
+  const bloomFilterEmitterCollection = new BloomFilterEmitterCollection();
   const emitBlockToFilterCollection = emitBlockEventToFilterCollectionFactory(
-    bloomFilterCollection,
+    bloomFilterEmitterCollection,
   );
   const testTransactionAgainstFilterCollection = testTransactionAgainstFilterCollectionFactory(
-    bloomFilterCollection,
+    bloomFilterEmitterCollection,
   );
 
   dashCoreZmqClient.on(dashCoreZmqClient.topics.rawtx, testTransactionAgainstFilterCollection);
@@ -53,7 +53,7 @@ async function main() {
   log.info('Starting GRPC server');
 
   const getTransactionsByFilterHandler = getTransactionsByFilterHandlerFactory(
-    bloomFilterCollection,
+    bloomFilterEmitterCollection,
     testTransactionsAgainstFilter,
   );
 
