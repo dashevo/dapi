@@ -70,6 +70,7 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
   it('should send a matched raw transaction when it appears', () => {
     const bloomFilter = BloomFilter.create(1, 0.01);
+
     bloomFilter.insert(Buffer.from(transaction.hash, 'hex'));
 
     call.request = bloomFilter.toObject();
