@@ -33,6 +33,7 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
   let call;
   let getTransactionsByFilterHandler;
+  let bloomFilterEmitterCollection;
   let emitBlockEventToFilterCollection;
   let testRawTransactionAgainstFilterCollection;
   let transaction;
@@ -54,7 +55,7 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     call = new GrpcCallMock(this.sinon);
 
-    const bloomFilterEmitterCollection = new BloomFilterEmitterCollection();
+    bloomFilterEmitterCollection = new BloomFilterEmitterCollection();
     emitBlockEventToFilterCollection = emitBlockEventToFilterCollectionFactory(
       bloomFilterEmitterCollection,
     );
@@ -103,9 +104,6 @@ describe('getTransactionsByFilterHandlerFactory', () => {
     // Call listener when new transaction appears
     testRawTransactionAgainstFilterCollection(transaction.serialize());
 
-    const expectedResponse = new TransactionFilterResponse();
-    expectedResponse.setRawTransaction(transaction.toBuffer());
-
     expect(call.write).to.not.have.been.called();
     expect(call.end).to.not.have.been.called();
   });
@@ -113,5 +111,29 @@ describe('getTransactionsByFilterHandlerFactory', () => {
   it('should send a merkle block with sent matched transactions when new block is mined');
   it('should not send a merkle block if it doesn\'t contain sent matched transactions');
   it('should not send a merkle block if there is no matched transactions');
-  it('should end call and remove the bloom filter emitter from the collection when client disconnects');
+
+  it('should end call and remove the bloom filter emitter from the collection when client disconnects', () => {
+    // Create empty bloom filter
+    const bloomFilter = BloomFilter.create(1, 0.01);
+
+    call.request = bloomFilter.toObject();
+
+    // There are no bloom filters yet
+    expect(bloomFilterEmitterCollection.filters).to.be.empty();
+
+    // Get bloom filter from client
+    getTransactionsByFilterHandler(call);
+
+    // The new bloom filter was added
+    expect(bloomFilterEmitterCollection.filters).to.have.lengthOf(1);
+
+    // Client disconnects
+    call.emit('cancelled');
+
+    // Bloom filters was removed when client disconnects
+    expect(bloomFilterEmitterCollection.filters).to.be.empty();
+
+    expect(call.write).to.not.have.been.called();
+    expect(call.end).to.have.been.calledOnce();
+  });
 });
