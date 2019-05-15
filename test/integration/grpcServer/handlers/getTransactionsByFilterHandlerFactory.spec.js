@@ -69,14 +69,19 @@ describe('getTransactionsByFilterHandlerFactory', () => {
   });
 
   it('should send a matched raw transaction when it appears', () => {
+    // Create bloom filter with transaction hash
     const bloomFilter = BloomFilter.create(1, 0.01);
 
-    bloomFilter.insert(Buffer.from(transaction.hash, 'hex'));
+    const binaryTransactionHash = Buffer.from(transaction.hash, 'hex');
+
+    bloomFilter.insert(binaryTransactionHash);
 
     call.request = bloomFilter.toObject();
 
+    // Get bloom filter from client
     getTransactionsByFilterHandler(call);
 
+    // Call listener when new transaction appears
     testRawTransactionAgainstFilterCollection(transaction.serialize());
 
     const expectedResponse = new TransactionFilterResponse();
@@ -86,9 +91,25 @@ describe('getTransactionsByFilterHandlerFactory', () => {
     expect(call.end).to.not.have.been.called();
   });
 
-  it('should not send a not matched raw transaction when it appears');
-  it('should send a matched locked transaction hash when it appears');
-  it('should not send a not matched locked transaction hash when it appears');
+  it('should not send a not matched raw transaction when it appears', () => {
+    // Create empty bloom filter
+    const bloomFilter = BloomFilter.create(1, 0.01);
+
+    call.request = bloomFilter.toObject();
+
+    // Get bloom filter from client
+    getTransactionsByFilterHandler(call);
+
+    // Call listener when new transaction appears
+    testRawTransactionAgainstFilterCollection(transaction.serialize());
+
+    const expectedResponse = new TransactionFilterResponse();
+    expectedResponse.setRawTransaction(transaction.toBuffer());
+
+    expect(call.write).to.not.have.been.called();
+    expect(call.end).to.not.have.been.called();
+  });
+
   it('should send a merkle block with sent matched transactions when new block is mined');
   it('should not send a merkle block if it doesn\'t contain sent matched transactions');
   it('should not send a merkle block if there is no matched transactions');

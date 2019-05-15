@@ -56,12 +56,6 @@ async function main() {
     testRawTransactionAgainstFilterCollection,
   );
 
-  // Send locked transaction hashes via getTransactionsByFilter stream if matched
-  dashCoreZmqClient.on(
-    dashCoreZmqClient.topics.rawtxlock,
-    testRawTransactionAgainstFilterCollection,
-  );
-
   // Send merkle blocks via getTransactionsByFilter stream
   dashCoreZmqClient.on(
     dashCoreZmqClient.topics.rawblock,
