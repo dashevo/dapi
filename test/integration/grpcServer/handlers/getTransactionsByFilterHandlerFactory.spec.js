@@ -175,8 +175,11 @@ describe('getTransactionsByFilterHandlerFactory', () => {
     expect(merkleBlock.hashes).to.have.lengthOf(2);
     expect(merkleBlock.hashes).to.have.members([transaction.hash, notMatchedTransaction.hash]);
     expect(merkleBlock.header.hash).to.equal(blockHeader.hash);
-    // TODO Verify flags
-    // expect(merkleBlock.flags).to.equal();
+
+    // noinspection JSAccessibilityCheck
+    expect(merkleBlock.hasTransaction(notMatchedTransaction.hash)).to.be.false();
+    // noinspection JSAccessibilityCheck
+    expect(merkleBlock.hasTransaction(transaction.hash)).to.be.true();
 
     expect(call.end).to.not.have.been.called();
   });
