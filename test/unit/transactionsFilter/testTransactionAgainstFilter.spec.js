@@ -136,8 +136,6 @@ describe('testTransactionAgainstFilter', () => {
     + ' and output is to pub key hash', () => {
     const filter = BloomFilter.create(1, 0.001);
     const address = new PrivateKey().toAddress();
-    console.log(address.toString());
-    console.log(address.toString().length);
     const tx = new Transaction().to(address, 10);
     filter.nFlags = BloomFilter.BLOOM_UPDATE_P2PUBKEY_ONLY;
     filter.insert(address.hashBuffer);
@@ -225,7 +223,6 @@ describe('testTransactionAgainstFilter', () => {
     const irrelevantOutputIndex2 = '000000d70786e899529d71dbeba91ba216982fb6ba58f3bdaab65e73b7e9260b00000000';
 
     const tx = new Transaction(txHex);
-    console.log(tx.inputs[0].prevTxId.toString('hex'));
 
     let filter = BloomFilter.create(1, 0.0001, 0, BloomFilter.BLOOM_UPDATE_ALL);
     filter.insert(Buffer.from(txHash, 'hex'));
