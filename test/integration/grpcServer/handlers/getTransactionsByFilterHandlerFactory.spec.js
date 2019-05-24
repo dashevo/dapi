@@ -131,6 +131,7 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     expect(call.write).to.have.been.calledOnceWith(expectedResponse.toObject());
     expect(call.end).to.not.have.been.called();
+    expect(callback).to.not.have.been.called();
   });
 
   it('should not send a not matched raw transaction when it appears', function it() {
@@ -149,6 +150,7 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     expect(call.write).to.not.have.been.called();
     expect(call.end).to.not.have.been.called();
+    expect(callback).to.not.have.been.called();
   });
 
   it('should send a merkle block with sent matched transactions when a new block is mined', function it() {
@@ -219,6 +221,7 @@ describe('getTransactionsByFilterHandlerFactory', () => {
     expect(merkleBlock.hasTransaction(transaction.hash)).to.be.true();
 
     expect(call.end).to.not.have.been.called();
+    expect(callback).to.not.have.been.called();
   });
 
   it('should not send a merkle block if it doesn\'t contain sent matched transactions', function it() {
@@ -269,6 +272,7 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     expect(call.write).to.have.been.calledOnceWith(expectedResponse.toObject());
     expect(call.end).to.not.have.been.called();
+    expect(callback).to.not.have.been.called();
   });
 
   it('should not send a merkle block if there is no matched transactions', function it() {
@@ -316,6 +320,7 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     expect(call.write).to.not.have.been.called();
     expect(call.end).to.not.have.been.called();
+    expect(callback).to.not.have.been.called();
   });
 
   it('should end call and remove the bloom filter emitter from the collection when client disconnects', function it() {
@@ -343,5 +348,6 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     expect(call.write).to.not.have.been.called();
     expect(call.end).to.have.been.calledOnce();
+    expect(callback).to.have.been.calledOnceWith(null, null);
   });
 });
