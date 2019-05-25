@@ -1,7 +1,9 @@
 const chai = require('chai');
 const dirtyChai = require('dirty-chai');
 const BloomFilter = require('bloom-filter');
-const { Transaction, PrivateKey, Script } = require('@dashevo/dashcore-lib');
+const {
+  Transaction, PrivateKey, Script, Address,
+} = require('@dashevo/dashcore-lib');
 
 const { Output, Input } = Transaction;
 const { expect } = chai;
@@ -265,6 +267,13 @@ describe('testTransactionAgainstFilter', () => {
     expect(testTransactionAgainstFilter(filter, tx)).to.be.false();
   });
 
-  // TODO: test coinbase tx;
-  // TODO: test outpoint serialization
+  it('Should be able to handle coinbase tx', () => {
+    const tx = new Transaction('03000500010000000000000000000000000000000000000000000000000000000000000000ffffffff1703f06a101299dbcd32279d9e01e508000000002f4e614effffffff0285464209000000001976a9146a341485a9444b35dc9cb90d24e7483de7d37e0088ac7f464209000000001976a914ad037df64c0d0ec5d0395eb9a543f93fcc26092388ac00000000260100f06a1000c69a125eeb5ce6fa55c48966174a90253a79ce3350ccc4918ba2cb1463513c88');
+
+    const address = new Address('XkNPrBSJtrHZUvUqb3JF4g5rMB3uzaJfEL');
+    const filter = BloomFilter.create(1, 0.0001);
+    filter.insert(address.hashBuffer);
+
+    expect(testTransactionAgainstFilter(filter, tx)).to.be.true();
+  });
 });
