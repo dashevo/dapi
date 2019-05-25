@@ -77,8 +77,39 @@ describe('getTransactionsByFilterHandlerFactory', () => {
     );
   });
 
-  it('should send a matched raw transaction when it appears', () => {
-    // Create bloom filter with transaction hash
+  it('should respond with error if bloom filter is not valid', function it() {
+    // Create a wrong bloom filter
+    call.request = {
+      nHashFuncs: 100,
+      nTweak: 1000,
+      nFlags: 100,
+      vData: [],
+    };
+
+    const callback = this.sinon.stub();
+
+    // Get the bloom filter from a client
+    getTransactionsByFilterHandler(call, callback);
+
+    // Call listener when new transaction appears
+    testRawTransactionAgainstFilterCollection(transaction.toBuffer());
+
+    expect(callback).to.have.been.calledOnce();
+    expect(callback.getCall(0).args).to.have.lengthOf(2);
+
+    const [error, response] = callback.getCall(0).args;
+
+    expect(error).to.be.instanceOf(Error);
+    expect(error).to.have.property('message', 'Invalid bloom filter: "nHashFuncs" exceeded max size "50"');
+
+    expect(response).to.be.null();
+
+    expect(call.write).to.not.have.been.called();
+    expect(call.end).to.not.have.been.called();
+  });
+
+  it('should send a matched raw transaction when it appears', function it() {
+    // Create a bloom filter with a transaction hash
     const bloomFilter = BloomFilter.create(1, 0.01);
 
     const binaryTransactionHash = Buffer.from(transaction.hash, 'hex');
@@ -87,10 +118,12 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     call.request = bloomFilter.toObject();
 
-    // Get bloom filter from client
-    getTransactionsByFilterHandler(call);
+    const callback = this.sinon.stub();
 
-    // Call listener when new transaction appears
+    // Get the bloom filter from client
+    getTransactionsByFilterHandler(call, callback);
+
+    // Call listener when a new transaction appears
     testRawTransactionAgainstFilterCollection(transaction.toBuffer());
 
     const expectedResponse = new TransactionFilterResponse();
@@ -98,26 +131,30 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     expect(call.write).to.have.been.calledOnceWith(expectedResponse.toObject());
     expect(call.end).to.not.have.been.called();
+    expect(callback).to.not.have.been.called();
   });
 
-  it('should not send a not matched raw transaction when it appears', () => {
-    // Create empty bloom filter
+  it('should not send a not matched raw transaction when it appears', function it() {
+    // Create an empty bloom filter
     const bloomFilter = BloomFilter.create(1, 0.01);
 
     call.request = bloomFilter.toObject();
 
-    // Get bloom filter from client
-    getTransactionsByFilterHandler(call);
+    const callback = this.sinon.stub();
+
+    // Get the bloom filter from client
+    getTransactionsByFilterHandler(call, callback);
 
     // Call listener when new transaction appears
     testRawTransactionAgainstFilterCollection(transaction.toBuffer());
 
     expect(call.write).to.not.have.been.called();
     expect(call.end).to.not.have.been.called();
+    expect(callback).to.not.have.been.called();
   });
 
-  it('should send a merkle block with sent matched transactions when a new block is mined', () => {
-    // Create bloom filter with transaction hash
+  it('should send a merkle block with sent matched transactions when a new block is mined', function it() {
+    // Create a bloom filter with transaction hash
     const bloomFilter = BloomFilter.create(1, 0.01);
 
     const binaryTransactionHash = Buffer.from(transaction.hash, 'hex');
@@ -126,10 +163,12 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     call.request = bloomFilter.toObject();
 
-    // Get bloom filter from client
-    getTransactionsByFilterHandler(call);
+    const callback = this.sinon.stub();
 
-    // Call listener when new transaction appears
+    // Get the bloom filter from client
+    getTransactionsByFilterHandler(call, callback);
+
+    // Call listener when a new transaction appears
     testRawTransactionAgainstFilterCollection(transaction.toBuffer());
 
     // Create one more transaction which will not match the bloom filter
@@ -182,9 +221,10 @@ describe('getTransactionsByFilterHandlerFactory', () => {
     expect(merkleBlock.hasTransaction(transaction.hash)).to.be.true();
 
     expect(call.end).to.not.have.been.called();
+    expect(callback).to.not.have.been.called();
   });
 
-  it('should not send a merkle block if it doesn\'t contain sent matched transactions', () => {
+  it('should not send a merkle block if it doesn\'t contain sent matched transactions', function it() {
     // Create bloom filter with transaction hash
     const bloomFilter = BloomFilter.create(1, 0.01);
 
@@ -194,8 +234,10 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     call.request = bloomFilter.toObject();
 
-    // Get bloom filter from client
-    getTransactionsByFilterHandler(call);
+    const callback = this.sinon.stub();
+
+    // Get the bloom filter from client
+    getTransactionsByFilterHandler(call, callback);
 
     // Call listener when new transaction appears
     testRawTransactionAgainstFilterCollection(transaction.toBuffer());
@@ -230,9 +272,10 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     expect(call.write).to.have.been.calledOnceWith(expectedResponse.toObject());
     expect(call.end).to.not.have.been.called();
+    expect(callback).to.not.have.been.called();
   });
 
-  it('should not send a merkle block if there is no matched transactions', () => {
+  it('should not send a merkle block if there is no matched transactions', function it() {
     // Create bloom filter with transaction hash
     const bloomFilter = BloomFilter.create(1, 0.01);
 
@@ -242,8 +285,10 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     call.request = bloomFilter.toObject();
 
-    // Get bloom filter from client
-    getTransactionsByFilterHandler(call);
+    const callback = this.sinon.stub();
+
+    // Get the bloom filter from client
+    getTransactionsByFilterHandler(call, callback);
 
     // Create one more transaction which will not match the bloom filter
     const notMatchedTransaction = new Transaction(transaction.toObject());
@@ -275,9 +320,10 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     expect(call.write).to.not.have.been.called();
     expect(call.end).to.not.have.been.called();
+    expect(callback).to.not.have.been.called();
   });
 
-  it('should end call and remove the bloom filter emitter from the collection when client disconnects', () => {
+  it('should end call and remove the bloom filter emitter from the collection when client disconnects', function it() {
     // Create empty bloom filter
     const bloomFilter = BloomFilter.create(1, 0.01);
 
@@ -286,8 +332,10 @@ describe('getTransactionsByFilterHandlerFactory', () => {
     // There are no bloom filters yet
     expect(bloomFilterEmitterCollection.filters).to.be.empty();
 
-    // Get bloom filter from client
-    getTransactionsByFilterHandler(call);
+    const callback = this.sinon.stub();
+
+    // Get the bloom filter from client
+    getTransactionsByFilterHandler(call, callback);
 
     // The new bloom filter was added
     expect(bloomFilterEmitterCollection.filters).to.have.lengthOf(1);
@@ -300,5 +348,6 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     expect(call.write).to.not.have.been.called();
     expect(call.end).to.have.been.calledOnce();
+    expect(callback).to.have.been.calledOnceWith(null, null);
   });
 });
