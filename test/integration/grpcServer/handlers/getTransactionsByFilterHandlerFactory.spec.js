@@ -9,6 +9,7 @@ const {
   Block,
   BlockHeader,
   MerkleBlock,
+  PrivateKey,
 } = require('@dashevo/dashcore-lib');
 
 const BloomFilter = require('bloom-filter');
@@ -44,22 +45,10 @@ describe('getTransactionsByFilterHandlerFactory', () => {
   let emitBlockEventToFilterCollection;
   let testRawTransactionAgainstFilterCollection;
   let transaction;
-  let privateKey;
 
   beforeEach(function beforeEach() {
-    privateKey = 'cSBnVM4xvxarwGQuAfQFwqDg9k5tErHUHzgWsEfD4zdwUasvqRVY';
-    const testScript = 'OP_DUP OP_HASH160 20 0x88d9931ea73d60eaf7e5671efc0552b912911f2a OP_EQUALVERIFY OP_CHECKSIG';
-    const testPrevTx = 'a477af6b2667c29670467e4e0728b685ee07b240235771862318e29ddbe58458';
-    const testAmount = 1020000;
-    const toAddress = 'yXGeNPQXYFXhLAN1ZKrAjxzzBnZ2JZNKnh';
-    transaction = new Transaction();
-    transaction.from({
-      txId: testPrevTx,
-      outputIndex: 0,
-      script: testScript,
-      satoshis: testAmount,
-    }).to(toAddress, testAmount - 10000)
-      .sign(privateKey);
+    const address = new PrivateKey().toAddress();
+    transaction = new Transaction().to(address, 10);
 
     call = new GrpcCallMock(this.sinon);
 
@@ -172,9 +161,8 @@ describe('getTransactionsByFilterHandlerFactory', () => {
     testRawTransactionAgainstFilterCollection(transaction.toBuffer());
 
     // Create one more transaction which will not match the bloom filter
-    const notMatchedTransaction = new Transaction(transaction.toObject());
-    notMatchedTransaction.to('yhvXpqQjfN9S4j5mBKbxeGxiETJrrLETg5', 9000000)
-      .sign(privateKey);
+    const address = new PrivateKey().toAddress();
+    const notMatchedTransaction = new Transaction().to(address, 10);
 
     // Create a block with both transactions
     const blockHeader = new BlockHeader({
@@ -243,9 +231,8 @@ describe('getTransactionsByFilterHandlerFactory', () => {
     testRawTransactionAgainstFilterCollection(transaction.toBuffer());
 
     // Create one more transaction which will not match the bloom filter
-    const notMatchedTransaction = new Transaction(transaction.toObject());
-    notMatchedTransaction.to('yhvXpqQjfN9S4j5mBKbxeGxiETJrrLETg5', 9000000)
-      .sign(privateKey);
+    const address = new PrivateKey().toAddress();
+    const notMatchedTransaction = new Transaction().to(address, 10);
 
     // Create a block with only mot matched transaction
     const blockHeader = new BlockHeader({
@@ -291,9 +278,8 @@ describe('getTransactionsByFilterHandlerFactory', () => {
     getTransactionsByFilterHandler(call, callback);
 
     // Create one more transaction which will not match the bloom filter
-    const notMatchedTransaction = new Transaction(transaction.toObject());
-    notMatchedTransaction.to('yhvXpqQjfN9S4j5mBKbxeGxiETJrrLETg5', 9000000)
-      .sign(privateKey);
+    const address = new PrivateKey().toAddress();
+    const notMatchedTransaction = new Transaction().to(address, 10);
 
     // Create a block with both transactions
     const blockHeader = new BlockHeader({
