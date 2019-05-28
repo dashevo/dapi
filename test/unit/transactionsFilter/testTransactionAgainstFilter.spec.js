@@ -13,7 +13,7 @@ const testTransactionAgainstFilter = require('../../../lib/transactionsFilter/te
 
 describe('testTransactionAgainstFilter', () => {
   it('should match on address in output', () => {
-    const filter = BloomFilter.create(1, 0.001);
+    const filter = BloomFilter.create(1, 0.0001);
     const address = new PrivateKey().toAddress();
     const tx = new Transaction().to(address, 10);
     filter.insert(address.hashBuffer);
@@ -23,7 +23,7 @@ describe('testTransactionAgainstFilter', () => {
   });
 
   it('should not match on address if there is no such output in transaction', () => {
-    const filter = BloomFilter.create(1, 0.001);
+    const filter = BloomFilter.create(1, 0.0001);
     const addressInFilter = new PrivateKey().toAddress();
     const addressInTransaction = new PrivateKey().toAddress();
     const tx = new Transaction().to(addressInTransaction, 10);
@@ -34,7 +34,7 @@ describe('testTransactionAgainstFilter', () => {
   });
 
   it('should match when input script contains desired data', () => {
-    const filter = BloomFilter.create(1, 0.001);
+    const filter = BloomFilter.create(1, 0.0001);
     const address = new PrivateKey().toAddress();
     const tx = new Transaction().to(address, 10);
     filter.insert(address.hashBuffer);
@@ -54,7 +54,7 @@ describe('testTransactionAgainstFilter', () => {
   });
 
   it("should not match when input script doesn't contain desired data", () => {
-    const filter = BloomFilter.create(1, 0.001);
+    const filter = BloomFilter.create(1, 0.0001);
     const addressInFilter = new PrivateKey().toAddress();
     const addressInTransaction = new PrivateKey().toAddress();
     const tx = new Transaction().to(addressInTransaction, 10);
@@ -76,7 +76,7 @@ describe('testTransactionAgainstFilter', () => {
 
   it('should add outpoint to the filter if BLOOM_UPDATE_ALL flag is set in the filter'
     + ' and match transaction with that outpoint in input', () => {
-    const filter = BloomFilter.create(1, 0.001);
+    const filter = BloomFilter.create(1, 0.0001);
     const address = new PrivateKey().toAddress();
     const tx = new Transaction().to(address, 10);
     filter.nFlags = BloomFilter.BLOOM_UPDATE_ALL;
@@ -97,7 +97,7 @@ describe('testTransactionAgainstFilter', () => {
 
   it('should not add outpoint to the filter if BLOOM_UPDATE_NONE flag is'
     + ' set in the filter', () => {
-    const filter = BloomFilter.create(1, 0.001);
+    const filter = BloomFilter.create(1, 0.0001);
     const address = new PrivateKey().toAddress();
     const tx = new Transaction().to(address, 10);
     filter.nFlags = BloomFilter.BLOOM_UPDATE_NONE;
@@ -118,7 +118,7 @@ describe('testTransactionAgainstFilter', () => {
 
   it('should add outpoint to the filter if BLOOM_UPDATE_P2PUBKEY_ONLY,'
     + ' and output is pub key out', () => {
-    const filter = BloomFilter.create(1, 0.001);
+    const filter = BloomFilter.create(1, 0.0001);
     const pubKey = new PrivateKey().toPublicKey();
     const output = new Output({
       satoshis: 10,
@@ -143,7 +143,7 @@ describe('testTransactionAgainstFilter', () => {
 
   it('should not add outpoint to the filter if BLOOM_UPDATE_P2PUBKEY_ONLY,'
     + ' and output is to pub key hash', () => {
-    const filter = BloomFilter.create(1, 0.001);
+    const filter = BloomFilter.create(1, 0.0001);
     const address = new PrivateKey().toAddress();
     const tx = new Transaction().to(address, 10);
     filter.nFlags = BloomFilter.BLOOM_UPDATE_P2PUBKEY_ONLY;
@@ -164,7 +164,7 @@ describe('testTransactionAgainstFilter', () => {
 
   it('should add outpoint to the filter if BLOOM_UPDATE_P2PUBKEY_ONLY'
     + ' is set and matched output is multisig', () => {
-    const filter = BloomFilter.create(3, 0.001);
+    const filter = BloomFilter.create(3, 0.0001);
     const pubKeys = [
       new PrivateKey().toPublicKey(),
       new PrivateKey().toPublicKey(),
@@ -193,7 +193,7 @@ describe('testTransactionAgainstFilter', () => {
 
   it('should not add outpoint to the filter if output is multisig and '
     + 'BLOOM_UPDATE_P2PUBKEY_ONLY flag is not set', () => {
-    const filter = BloomFilter.create(3, 0.001);
+    const filter = BloomFilter.create(3, 0.0001);
     const pubKeys = [
       new PrivateKey().toPublicKey(),
       new PrivateKey().toPublicKey(),
