@@ -8,6 +8,8 @@ const log = require('../lib/log');
 const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
 
 const createServerFactory = require('../lib/grpcServer/createServerFactory');
+const wrapInErrorHandlerFactory = require('../lib/grpcServer/error/wrapInErrorHandlerFactory');
+
 const BloomFilterEmitterCollection = require('../lib/bloomFilter/emitter/BloomFilterEmitterCollection');
 
 const testTransactionAgainstFilterCollectionFactory = require('../lib/transactionsFilter/testRawTransactionAgainstFilterCollectionFactory');
@@ -65,12 +67,16 @@ async function main() {
   // Start GRPC server
   log.info('Starting GRPC server');
 
+  const wrapInErrorHandler = wrapInErrorHandlerFactory(log);
+
   const getTransactionsByFilterHandler = getTransactionsByFilterHandlerFactory(
     bloomFilterEmitterCollection,
     testTransactionsAgainstFilter,
   );
 
-  const createServer = createServerFactory(getTransactionsByFilterHandler);
+  const createServer = createServerFactory(
+    wrapInErrorHandler(getTransactionsByFilterHandler),
+  );
 
   const grpcServer = createServer();
 

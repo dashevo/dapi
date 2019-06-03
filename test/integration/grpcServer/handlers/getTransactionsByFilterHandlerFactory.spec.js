@@ -22,6 +22,8 @@ const emitBlockEventToFilterCollectionFactory = require('../../../../lib/transac
 const testTransactionsAgainstFilter = require('../../../../lib/transactionsFilter/testTransactionAgainstFilter');
 const getTransactionsByFilterHandlerFactory = require('../../../../lib/grpcServer/handlers/getTransactionsByFilterHandlerFactory');
 
+const InvalidArgumentError = require('../../../../lib/grpcServer/error/InvalidArgumentError');
+
 use(sinonChai);
 use(chaiAsPromised);
 use(dirtyChai);
@@ -88,8 +90,9 @@ describe('getTransactionsByFilterHandlerFactory', () => {
 
     const [error, response] = callback.getCall(0).args;
 
-    expect(error).to.be.instanceOf(Error);
-    expect(error).to.have.property('message', 'Invalid bloom filter: "nHashFuncs" exceeded max size "50"');
+    expect(error).to.be.instanceOf(InvalidArgumentError);
+    expect(error.getMessage()).to.equal('Invalid argument: Invalid bloom filter: '
+      + '"nHashFuncs" exceeded max size "50"');
 
     expect(response).to.be.null();
 
