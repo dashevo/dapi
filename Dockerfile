@@ -37,5 +37,3 @@ ARG NODE_ENV=production
 ENV NODE_ENV ${NODE_ENV}
 
 EXPOSE 3000
-
-CMD ["node", "/dapi/lib/app.js"]
