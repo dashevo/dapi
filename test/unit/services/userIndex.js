@@ -51,6 +51,6 @@ describe('userIndex', () => {
       await wait(10);
       zmqMock.emit(zmqMock.topics.hashblock, '4');
       await wait(10);
-    })()).to.not.be.rejected();
+    })()).not.to.be.rejected();
   });
 });
