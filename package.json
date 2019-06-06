@@ -1,7 +1,7 @@
 {
   "name": "@dashevo/dapi",
   "version": "0.5.0",
-  "description": "A Decentralized API for Dash Masternodes",
+  "description": "A decentralized API for the Dash network",
   "scripts": {
     "core": "node scripts/core.js",
     "tx-filter-stream": "node scripts/tx-filter-stream.js",
@@ -27,8 +27,8 @@
     "all": true
   },
   "dependencies": {
-    "@dashevo/dapi-grpc": "^0.1.3",
-    "@dashevo/dashcore-lib": "0.17.1",
+    "@dashevo/dapi-grpc": "^0.5.1",
+    "@dashevo/dashcore-lib": "0.17.4",
     "@dashevo/dashcore-p2p": "^1.1.9",
     "@dashevo/dashd-rpc": "^1.3.0",
     "ajv": "^6.4.0",
