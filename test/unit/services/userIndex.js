@@ -38,7 +38,7 @@ const rpcMock = {
       tx: [],
     };
   },
-  getUser(txId) { throw new Error('Not found'); },
+  getUser() { throw new Error('Not found'); },
 };
 
 const zmqMock = new EventEmitter();
