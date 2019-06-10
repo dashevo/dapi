@@ -42,20 +42,68 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     );
   });
 
-  it('should throw an error if user was not found', function it(done) {
-    const userId = 'nonExistentUserId';
+  it('should throw an error if userId is not a buffer', function it(done) {
+    const userId = 'someStringId';
 
     const call = new GrpcCallMock(this.sinon, {
-      getUserId: () => userId,
+      userId,
     });
 
     const callback = (e, v) => {
       try {
-        expect(coreAPIMock.getUser).to.have.been.calledOnceWith(userId);
+        expect(v).to.equal(null);
+        expect(e).to.be.an.instanceOf(InvalidArgumentError);
+        expect(e.getMessage()).to.equal('Invalid argument: userId is not a buffer');
+
+        done();
+      } catch (error) {
+        done(error);
+      }
+    };
+
+    coreAPIMock.getUser.resolves(undefined);
+
+    getLastStateTransitionHashHandler(call, callback);
+  });
+
+  it('should throw an error if userId is not of correct length', function it(done) {
+    const userId = Buffer.from('someStringId');
+
+    const call = new GrpcCallMock(this.sinon, {
+      userId,
+    });
+
+    const callback = (e, v) => {
+      try {
+        expect(v).to.equal(null);
+        expect(e).to.be.an.instanceOf(InvalidArgumentError);
+        expect(e.getMessage()).to.equal('Invalid argument: userId length is not 256 bytes');
+
+        done();
+      } catch (error) {
+        done(error);
+      }
+    };
+
+    coreAPIMock.getUser.resolves(undefined);
+
+    getLastStateTransitionHashHandler(call, callback);
+  });
+
+  it('should throw an error if user was not found', function it(done) {
+    const userId = Buffer.alloc(256);
+
+    const call = new GrpcCallMock(this.sinon, {
+      userId,
+    });
+
+    const callback = (e, v) => {
+      try {
+        expect(coreAPIMock.getUser).to.have.been.calledOnceWith(userId.toString('hex'));
 
         expect(v).to.equal(null);
         expect(e).to.be.an.instanceOf(InvalidArgumentError);
-        expect(e.getMessage()).to.equal(`Invalid argument: User was not found by id ${userId}`);
+        expect(e.getMessage()).to.equal(`Invalid argument: User was not found by id ${userId.toString('hex')}`);
 
         done();
       } catch (error) {
@@ -69,10 +117,10 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   });
 
   it('should throw-forward an error if core API call goes wrong', function it() {
-    const userId = 'someUserId';
+    const userId = Buffer.alloc(256);
 
     const call = new GrpcCallMock(this.sinon, {
-      getUserId: () => userId,
+      userId,
     });
 
     const callback = this.sinon.stub();
@@ -91,18 +139,17 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     expect(callback).to.not.have.been.called();
   });
 
-  it('should return regTxId in case no state transitions exist', function it(done) {
-    const userId = 'someUserId';
+  it('should return empty state transition hash in case no state transitions exist', function it(done) {
+    const userId = Buffer.alloc(256);
 
     const call = new GrpcCallMock(this.sinon, {
-      getUserId: () => userId,
+      userId,
     });
 
     const callback = (e, v) => {
       try {
         expect(e).to.equal(null);
-        expect(v.getRegTxId()).to.equal(userId);
-        expect(v.getLastStateTransitionHash()).to.equal('');
+        expect(v.getLastStateTransitionHash()).to.equal(null);
         done();
       } catch (error) {
         done(error);
@@ -117,22 +164,23 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   });
 
   it('should return last state transitions hash', function it(done) {
-    const userId = 'someUserId';
+    const userId = Buffer.alloc(256);
     const subTxs = [
-      'one',
-      'two',
-      'three',
+      '6f6e65',
+      '6f6e66',
+      '6f6e67',
     ];
 
     const call = new GrpcCallMock(this.sinon, {
-      getUserId: () => userId,
+      userId,
     });
 
     const callback = (e, v) => {
       try {
         expect(e).to.equal(null);
-        expect(v.getRegTxId()).to.equal('');
-        expect(v.getLastStateTransitionHash()).to.equal(subTxs[subTxs.length - 1]);
+        expect(v.getLastStateTransitionHash()).to.equal(
+          Buffer.from(subTxs[subTxs.length - 1], 'hex'),
+        );
         done();
       } catch (error) {
         done(error);
