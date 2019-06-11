@@ -42,30 +42,6 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     );
   });
 
-  it('should throw an error if userId is not a buffer', function it(done) {
-    const userId = 'someStringId';
-
-    const call = new GrpcCallMock(this.sinon, {
-      userId,
-    });
-
-    const callback = (e, v) => {
-      try {
-        expect(v).to.equal(null);
-        expect(e).to.be.an.instanceOf(InvalidArgumentError);
-        expect(e.getMessage()).to.equal('Invalid argument: userId is not a buffer');
-
-        done();
-      } catch (error) {
-        done(error);
-      }
-    };
-
-    coreAPIMock.getUser.resolves(undefined);
-
-    getLastStateTransitionHashHandler(call, callback);
-  });
-
   it('should throw an error if userId is not of correct length', function it(done) {
     const userId = Buffer.from('someStringId');
 
@@ -73,8 +49,10 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       userId,
     });
 
-    const callback = (e, v) => {
+    const callback = sinon.spy((e, v) => {
       try {
+        expect(callback).to.have.been.calledOnce();
+
         expect(v).to.equal(null);
         expect(e).to.be.an.instanceOf(InvalidArgumentError);
         expect(e.getMessage()).to.equal('Invalid argument: userId length is not 256 bytes');
@@ -83,7 +61,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       } catch (error) {
         done(error);
       }
-    };
+    });
 
     coreAPIMock.getUser.resolves(undefined);
 
@@ -97,8 +75,10 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       userId,
     });
 
-    const callback = (e, v) => {
+    const callback = sinon.spy((e, v) => {
       try {
+        expect(callback).to.have.been.calledOnce();
+
         expect(coreAPIMock.getUser).to.have.been.calledOnceWith(userId.toString('hex'));
 
         expect(v).to.equal(null);
@@ -109,7 +89,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       } catch (error) {
         done(error);
       }
-    };
+    });
 
     coreAPIMock.getUser.resolves(undefined);
 
@@ -146,15 +126,17 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       userId,
     });
 
-    const callback = (e, v) => {
+    const callback = sinon.spy((e, v) => {
       try {
+        expect(callback).to.have.been.calledOnce();
+
         expect(e).to.equal(null);
         expect(v.getLastStateTransitionHash()).to.equal(null);
         done();
       } catch (error) {
         done(error);
       }
-    };
+    });
 
     coreAPIMock.getUser.resolves({
       subtx: [],
@@ -175,8 +157,10 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       userId,
     });
 
-    const callback = (e, v) => {
+    const callback = sinon.spy((e, v) => {
       try {
+        expect(callback).to.have.been.calledOnce();
+
         expect(e).to.equal(null);
         expect(v.getLastStateTransitionHash()).to.equal(
           Buffer.from(subTxs[subTxs.length - 1], 'hex'),
@@ -185,7 +169,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       } catch (error) {
         done(error);
       }
-    };
+    });
 
     coreAPIMock.getUser.resolves({
       subtx: subTxs,
