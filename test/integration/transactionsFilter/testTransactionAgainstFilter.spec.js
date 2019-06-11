@@ -25,18 +25,18 @@ describe('testTransactionAgainstFilter', () => {
 
   it('should match the same transaction as Core', async () => {
     // Create a transactions
-    const { result: addressBase52 } = await coreApi.getnewaddress();
-    const { result: privateKeyString } = await coreApi.dumpprivkey(addressBase52);
+    const { result: addressBase58 } = await coreApi.getnewaddress();
+    const { result: privateKeyString } = await coreApi.dumpprivkey(addressBase58);
 
-    const address = Address.fromString(addressBase52, Networks.testnet);
+    const address = Address.fromString(addressBase58, Networks.testnet);
     const privateKey = new PrivateKey(privateKeyString);
 
     await coreApi.generate(101);
-    await coreApi.sendtoaddress(addressBase52, 10);
+    await coreApi.sendtoaddress(addressBase58, 10);
     await coreApi.generate(7);
 
     const { result: unspent } = await coreApi.listunspent();
-    const inputs = unspent.filter(input => input.address === addressBase52);
+    const inputs = unspent.filter(input => input.address === addressBase58);
 
     const transaction = new Transaction()
       .from(inputs)
