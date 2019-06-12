@@ -19,6 +19,8 @@ use(dirtyChai);
 describe('getLastStateTransitionHashHandlerFactory', () => {
   let coreAPIMock;
   let getLastStateTransitionHashHandler;
+  let userId;
+  let subTxs;
 
   beforeEach(function beforeEach() {
     if (!this.sinon) {
@@ -33,6 +35,13 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   });
 
   beforeEach(function beforeEach() {
+    userId = Buffer.alloc(256);
+    subTxs = [
+      '6f6e65',
+      '6f6e66',
+      '6f6e67',
+    ];
+
     coreAPIMock = {
       getUser: this.sinon.stub(),
     };
@@ -43,10 +52,8 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   });
 
   it('should throw an error if userId is not of correct length', function it(done) {
-    const userId = Buffer.from('someStringId');
-
     const call = new GrpcCallMock(this.sinon, {
-      userId,
+      userId: Buffer.from('SomeOtherId'),
     });
 
     const callback = (e, v) => {
@@ -67,8 +74,6 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   });
 
   it('should throw an error if user was not found', function it(done) {
-    const userId = Buffer.alloc(256);
-
     const call = new GrpcCallMock(this.sinon, {
       userId,
     });
@@ -93,8 +98,6 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   });
 
   it('should throw-forward an error if core API call goes wrong', function it() {
-    const userId = Buffer.alloc(256);
-
     const call = new GrpcCallMock(this.sinon, {
       userId,
     });
@@ -116,8 +119,6 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   });
 
   it('should return empty state transition hash in case no state transitions exist', function it(done) {
-    const userId = Buffer.alloc(256);
-
     const call = new GrpcCallMock(this.sinon, {
       userId,
     });
@@ -140,13 +141,6 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   });
 
   it('should return last state transitions hash', function it(done) {
-    const userId = Buffer.alloc(256);
-    const subTxs = [
-      '6f6e65',
-      '6f6e66',
-      '6f6e67',
-    ];
-
     const call = new GrpcCallMock(this.sinon, {
       userId,
     });
