@@ -49,10 +49,8 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       userId,
     });
 
-    const callback = sinon.spy((e, v) => {
+    const callback = (e, v) => {
       try {
-        expect(callback).to.have.been.calledOnce();
-
         expect(v).to.equal(null);
         expect(e).to.be.an.instanceOf(InvalidArgumentError);
         expect(e.getMessage()).to.equal('Invalid argument: userId length is not 256 bytes');
@@ -61,7 +59,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       } catch (error) {
         done(error);
       }
-    });
+    };
 
     coreAPIMock.getUser.resolves(undefined);
 
@@ -75,10 +73,8 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       userId,
     });
 
-    const callback = sinon.spy((e, v) => {
+    const callback = (e, v) => {
       try {
-        expect(callback).to.have.been.calledOnce();
-
         expect(coreAPIMock.getUser).to.have.been.calledOnceWith(userId.toString('hex'));
 
         expect(v).to.equal(null);
@@ -89,7 +85,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       } catch (error) {
         done(error);
       }
-    });
+    };
 
     coreAPIMock.getUser.resolves(undefined);
 
@@ -126,17 +122,15 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       userId,
     });
 
-    const callback = sinon.spy((e, v) => {
+    const callback = (e, v) => {
       try {
-        expect(callback).to.have.been.calledOnce();
-
         expect(e).to.equal(null);
-        expect(v.getLastStateTransitionHash()).to.equal(null);
+        expect(v.getStateTransitionHash()).to.equal('');
         done();
       } catch (error) {
         done(error);
       }
-    });
+    };
 
     coreAPIMock.getUser.resolves({
       subtx: [],
@@ -157,19 +151,17 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       userId,
     });
 
-    const callback = sinon.spy((e, v) => {
+    const callback = (e, v) => {
       try {
-        expect(callback).to.have.been.calledOnce();
-
         expect(e).to.equal(null);
-        expect(v.getLastStateTransitionHash()).to.equal(
+        expect(v.getStateTransitionHash()).to.deep.equal(
           Buffer.from(subTxs[subTxs.length - 1], 'hex'),
         );
         done();
       } catch (error) {
         done(error);
       }
-    });
+    };
 
     coreAPIMock.getUser.resolves({
       subtx: subTxs,
