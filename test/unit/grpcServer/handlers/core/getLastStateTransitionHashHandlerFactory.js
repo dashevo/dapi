@@ -21,6 +21,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   let getLastStateTransitionHashHandler;
   let userId;
   let subTxs;
+  let call;
 
   beforeEach(function beforeEach() {
     if (!this.sinon) {
@@ -42,6 +43,10 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       '6f6e67',
     ];
 
+    call = new GrpcCallMock(this.sinon, {
+      userId,
+    });
+
     coreAPIMock = {
       getUser: this.sinon.stub(),
     };
@@ -52,7 +57,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   });
 
   it('should throw an error if userId is not of correct length', function it(done) {
-    const call = new GrpcCallMock(this.sinon, {
+    call = new GrpcCallMock(this.sinon, {
       userId: Buffer.from('SomeOtherId'),
     });
 
@@ -73,11 +78,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     getLastStateTransitionHashHandler(call, callback);
   });
 
-  it('should throw an error if user was not found', function it(done) {
-    const call = new GrpcCallMock(this.sinon, {
-      userId,
-    });
-
+  it('should throw an error if user was not found', (done) => {
     const callback = (e, v) => {
       try {
         expect(coreAPIMock.getUser).to.have.been.calledOnceWith(userId.toString('hex'));
@@ -98,10 +99,6 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   });
 
   it('should throw-forward an error if core API call goes wrong', function it() {
-    const call = new GrpcCallMock(this.sinon, {
-      userId,
-    });
-
     const callback = this.sinon.stub();
 
     const anError = new Error('Core API goes nuts');
@@ -118,11 +115,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     expect(callback).to.not.have.been.called();
   });
 
-  it('should return empty state transition hash in case no state transitions exist', function it(done) {
-    const call = new GrpcCallMock(this.sinon, {
-      userId,
-    });
-
+  it('should return empty state transition hash in case no state transitions exist', (done) => {
     const callback = (e, v) => {
       try {
         expect(e).to.equal(null);
@@ -140,11 +133,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     getLastStateTransitionHashHandler(call, callback);
   });
 
-  it('should return last state transitions hash', function it(done) {
-    const call = new GrpcCallMock(this.sinon, {
-      userId,
-    });
-
+  it('should return last state transitions hash', (done) => {
     const callback = (e, v) => {
       try {
         expect(e).to.equal(null);
