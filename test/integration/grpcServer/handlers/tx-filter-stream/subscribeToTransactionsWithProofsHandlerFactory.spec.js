@@ -13,7 +13,7 @@ const {
 } = require('@dashevo/dashcore-lib');
 
 const { BloomFilter } = require('@dashevo/dashcore-lib');
-const { TransactionFilterResponse } = require('@dashevo/dapi-grpc');
+const { TransactionsWithProofResponse } = require('@dashevo/dapi-grpc');
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 const BloomFilterEmitterCollection = require('../../../../../lib/bloomFilter/emitter/BloomFilterEmitterCollection');
@@ -118,7 +118,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     // Call listener when a new transaction appears
     testRawTransactionAgainstFilterCollection(transaction.toBuffer());
 
-    const expectedResponse = new TransactionFilterResponse();
+    const expectedResponse = new TransactionsWithProofResponse();
     expectedResponse.setRawTransaction(transaction.toBuffer());
 
     expect(call.write).to.have.been.calledOnceWith(expectedResponse.toObject());
@@ -189,7 +189,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     expect(call.write).to.have.been.calledTwice();
 
     // Matched transaction must be sent
-    const expectedResponse = new TransactionFilterResponse();
+    const expectedResponse = new TransactionsWithProofResponse();
     expectedResponse.setRawTransaction(transaction.toBuffer());
 
     expect(call.write.getCall(0)).to.have.been.calledWith(expectedResponse.toObject());
@@ -198,7 +198,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     const rawMerkleBlockResponse = call.write.getCall(1).args[0];
     expect(rawMerkleBlockResponse).to.have.property('rawMerkleBlock');
 
-    // TransactionFilterResponse converts buffers to base64 before send
+    // TransactionsWithProofResponse converts buffers to base64 before send
     const rawMerkleBlock = Buffer.from(rawMerkleBlockResponse.rawMerkleBlock, 'base64');
     const merkleBlock = new MerkleBlock(rawMerkleBlock);
 
@@ -257,7 +257,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     emitBlockEventToFilterCollection(block.toBuffer());
 
     // Matched transaction must be sent
-    const expectedResponse = new TransactionFilterResponse();
+    const expectedResponse = new TransactionsWithProofResponse();
     expectedResponse.setRawTransaction(transaction.toBuffer());
 
     expect(call.write).to.have.been.calledOnceWith(expectedResponse.toObject());
@@ -304,7 +304,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     emitBlockEventToFilterCollection(block.toBuffer());
 
     // Matched transaction must be sent
-    const expectedResponse = new TransactionFilterResponse();
+    const expectedResponse = new TransactionsWithProofResponse();
     expectedResponse.setRawTransaction(transaction.toBuffer());
 
     expect(call.write).to.not.have.been.called();
