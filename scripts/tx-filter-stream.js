@@ -6,6 +6,7 @@ const { validateConfig } = require('../lib/config/validator');
 const log = require('../lib/log');
 
 const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
+const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
 
 const createServer = require('../lib/grpcServer/createServer');
 const wrapInErrorHandlerFactory = require('../lib/grpcServer/error/wrapInErrorHandlerFactory');
@@ -72,6 +73,7 @@ async function main() {
   const subscribeToTransactionsWithProofsHandler = subscribeToTransactionsWithProofsHandlerFactory(
     bloomFilterEmitterCollection,
     testTransactionsAgainstFilter,
+    dashCoreRpcClient,
   );
 
   const grpcServer = createServer(
