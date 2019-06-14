@@ -2,6 +2,7 @@ const chai = require('chai');
 const dirtyChai = require('dirty-chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
+const { MerkleBlock } = require('@dashevo/dashcore-lib');
 
 const getMerkleBlocksFactory = require('../../../lib/transactionsFilter/getMerkleBlocksFactory');
 
@@ -53,6 +54,10 @@ describe('getMerkleBlocks', () => {
     expect(coreRpcMock.getMerkleBlocks.calledWith(bloomFilter, fromBlockHash, count)).to.be.true();
 
     expect(merkleBlocks.length).to.be.equal(1);
-    expect(merkleBlocks.length).to.be.equal(1);
+
+    const merkleBlock = merkleBlocks[0];
+
+    expect(merkleBlock).to.be.an.instanceof(MerkleBlock);
+    expect(merkleBlock.getMatchedTransactionHashes().length).to.be.equal(4);
   });
 });
