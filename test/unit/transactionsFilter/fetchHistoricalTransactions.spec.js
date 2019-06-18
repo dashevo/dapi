@@ -242,11 +242,26 @@ describe('fetchHistoricalTransactions', () => {
       expect(rawTx).to.be.a('string');
     });
 
-    const { value: { secondMerkleBlock, secondRawTransactions } } = await merkleBlocksAndTransactions.next();
-    
+    const {
+      value: {
+        merkleBlock: secondMerkleBlock,
+        rawTransactions: secondSetOfRawTransactions,
+      },
+    } = await merkleBlocksAndTransactions.next();
+
+    expect(secondMerkleBlock).to.be.an.instanceof(MerkleBlock);
+    expect(secondSetOfRawTransactions).to.be.an('array');
+    secondSetOfRawTransactions.forEach((rawTx) => {
+      expect(rawTx).to.be.a('string');
+    });
+
     expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
     expect(coreRpcMock.getBlockHash.callCount).to.be.equal(1);
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(1);
+
+    const { done } = await merkleBlocksAndTransactions.next();
+
+    expect(done).to.be.true();
   });
   it('Should skip interval with no blocks', async () => {
     expect.fail('Not Implemented');
