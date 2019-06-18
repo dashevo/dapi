@@ -204,8 +204,7 @@ describe('fetchHistoricalTransactions', () => {
     expect(done).to.be.true();
   });
   it('Should return one merkle block at a time, even if there is more than two blocks found in a range', async () => {
-    coreRpcMock.getMerkleBlocks.restore();
-    sinon.stub(coreRpcMock, 'getMerkleBlocks')
+    coreRpcMock.getMerkleBlocks
       .withArgs()
       .resolves([rawMerkleBlock, rawMerkleBlock]);
 
