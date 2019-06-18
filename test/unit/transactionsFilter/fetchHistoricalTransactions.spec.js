@@ -104,14 +104,14 @@ describe('fetchHistoricalTransactions', () => {
     const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
     const count = 4123;
 
-    const merkleBlocksAndTransactions = fetchHistoricalTransactions(
+    const merkleBlocksIterator = fetchHistoricalTransactions(
       {},
       bloomFilter,
       fromBlockHash,
       count,
     );
 
-    const { value: { merkleBlock, rawTransactions } } = await merkleBlocksAndTransactions.next();
+    const { value: { merkleBlock, rawTransactions } } = await merkleBlocksIterator.next();
 
     expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
     expect(coreRpcMock.getBlock.getCall(0).calledWith(mockData.blocks[0].hash)).to.be.true();
@@ -132,7 +132,7 @@ describe('fetchHistoricalTransactions', () => {
       expect(rawTx).to.be.a('string');
     });
 
-    await merkleBlocksAndTransactions.next();
+    await merkleBlocksIterator.next();
 
     expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
 
@@ -146,7 +146,7 @@ describe('fetchHistoricalTransactions', () => {
       ),
     ).to.be.true();
 
-    await merkleBlocksAndTransactions.next();
+    await merkleBlocksIterator.next();
 
     expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
 
@@ -160,14 +160,41 @@ describe('fetchHistoricalTransactions', () => {
       ),
     ).to.be.true();
 
-    const { done } = await merkleBlocksAndTransactions.next();
+    const { done } = await merkleBlocksIterator.next();
 
     expect(done).to.be.true();
   });
   it('Should return one merkle block at a time, even if there is more than two blocks found in a range', async () => {
     expect.fail('Not Implemented');
   });
-  it('Should skip interval with no blocks', async () => {
-    expect.fail('Not Implemented');
+  it('Should skip interval with no merkle blocks', async () => {
+    const bloomFilter = '0fa00001';
+    coreRpcMock.withArgs(bloomFilter, mockData.blocks[1].hash, 2000).resolves([]);
+
+    const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
+    const count = 4123;
+
+    const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
+
+    const merkleBlocksIterator = fetchHistoricalTransactions(
+      {},
+      bloomFilter,
+      fromBlockHash,
+      count,
+    );
+
+    await merkleBlocksIterator.next();
+
+    expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
+    expect(coreRpcMock.getBlockHash.callCount).to.be.equal(1);
+    expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(1);
+
+    await merkleBlocksIterator.next();
+
+    // As there will be one interval (4002-6002) with no merkle blocks,
+    // all call count should increase by 2
+    expect(coreRpcMock.getBlock.callCount).to.be.equal(3);
+    expect(coreRpcMock.getBlockHash.callCount).to.be.equal(3);
+    expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(3);
   });
 });
