@@ -91,9 +91,6 @@ describe('fetchHistoricalTransactions', () => {
     expect.fail('Not Implemented');
   });
   it('Count is bigger than max block headers', async () => {
-    expect.fail('Not Implemented');
-  });
-  it('Count is bigger than max block headers more than twice', async () => {
     mockData.blocks.forEach((mockedBlockData) => {
       coreRpcMock.getBlock.withArgs(mockedBlockData.hash).resolves(mockedBlockData);
     });
