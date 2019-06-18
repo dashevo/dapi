@@ -42,6 +42,10 @@ const mockData = {
     height: 2002,
   },
   {
+    hash: '000000000000000000000000000000000000000000000000000000000000001c',
+    height: 2582,
+  },
+  {
     hash: 'ed07c181ce5ba7cb66d205bc970f43e1ca11996d611aa8e91e305eb8608c543c',
     height: 4002,
   },
@@ -79,6 +83,14 @@ describe('fetchHistoricalTransactions', () => {
 
     sinon.stub(coreRpcMock, 'getBlock');
     sinon.stub(coreRpcMock, 'getBlockHash');
+
+    mockData.blocks.forEach((mockedBlockData) => {
+      coreRpcMock.getBlock.withArgs(mockedBlockData.hash).resolves(mockedBlockData);
+    });
+
+    mockData.blocks.forEach((mockedBlockData) => {
+      coreRpcMock.getBlockHash.withArgs(mockedBlockData.height).resolves(mockedBlockData.hash);
+    });
   });
 
   afterEach(() => {
@@ -88,17 +100,44 @@ describe('fetchHistoricalTransactions', () => {
     coreRpcMock.getBlockHash.restore();
   });
   it('Count is lesser than max block headers', async () => {
-    expect.fail('Not Implemented');
+    const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
+    const bloomFilter = '0fa00001';
+    const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
+    const count = 580;
+
+    const merkleBlocksAndTransactions = fetchHistoricalTransactions(
+      {},
+      bloomFilter,
+      fromBlockHash,
+      count,
+    );
+
+    const { value: { merkleBlock, rawTransactions } } = await merkleBlocksAndTransactions.next();
+
+    expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
+    expect(coreRpcMock.getBlock.getCall(0).calledWith(mockData.blocks[0].hash)).to.be.true();
+
+    expect(coreRpcMock.getBlockHash.callCount).to.be.equal(1);
+    expect(coreRpcMock.getBlockHash.getCall(0).calledWith(mockData.blocks[0].height)).to.be.true();
+
+    expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(1);
+    expect(
+      coreRpcMock.getMerkleBlocks.getCall(0).calledWith(
+        bloomFilter, mockData.blocks[0].hash, 580,
+      ),
+    ).to.be.true();
+
+    expect(merkleBlock).to.be.an.instanceof(MerkleBlock);
+    expect(rawTransactions).to.be.an('array');
+    rawTransactions.forEach((rawTx) => {
+      expect(rawTx).to.be.a('string');
+    });
+
+    const { done } = await merkleBlocksAndTransactions.next();
+
+    expect(done).to.be.true();
   });
   it('Count is bigger than max block headers', async () => {
-    mockData.blocks.forEach((mockedBlockData) => {
-      coreRpcMock.getBlock.withArgs(mockedBlockData.hash).resolves(mockedBlockData);
-    });
-
-    mockData.blocks.forEach((mockedBlockData) => {
-      coreRpcMock.getBlockHash.withArgs(mockedBlockData.height).resolves(mockedBlockData.hash);
-    });
-
     const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
     const bloomFilter = '0fa00001';
     const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
@@ -165,7 +204,49 @@ describe('fetchHistoricalTransactions', () => {
     expect(done).to.be.true();
   });
   it('Should return one merkle block at a time, even if there is more than two blocks found in a range', async () => {
-    expect.fail('Not Implemented');
+    coreRpcMock.getMerkleBlocks.restore();
+    sinon.stub(coreRpcMock, 'getMerkleBlocks')
+      .withArgs()
+      .resolves([rawMerkleBlock, rawMerkleBlock]);
+
+    const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
+    const bloomFilter = '0fa00001';
+    const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
+    const count = 580;
+
+    const merkleBlocksAndTransactions = fetchHistoricalTransactions(
+      {},
+      bloomFilter,
+      fromBlockHash,
+      count,
+    );
+
+    const { value: { merkleBlock, rawTransactions } } = await merkleBlocksAndTransactions.next();
+
+    expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
+    expect(coreRpcMock.getBlock.getCall(0).calledWith(mockData.blocks[0].hash)).to.be.true();
+
+    expect(coreRpcMock.getBlockHash.callCount).to.be.equal(1);
+    expect(coreRpcMock.getBlockHash.getCall(0).calledWith(mockData.blocks[0].height)).to.be.true();
+
+    expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(1);
+    expect(
+      coreRpcMock.getMerkleBlocks.getCall(0).calledWith(
+        bloomFilter, mockData.blocks[0].hash, 580,
+      ),
+    ).to.be.true();
+
+    expect(merkleBlock).to.be.an.instanceof(MerkleBlock);
+    expect(rawTransactions).to.be.an('array');
+    rawTransactions.forEach((rawTx) => {
+      expect(rawTx).to.be.a('string');
+    });
+
+    const { value: { secondMerkleBlock, secondRawTransactions } } = await merkleBlocksAndTransactions.next();
+    
+    expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
+    expect(coreRpcMock.getBlockHash.callCount).to.be.equal(1);
+    expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(1);
   });
   it('Should skip interval with no merkle blocks', async () => {
     const bloomFilter = '0fa00001';
