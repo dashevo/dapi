@@ -30,7 +30,7 @@ const rawMerkleBlock = '03000000' // Version
   + 'db3f';
 
 const coreRpcMock = {
-  async getMerkleBlocks() { },
+  async getMerkleBlocks() { return []; },
   async getRawTransaction() { return ''; },
   async getBlock() { return {}; },
   async getBlockHash() { return ''; },
@@ -176,12 +176,12 @@ describe('fetchHistoricalTransactions', () => {
     expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
 
     expect(coreRpcMock.getBlockHash.callCount).to.be.equal(2);
-    expect(coreRpcMock.getBlockHash.getCall(1).calledWith(mockData.blocks[1].height)).to.be.true();
+    expect(coreRpcMock.getBlockHash.getCall(1).calledWith(mockData.blocks[2].height)).to.be.true();
 
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(2);
     expect(
       coreRpcMock.getMerkleBlocks.getCall(1).calledWith(
-        bloomFilter, mockData.blocks[1].hash, 2000,
+        bloomFilter, mockData.blocks[2].hash, 2000,
       ),
     ).to.be.true();
 
@@ -190,12 +190,12 @@ describe('fetchHistoricalTransactions', () => {
     expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
 
     expect(coreRpcMock.getBlockHash.callCount).to.be.equal(3);
-    expect(coreRpcMock.getBlockHash.getCall(2).calledWith(mockData.blocks[2].height)).to.be.true();
+    expect(coreRpcMock.getBlockHash.getCall(2).calledWith(mockData.blocks[3].height)).to.be.true();
 
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(3);
     expect(
       coreRpcMock.getMerkleBlocks.getCall(2).calledWith(
-        bloomFilter, mockData.blocks[2].hash, 123,
+        bloomFilter, mockData.blocks[3].hash, 123,
       ),
     ).to.be.true();
 
@@ -263,6 +263,7 @@ describe('fetchHistoricalTransactions', () => {
 
     expect(done).to.be.true();
   });
+
   it('Should skip interval with no merkle blocks', async () => {
     const bloomFilter = '0fa00001';
     coreRpcMock.getMerkleBlocks
@@ -295,5 +296,30 @@ describe('fetchHistoricalTransactions', () => {
     // all call count should increase by 2
     expect(coreRpcMock.getBlockHash.callCount).to.be.equal(3);
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(3);
+  });
+
+  it('Should proceed straight to done if all ranges are empty', async () => {
+    const bloomFilter = '0fa00001';
+    coreRpcMock.getMerkleBlocks
+      .withArgs()
+      .resolves([]);
+
+    const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
+    const count = 4123;
+
+    const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
+
+    const merkleBlocksIterator = fetchHistoricalTransactions(
+      {},
+      bloomFilter,
+      fromBlockHash,
+      count,
+    );
+
+    const { done } = await merkleBlocksIterator.next();
+
+    expect(coreRpcMock.getBlockHash.callCount).to.be.equal(3);
+    expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(3);
+    expect(done).to.be.true();
   });
 });
