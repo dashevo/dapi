@@ -243,14 +243,17 @@ describe('fetchHistoricalTransactions', () => {
     });
 
     const { value: { secondMerkleBlock, secondRawTransactions } } = await merkleBlocksAndTransactions.next();
-    
+
     expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
     expect(coreRpcMock.getBlockHash.callCount).to.be.equal(1);
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(1);
   });
+
   it('Should skip interval with no merkle blocks', async () => {
     const bloomFilter = '0fa00001';
-    coreRpcMock.withArgs(bloomFilter, mockData.blocks[1].hash, 2000).resolves([]);
+    coreRpcMock.getMerkleBlocks
+      .withArgs(bloomFilter, mockData.blocks[2].hash, 2000)
+      .resolves([]);
 
     const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
     const count = 4123;
@@ -266,15 +269,16 @@ describe('fetchHistoricalTransactions', () => {
 
     await merkleBlocksIterator.next();
 
-    expect(coreRpcMock.getBlock.callCount).to.be.equal(1);
     expect(coreRpcMock.getBlockHash.callCount).to.be.equal(1);
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(1);
 
     await merkleBlocksIterator.next();
 
+    expect(coreRpcMock.getMerkleBlocks.getCall(1)
+      .calledWith(bloomFilter, mockData.blocks[2].hash, 2000)).to.be.true();
+
     // As there will be one interval (4002-6002) with no merkle blocks,
     // all call count should increase by 2
-    expect(coreRpcMock.getBlock.callCount).to.be.equal(3);
     expect(coreRpcMock.getBlockHash.callCount).to.be.equal(3);
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(3);
   });
