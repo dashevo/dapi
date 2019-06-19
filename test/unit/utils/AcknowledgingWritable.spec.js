@@ -3,7 +3,7 @@ const dirtyChai = require('dirty-chai');
 const chaiAsPromised = require('chai-as-promised');
 
 const WritableMock = require('../../../lib/test/mock/WritableMock');
-const WritableWrapper = require('../../../lib/utils/WritableWrapper');
+const WritableWrapper = require('../../../lib/utils/AcknowledgingWritable');
 
 const { expect } = chai;
 chai.use(dirtyChai);
