@@ -5,6 +5,7 @@ const TransactionHashesCache = require('../../../lib/transactionsFilter/Transact
 describe('TransactionHashesCache', () => {
   let transactions;
   let blocks;
+  let merkleBlocks;
   let transactionHashesCache;
 
   beforeEach(() => {
@@ -37,93 +38,81 @@ describe('TransactionHashesCache', () => {
       },
     ];
 
+    merkleBlocks = blocks.map(block => ({ header: { hash: block.hash } }));
+
     transactionHashesCache = new TransactionHashesCache();
   });
 
   describe('#addTransaction', () => {
-    it('should add transaction hash with 0 linked blocks', () => {
+    it('should add transaction', () => {
       const [firstTx] = transactions;
 
       transactionHashesCache.addTransaction(firstTx);
 
       expect(transactionHashesCache.transactions).to.deep.equal({
-        [firstTx.hash]: {
-          transaction: firstTx,
-          linkedBlockHashes: [],
-        },
+        [firstTx.hash]: firstTx,
+      });
+    });
+  });
+
+  describe('#addMerkleBlock', () => {
+    it('should add merkle block', () => {
+      const [merkleBlock] = merkleBlocks;
+
+      transactionHashesCache.addMerkleBlock(merkleBlock);
+
+      expect(transactionHashesCache.merkleBlocks).to.deep.equal({
+        [merkleBlock.header.hash]: merkleBlock,
       });
     });
   });
 
   describe('#addBlock', () => {
-    it('should add a block and link any matched transaction', () => {
-      const [tx] = transactions;
+    it('should add a block', () => {
       const [block] = blocks;
 
-      transactionHashesCache.addTransaction(tx);
       transactionHashesCache.addBlock(block);
 
-      expect(transactionHashesCache.transactions[tx.hash].linkedBlockHashes).to.deep.equal(
-        [block.hash],
+      expect(transactionHashesCache.blocks).to.deep.equal(
+        [block],
       );
     });
 
-    it('should add a block and not link unmatched transactions', () => {
-      const [tx] = transactions;
-      const [, block] = blocks;
-
-      transactionHashesCache.addTransaction(tx);
-      transactionHashesCache.addBlock(block);
-
-      expect(transactionHashesCache.transactions[tx.hash].linkedBlockHashes).to.have.a.lengthOf(0);
-    });
-
-    it('should remove blocks if cache size is reached', () => {
+    it('should remove data if cache size is reached', () => {
       transactionHashesCache.cacheSize = 2;
+
+      transactionHashesCache.addTransaction(transactions[0]);
+      transactionHashesCache.addTransaction(transactions[1]);
+      transactionHashesCache.addTransaction(transactions[2]);
+      transactionHashesCache.addTransaction(transactions[3]);
+      transactionHashesCache.addTransaction(transactions[4]);
+      transactionHashesCache.addTransaction(transactions[5]);
+
+      transactionHashesCache.addMerkleBlock(merkleBlocks[0]);
+      transactionHashesCache.addMerkleBlock(merkleBlocks[1]);
 
       transactionHashesCache.addBlock(blocks[0]);
       transactionHashesCache.addBlock(blocks[1]);
+      transactionHashesCache.addBlock(blocks[2]);
 
-      expect(transactionHashesCache.blocks).to.deep.equal(
-        [blocks[0], blocks[1]],
+      expect(transactionHashesCache.transactions).to.deep.equal(
+        {
+          [transactions[2].hash]: transactions[2],
+          [transactions[3].hash]: transactions[3],
+          [transactions[4].hash]: transactions[4],
+          [transactions[5].hash]: transactions[5],
+        },
       );
 
-      transactionHashesCache.addBlock(blocks[2]);
+      expect(transactionHashesCache.merkleBlocks).to.deep.equal(
+        {
+          [merkleBlocks[1].header.hash]: merkleBlocks[1],
+        },
+      );
 
       expect(transactionHashesCache.blocks).to.deep.equal(
         [blocks[1], blocks[2]],
       );
-    });
-
-    it('should remove orphaned transactions', () => {
-      transactionHashesCache.cacheSize = 2;
-
-      transactions.forEach(tx => transactionHashesCache.addTransaction(tx));
-
-      const [, , txThree, txFour, txFive, txSix] = transactions;
-
-      transactionHashesCache.addBlock(blocks[0]);
-      transactionHashesCache.addBlock(blocks[1]);
-      transactionHashesCache.addBlock(blocks[2]);
-
-      expect(transactionHashesCache.transactions).to.deep.equal({
-        [txThree.hash]: {
-          transaction: txThree,
-          linkedBlockHashes: [blocks[1].hash],
-        },
-        [txFour.hash]: {
-          transaction: txFour,
-          linkedBlockHashes: [blocks[1].hash],
-        },
-        [txFive.hash]: {
-          transaction: txFive,
-          linkedBlockHashes: [blocks[2].hash],
-        },
-        [txSix.hash]: {
-          transaction: txSix,
-          linkedBlockHashes: [blocks[2].hash],
-        },
-      });
     });
   });
 
@@ -155,44 +144,74 @@ describe('TransactionHashesCache', () => {
     });
   });
 
-  describe('#getUnmatchedBlocks', () => {
-    it('should return blocks with unmatched hashes', () => {
+  describe('#getBlockCount', () => {
+    it('should return block count', () => {
       transactionHashesCache.addBlock(blocks[0]);
       transactionHashesCache.addBlock(blocks[1]);
-      transactionHashesCache.addBlock(blocks[2]);
 
-      const blocksReturned = transactionHashesCache.getUnmatchedBlocks([
-        blocks[0].hash,
-      ]);
+      expect(transactionHashesCache.getBlockCount()).to.equal(2);
+    });
+  });
 
-      expect(blocksReturned).to.deep.equal(
-        [blocks[1], blocks[2]],
+  describe('#removeDataByBlockHash', () => {
+    it('should remove data by block hash', () => {
+      transactionHashesCache.addTransaction(transactions[0]);
+      transactionHashesCache.addTransaction(transactions[1]);
+      transactionHashesCache.addTransaction(transactions[2]);
+      transactionHashesCache.addTransaction(transactions[3]);
+      transactionHashesCache.addTransaction(transactions[4]);
+      transactionHashesCache.addTransaction(transactions[5]);
+
+      transactionHashesCache.addMerkleBlock(merkleBlocks[0]);
+      transactionHashesCache.addMerkleBlock(merkleBlocks[1]);
+
+      transactionHashesCache.addBlock(blocks[0]);
+      transactionHashesCache.addBlock(blocks[1]);
+
+      transactionHashesCache.removeDataByBlockHash(blocks[0].hash);
+
+      expect(transactionHashesCache.transactions).to.deep.equal(
+        {
+          [transactions[2].hash]: transactions[2],
+          [transactions[3].hash]: transactions[3],
+          [transactions[4].hash]: transactions[4],
+          [transactions[5].hash]: transactions[5],
+        },
+      );
+
+      expect(transactionHashesCache.merkleBlocks).to.deep.equal(
+        {
+          [merkleBlocks[1].header.hash]: merkleBlocks[1],
+        },
+      );
+
+      expect(transactionHashesCache.blocks).to.deep.equal(
+        [blocks[1]],
       );
     });
   });
 
-  describe('#getMatchedTransactions', () => {
-    it('should return matched transactions', () => {
-      transactionHashesCache.addTransaction(transactions[0]);
+  describe('#getDataGroupedByBlock', () => {
+    it('should return grouped data by blocks that have merkle blocks', () => {
+      transactionHashesCache.addTransaction(transactions[2]);
       transactionHashesCache.addTransaction(transactions[3]);
+      transactionHashesCache.addTransaction(transactions[4]);
+      transactionHashesCache.addTransaction(transactions[5]);
+
+      transactionHashesCache.addMerkleBlock(merkleBlocks[1]);
 
       transactionHashesCache.addBlock(blocks[0]);
+      transactionHashesCache.addBlock(blocks[1]);
 
-      const result = transactionHashesCache.getMatchedTransactions(blocks[0]);
+      const data = transactionHashesCache.getDataGroupedByBlock();
 
-      expect(result).to.deep.equal([transactions[0]]);
-    });
-
-    it('should not return matched transactions with more than 1 linked block', () => {
-      transactionHashesCache.addTransaction(transactions[0]);
-      transactionHashesCache.addTransaction(transactions[3]);
-
-      transactionHashesCache.addBlock(blocks[0]);
-      transactionHashesCache.addBlock(blocks[3]);
-
-      const result = transactionHashesCache.getMatchedTransactions(blocks[3]);
-
-      expect(result).to.have.lengthOf(0);
+      expect(data).to.deep.equal([{
+        merkleBlock: merkleBlocks[1],
+        transactions: [
+          transactions[2],
+          transactions[3],
+        ]
+      }]);
     });
   });
 });
