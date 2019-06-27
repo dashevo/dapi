@@ -91,12 +91,6 @@ describe('fetchHistoricalTransactions', () => {
     });
   });
 
-  afterEach(() => {
-    coreRpcMock.getMerkleBlocks.restore();
-    coreRpcMock.getRawTransaction.restore();
-    coreRpcMock.getBlock.restore();
-    coreRpcMock.getBlockHash.restore();
-  });
   it('count is lesser than max block headers', async () => {
     const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
     const bloomFilter = '0fa00001';
@@ -134,6 +128,7 @@ describe('fetchHistoricalTransactions', () => {
 
     expect(done).to.be.true();
   });
+
   it('count is bigger than max block headers', async () => {
     const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
     const bloomFilter = '0fa00001';
@@ -199,6 +194,7 @@ describe('fetchHistoricalTransactions', () => {
 
     expect(done).to.be.true();
   });
+  
   it('should return one merkle block at a time, even if there is more than two blocks found in a range', async () => {
     coreRpcMock.getMerkleBlocks
       .withArgs()
