@@ -1,3 +1,6 @@
+const { MerkleBlock } = require('@dashevo/dashcore-lib');
+
+const sinon = require('sinon');
 const { expect } = require('chai');
 
 const TransactionHashesCache = require('../../../lib/transactionsFilter/TransactionHashesCache');
@@ -22,25 +25,49 @@ describe('TransactionHashesCache', () => {
       {
         hash: '000000000000000000000000000000000000000000000000000000000000001b',
         transactions: [transactions[0], transactions[1]],
+        header: {
+          hash: '000000000000000000000000000000000000000000000000000000000000001b',
+        },
       },
       {
         hash: '000000000000000000000000000000000000000000000000000000000000002b',
         transactions: [transactions[2], transactions[3]],
+        header: {
+          hash: '000000000000000000000000000000000000000000000000000000000000002b',
+        },
       },
       {
         hash: '000000000000000000000000000000000000000000000000000000000000003b',
         transactions: [transactions[4], transactions[5]],
+        header: {
+          hash: '000000000000000000000000000000000000000000000000000000000000003b',
+        },
       },
 
       {
         hash: '000000000000000000000000000000000000000000000000000000000000004b',
         transactions: [transactions[0], transactions[1]],
+        header: {
+          hash: '000000000000000000000000000000000000000000000000000000000000004b',
+        },
       },
     ];
 
     merkleBlocks = blocks.map(block => ({ header: { hash: block.hash } }));
 
+    sinon.stub(MerkleBlock, 'build');
+
+    blocks.forEach((block, index) => {
+      MerkleBlock.build
+        .withArgs(block.header, sinon.match.any, sinon.match.any)
+        .returns(merkleBlocks[index]);
+    });
+
     transactionHashesCache = new TransactionHashesCache();
+  });
+
+  afterEach(() => {
+    MerkleBlock.build.restore();
   });
 
   describe('#addTransaction', () => {
@@ -49,27 +76,21 @@ describe('TransactionHashesCache', () => {
 
       transactionHashesCache.addTransaction(firstTx);
 
-      expect(transactionHashesCache.transactions).to.deep.equal({
-        [firstTx.hash]: firstTx,
-      });
-    });
-  });
-
-  describe('#addMerkleBlock', () => {
-    it('should add merkle block', () => {
-      const [merkleBlock] = merkleBlocks;
-
-      transactionHashesCache.addMerkleBlock(merkleBlock);
-
-      expect(transactionHashesCache.merkleBlocks).to.deep.equal({
-        [merkleBlock.header.hash]: merkleBlock,
-      });
+      expect(transactionHashesCache.transactions).to.deep.equal([
+        {
+          transaction: firstTx,
+          isSent: false,
+        },
+      ]);
     });
   });
 
   describe('#addBlock', () => {
-    it('should add a block', () => {
+    it('should add a block if it has matched transactions', () => {
       const [block] = blocks;
+
+      transactionHashesCache.addTransaction(transactions[0]);
+      transactionHashesCache.addTransaction(transactions[1]);
 
       transactionHashesCache.addBlock(block);
 
@@ -88,27 +109,21 @@ describe('TransactionHashesCache', () => {
       transactionHashesCache.addTransaction(transactions[4]);
       transactionHashesCache.addTransaction(transactions[5]);
 
-      transactionHashesCache.addMerkleBlock(merkleBlocks[0]);
-      transactionHashesCache.addMerkleBlock(merkleBlocks[1]);
-
       transactionHashesCache.addBlock(blocks[0]);
       transactionHashesCache.addBlock(blocks[1]);
       transactionHashesCache.addBlock(blocks[2]);
 
-      expect(transactionHashesCache.transactions).to.deep.equal(
-        {
-          [transactions[2].hash]: transactions[2],
-          [transactions[3].hash]: transactions[3],
-          [transactions[4].hash]: transactions[4],
-          [transactions[5].hash]: transactions[5],
-        },
-      );
+      expect(transactionHashesCache.transactions).to.deep.equal([
+        { transaction: transactions[2], isSent: false },
+        { transaction: transactions[3], isSent: false },
+        { transaction: transactions[4], isSent: false },
+        { transaction: transactions[5], isSent: false },
+      ]);
 
-      expect(transactionHashesCache.merkleBlocks).to.deep.equal(
-        {
-          [merkleBlocks[1].header.hash]: merkleBlocks[1],
-        },
-      );
+      expect(transactionHashesCache.merkleBlocks).to.deep.equal([
+        { merkleBlock: merkleBlocks[1], isSent: false },
+        { merkleBlock: merkleBlocks[2], isSent: false },
+      ]);
 
       expect(transactionHashesCache.blocks).to.deep.equal(
         [blocks[1], blocks[2]],
@@ -116,36 +131,13 @@ describe('TransactionHashesCache', () => {
     });
   });
 
-  describe('#hasMatchedTransactions', () => {
-    it('should indicate if cache has matched transactions', () => {
-      let result = transactionHashesCache.hasMatchedTransactions(blocks[0]);
-
-      expect(result).to.equal(false);
-
-      transactionHashesCache.addTransaction(transactions[0]);
-
-      result = transactionHashesCache.hasMatchedTransactions(blocks[0]);
-
-      expect(result).to.equal(true);
-    });
-  });
-
-  describe('#hasTransactionHash', () => {
-    it('should indicate if cache has transactions by hash', () => {
-      let result = transactionHashesCache.hasTransactionHash(transactions[0].hash);
-
-      expect(result).to.equal(false);
-
-      transactionHashesCache.addTransaction(transactions[0]);
-
-      result = transactionHashesCache.hasTransactionHash(transactions[0].hash);
-
-      expect(result).to.equal(true);
-    });
-  });
-
   describe('#getBlockCount', () => {
     it('should return block count', () => {
+      transactionHashesCache.addTransaction(transactions[0]);
+      transactionHashesCache.addTransaction(transactions[1]);
+      transactionHashesCache.addTransaction(transactions[2]);
+      transactionHashesCache.addTransaction(transactions[3]);
+
       transactionHashesCache.addBlock(blocks[0]);
       transactionHashesCache.addBlock(blocks[1]);
 
@@ -162,28 +154,21 @@ describe('TransactionHashesCache', () => {
       transactionHashesCache.addTransaction(transactions[4]);
       transactionHashesCache.addTransaction(transactions[5]);
 
-      transactionHashesCache.addMerkleBlock(merkleBlocks[0]);
-      transactionHashesCache.addMerkleBlock(merkleBlocks[1]);
-
       transactionHashesCache.addBlock(blocks[0]);
       transactionHashesCache.addBlock(blocks[1]);
 
       transactionHashesCache.removeDataByBlockHash(blocks[0].hash);
 
-      expect(transactionHashesCache.transactions).to.deep.equal(
-        {
-          [transactions[2].hash]: transactions[2],
-          [transactions[3].hash]: transactions[3],
-          [transactions[4].hash]: transactions[4],
-          [transactions[5].hash]: transactions[5],
-        },
-      );
+      expect(transactionHashesCache.transactions).to.deep.equal([
+        { transaction: transactions[2], isSent: false },
+        { transaction: transactions[3], isSent: false },
+        { transaction: transactions[4], isSent: false },
+        { transaction: transactions[5], isSent: false },
+      ]);
 
-      expect(transactionHashesCache.merkleBlocks).to.deep.equal(
-        {
-          [merkleBlocks[1].header.hash]: merkleBlocks[1],
-        },
-      );
+      expect(transactionHashesCache.merkleBlocks).to.deep.equal([
+        { merkleBlock: merkleBlocks[1], isSent: false },
+      ]);
 
       expect(transactionHashesCache.blocks).to.deep.equal(
         [blocks[1]],
@@ -191,27 +176,36 @@ describe('TransactionHashesCache', () => {
     });
   });
 
-  describe('#getDataGroupedByBlock', () => {
-    it('should return grouped data by blocks that have merkle blocks', () => {
+  describe('#getUnsentTrasactions', () => {
+    it('should return unsent transactions and mark them as sent', () => {
+      transactionHashesCache.addTransaction(transactions[0]);
+      transactionHashesCache.addTransaction(transactions[1]);
+
+      expect(transactionHashesCache.getUnsentTransactions()).to.deep.equal([
+        transactions[0],
+        transactions[1],
+      ]);
+
+      expect(transactionHashesCache.getUnsentTransactions()).to.deep.equal([]);
+    });
+  });
+
+  describe('#getUnsentMerkleBlocks', () => {
+    it('should return unsent merkle blocks and mark them as sent', () => {
+      transactionHashesCache.addTransaction(transactions[0]);
+      transactionHashesCache.addTransaction(transactions[1]);
       transactionHashesCache.addTransaction(transactions[2]);
       transactionHashesCache.addTransaction(transactions[3]);
-      transactionHashesCache.addTransaction(transactions[4]);
-      transactionHashesCache.addTransaction(transactions[5]);
-
-      transactionHashesCache.addMerkleBlock(merkleBlocks[1]);
 
       transactionHashesCache.addBlock(blocks[0]);
       transactionHashesCache.addBlock(blocks[1]);
 
-      const data = transactionHashesCache.getDataGroupedByBlock();
+      expect(transactionHashesCache.getUnsentMerkleBlocks()).to.deep.equal([
+        merkleBlocks[0],
+        merkleBlocks[1],
+      ]);
 
-      expect(data).to.deep.equal([{
-        merkleBlock: merkleBlocks[1],
-        transactions: [
-          transactions[2],
-          transactions[3],
-        ]
-      }]);
+      expect(transactionHashesCache.getUnsentMerkleBlocks()).to.deep.equal([]);
     });
   });
 });
