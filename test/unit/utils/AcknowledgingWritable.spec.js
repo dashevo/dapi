@@ -35,11 +35,14 @@ describe('WritableWrapper', () => {
     it("Should attach handlers when write is called and detach when it's finished", async () => {
       const writable = new WritableMock({ callCallback: true });
       const wrapper = new WritableWrapper(writable);
+      // eslint-disable-next-line no-underscore-dangle
       expect(wrapper.writable._eventsCount).to.be.equal(0);
       const promise = wrapper.write('123');
+      // eslint-disable-next-line no-underscore-dangle
       expect(wrapper.writable._eventsCount).to.be.equal(2);
       const result = await promise;
       expect(result).to.be.true();
+      // eslint-disable-next-line no-underscore-dangle
       expect(wrapper.writable._eventsCount).to.be.equal(0);
     });
     it('Should return true when instead of calling callback drain is required', async () => {
