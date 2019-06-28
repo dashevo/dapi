@@ -182,14 +182,12 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     coreAPIMock.getBlock.resolves({ height: 1 });
     coreAPIMock.getBestBlockHeight.resolves(10);
 
-    // TODO: investigate d.toArray issue
-
     historicalTxData.push({
       merkleBlock: {
-        toBuffer: () => '',
+        toBuffer: () => Buffer.alloc(0),
       },
       transactions: [
-        { toBuffer: () => 'edefad1c70ee6736a0a0c2f9be7f22cfcf77ae2c120704a98cdc9aebdab7ffc5' },
+        { toBuffer: () => Buffer.from('edefad1c70ee6736a0a0c2f9be7f22cfcf77ae2c120704a98cdc9aebdab7ffc5', 'hex') },
       ],
     });
 
