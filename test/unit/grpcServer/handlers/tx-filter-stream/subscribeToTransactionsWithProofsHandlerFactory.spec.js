@@ -102,6 +102,36 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     expect(call.end).to.not.have.been.called();
   });
 
+  it('should respond with error if both fromBlockHash and fromBlockHeight are not specified', async () => {
+    // Create a wrong bloom filter
+    call.request = {
+      bloomFilter: {
+        nHashFuncs: 10,
+        nTweak: 1000,
+        nFlags: 100,
+        vData: [],
+      },
+    };
+
+    // Get the bloom filter from a client
+    await subscribeToTransactionsWithProofsHandler(call, callback);
+
+    expect(callback).to.have.been.calledOnce();
+    expect(callback.getCall(0).args).to.have.lengthOf(2);
+
+    const [error, response] = callback.getCall(0).args;
+
+    expect(error).to.be.instanceOf(InvalidArgumentError);
+    expect(error.getMessage()).to.equal(
+      'Invalid argument: Either fromBlockHash or fromBlockHeight should be specified',
+    );
+
+    expect(response).to.be.null();
+
+    expect(call.write).to.not.have.been.called();
+    expect(call.end).to.not.have.been.called();
+  });
+
   it('should respond with error if fromBlockHeight exceeded blockchain length', async () => {
     call.request = {
       bloomFilter: {
