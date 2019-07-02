@@ -4,6 +4,8 @@ const sinonChai = require('sinon-chai');
 const dirtyChai = require('dirty-chai');
 const chaiAsPromised = require('chai-as-promised');
 
+const { TransactionsWithProofsResponse, RawTransactions } = require('@dashevo/dapi-grpc');
+
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 const subscribeToTransactionsWithProofsHandlerFactory = require(
   '../../../../../lib/grpcServer/handlers/tx-filter-stream/subscribeToTransactionsWithProofsHandlerFactory',
@@ -12,6 +14,8 @@ const subscribeToTransactionsWithProofsHandlerFactory = require(
 const ProcessMediator = require('../../../../../lib/transactionsFilter/ProcessMediator');
 
 const InvalidArgumentError = require('../../../../../lib/grpcServer/error/InvalidArgumentError');
+
+const AcknowledgingWritable = require('../../../../../lib/utils/AcknowledgingWritable');
 
 use(sinonChai);
 use(chaiAsPromised);
@@ -84,7 +88,6 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
       },
     };
 
-    // Get the bloom filter from a client
     await subscribeToTransactionsWithProofsHandler(call, callback);
 
     expect(callback).to.have.been.calledOnce();
@@ -113,7 +116,6 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
       },
     };
 
-    // Get the bloom filter from a client
     await subscribeToTransactionsWithProofsHandler(call, callback);
 
     expect(callback).to.have.been.calledOnce();
@@ -145,7 +147,6 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
 
     coreAPIMock.getBestBlockHeight.resolves(10);
 
-    // Get the bloom filter from a client
     await subscribeToTransactionsWithProofsHandler(call, callback);
 
     expect(callback).to.have.been.calledOnce();
@@ -177,7 +178,6 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     coreAPIMock.getBlock.resolves({ height: 1 });
     coreAPIMock.getBestBlockHeight.resolves(10);
 
-    // Get the bloom filter from a client
     await subscribeToTransactionsWithProofsHandler(call, callback);
 
     expect(callback).to.have.been.calledOnce();
@@ -197,7 +197,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
   });
 
 
-  it('should subscribe to new transactions if count is not specified', async () => {
+  it('should subscribe to new transactions if count is not specified', async function it() {
     call.request = {
       bloomFilter: {
         nHashFuncs: 50,
@@ -209,26 +209,49 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
       count: 0,
     };
 
+    const writableStub = this.sinon.stub(AcknowledgingWritable.prototype, 'write');
+
     coreAPIMock.getBlock.resolves({ height: 1 });
     coreAPIMock.getBestBlockHeight.resolves(10);
 
     historicalTxData.push({
       merkleBlock: {
-        toBuffer: () => Buffer.alloc(0),
+        toBuffer: () => Buffer.from('someHash'),
+        header: {
+          hash: 'someHash',
+        },
       },
       transactions: [
-        { toBuffer: () => Buffer.from('edefad1c70ee6736a0a0c2f9be7f22cfcf77ae2c120704a98cdc9aebdab7ffc5', 'hex') },
+        {
+          toBuffer: () => Buffer.from(
+            'edefad1c70ee6736a0a0c2f9be7f22cfcf77ae2c120704a98cdc9aebdab7ffc5', 'hex',
+          ),
+        },
       ],
     });
 
-    // Get the bloom filter from a client
     await subscribeToTransactionsWithProofsHandler(call, callback);
 
     expect(subscribeToNewTransactionsMock).to.have.been.calledOnce();
+    expect(writableStub).to.have.been.calledTwice();
 
-    // TODO: check if data is received via events
+    const firstResponse = new TransactionsWithProofsResponse();
+    const rawTransactions = new RawTransactions();
+    rawTransactions.setTransactionsList(
+      historicalTxData[0].transactions.map(tx => tx.toBuffer()),
+    );
+    firstResponse.setRawTransactions(rawTransactions);
 
-    expect.fail('Not implemented');
+    const secondResponse = new TransactionsWithProofsResponse();
+    secondResponse.setRawMerkleBlock(historicalTxData[0].merkleBlock.toBuffer());
+
+    expect(writableStub.getCall(0).args).to.deep.equal(
+      [firstResponse.toObject()],
+    );
+
+    expect(writableStub.getCall(1).args).to.deep.equal(
+      [secondResponse.toObject()],
+    );
   });
 
   it('should end call and emit CLIENT_DISCONNECTED event when client disconnects', async () => {
@@ -239,9 +262,9 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
         nFlags: 100,
         vData: [],
       },
+      fromBlockHash: 'someHash',
     };
 
-    // Get the bloom filter from client
     await subscribeToTransactionsWithProofsHandler(call, callback);
 
     // Client disconnects
