@@ -44,7 +44,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     ];
 
     call = new GrpcCallMock(this.sinon, {
-      userId,
+      getUserId: () => userId,
     });
 
     coreAPIMock = {
@@ -56,100 +56,60 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     );
   });
 
-  it('should throw an error if userId is not of correct length', function it(done) {
+  it('should throw an error if userId is not of correct length', async function it() {
     call = new GrpcCallMock(this.sinon, {
-      userId: Buffer.from('SomeOtherId'),
+      getUserId: () => Buffer.from('SomeOtherId'),
     });
 
-    const callback = (e, v) => {
-      try {
-        expect(v).to.equal(null);
-        expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
-        expect(e.getMessage()).to.equal('Invalid argument: userId length is not 256 bytes');
-
-        done();
-      } catch (error) {
-        done(error);
-      }
-    };
-
     coreAPIMock.getUser.resolves(undefined);
-
-    getLastStateTransitionHashHandler(call, callback);
-  });
-
-  it('should throw an error if user was not found', (done) => {
-    const callback = (e, v) => {
-      try {
-        expect(coreAPIMock.getUser).to.have.been.calledOnceWith(userId.toString('hex'));
-
-        expect(v).to.equal(null);
-        expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
-        expect(e.getMessage()).to.equal(`Invalid argument: User was not found by id ${userId.toString('hex')}`);
-
-        done();
-      } catch (error) {
-        done(error);
-      }
-    };
-
-    coreAPIMock.getUser.resolves(undefined);
-
-    getLastStateTransitionHashHandler(call, callback);
-  });
-
-  it('should throw-forward an error if core API call goes wrong', function it() {
-    const callback = this.sinon.stub();
-
-    const anError = new Error('Core API goes nuts');
-
-    coreAPIMock.getUser.throws(anError);
 
     try {
-      getLastStateTransitionHashHandler(call, callback);
-      expect.fail('An error have not been thrown');
-    } catch (e) {
-      expect(e.message).to.equal(anError.message);
-    }
+      await getLastStateTransitionHashHandler(call);
 
-    expect(callback).to.not.have.been.called();
+      expect.fail('Error was not thrown');
+    } catch (e) {
+      expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal('Invalid argument: userId length is not 256 bytes');
+    }
   });
 
-  it('should return empty state transition hash in case no state transitions exist', (done) => {
-    const callback = (e, v) => {
-      try {
-        expect(e).to.equal(null);
-        expect(v.getStateTransitionHash()).to.equal('');
-        done();
-      } catch (error) {
-        done(error);
-      }
-    };
+  it('should throw an error if user was not found', async () => {
+    const userNotFoundError = new Error('no user mate');
 
+    coreAPIMock.getUser.throws(userNotFoundError);
+
+    try {
+      await getLastStateTransitionHashHandler(call);
+
+      expect.fail('Error was not thrown');
+    } catch (e) {
+      expect(coreAPIMock.getUser).to.have.been.calledOnceWith(userId.toString('hex'));
+      expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal(
+        `Invalid argument: Could not retrieve user by id ${userId.toString('hex')}. Reason: ${userNotFoundError.message}`,
+      );
+    }
+  });
+
+  it('should return empty state transition hash in case no state transitions exist', async () => {
     coreAPIMock.getUser.resolves({
       subtx: [],
     });
 
-    getLastStateTransitionHashHandler(call, callback);
+    const response = await getLastStateTransitionHashHandler(call);
+
+    expect(response.getStateTransitionHash()).to.equal('');
   });
 
-  it('should return last state transitions hash', (done) => {
-    const callback = (e, v) => {
-      try {
-        expect(e).to.equal(null);
-        expect(v.getStateTransitionHash()).to.deep.equal(
-          Buffer.from(subTxs[subTxs.length - 1], 'hex'),
-        );
-        done();
-      } catch (error) {
-        done(error);
-      }
-    };
-
+  it('should return last state transitions hash', async () => {
     coreAPIMock.getUser.resolves({
       subtx: subTxs,
     });
 
-    getLastStateTransitionHashHandler(call, callback);
+    const response = await getLastStateTransitionHashHandler(call);
+
+    expect(response.getStateTransitionHash()).to.deep.equal(
+      Buffer.from(subTxs[subTxs.length - 1], 'hex'),
+    );
   });
 });
