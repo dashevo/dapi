@@ -10,7 +10,7 @@ const getLastStateTransitionHashHandlerFactory = require(
   '../../../../../lib/grpcServer/handlers/core/getLastUserStateTransitionHashHandlerFactory',
 );
 
-const InvalidArgumentError = require('../../../../../lib/grpcServer/error/InvalidArgumentError');
+const InvalidArgumentGrpcError = require('../../../../../lib/grpcServer/error/InvalidArgumentGrpcError');
 
 use(sinonChai);
 use(chaiAsPromised);
@@ -64,7 +64,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     const callback = (e, v) => {
       try {
         expect(v).to.equal(null);
-        expect(e).to.be.an.instanceOf(InvalidArgumentError);
+        expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
         expect(e.getMessage()).to.equal('Invalid argument: userId length is not 256 bytes');
 
         done();
@@ -84,7 +84,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
         expect(coreAPIMock.getUser).to.have.been.calledOnceWith(userId.toString('hex'));
 
         expect(v).to.equal(null);
-        expect(e).to.be.an.instanceOf(InvalidArgumentError);
+        expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
         expect(e.getMessage()).to.equal(`Invalid argument: User was not found by id ${userId.toString('hex')}`);
 
         done();

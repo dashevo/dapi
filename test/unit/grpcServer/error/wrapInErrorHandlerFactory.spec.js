@@ -5,8 +5,8 @@ const dirtyChai = require('dirty-chai');
 const chaiAsPromised = require('chai-as-promised');
 
 const wrapInErrorHandlerFactory = require('../../../../lib/grpcServer/error/wrapInErrorHandlerFactory');
-const InternalError = require('../../../../lib/grpcServer/error/InternalError');
-const InvalidArgumentError = require('../../../../lib/grpcServer/error/InvalidArgumentError');
+const InternalGrpcError = require('../../../../lib/grpcServer/error/InternalGrpcError');
+const InvalidArgumentGrpcError = require('../../../../lib/grpcServer/error/InvalidArgumentGrpcError');
 
 use(sinonChai);
 use(chaiAsPromised);
@@ -64,7 +64,7 @@ describe('wrapInErrorHandlerFactory', () => {
     it('should call callback with GrpcError if it was thrown from the method', () => {
       const wrappedRpcMethod = wrapInErrorHandler(rpcMethod);
 
-      const grpcError = new InvalidArgumentError('Something wrong');
+      const grpcError = new InvalidArgumentGrpcError('Something wrong');
 
       rpcMethod.throws(grpcError);
 
@@ -75,7 +75,7 @@ describe('wrapInErrorHandlerFactory', () => {
       expect(loggerMock.error).to.not.be.called();
     });
 
-    it('should log and call callback with InternalError if some error except GrpcError was thrown from the method', () => {
+    it('should log and call callback with InternalGrpcError if some error except GrpcError was thrown from the method', () => {
       const wrappedRpcMethod = wrapInErrorHandler(rpcMethod);
 
       const someError = new Error();
@@ -91,7 +91,7 @@ describe('wrapInErrorHandlerFactory', () => {
 
       const [grpcError] = callback.getCall(0).args;
 
-      expect(grpcError).to.be.instanceOf(InternalError);
+      expect(grpcError).to.be.instanceOf(InternalGrpcError);
       expect(grpcError.getError()).to.equal(someError);
 
       expect(loggerMock.error).to.be.calledOnceWith(someError);

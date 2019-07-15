@@ -13,7 +13,7 @@ const subscribeToTransactionsWithProofsHandlerFactory = require(
 
 const ProcessMediator = require('../../../../../lib/transactionsFilter/ProcessMediator');
 
-const InvalidArgumentError = require('../../../../../lib/grpcServer/error/InvalidArgumentError');
+const InvalidArgumentGrpcError = require('../../../../../lib/grpcServer/error/InvalidArgumentGrpcError');
 
 const AcknowledgingWritable = require('../../../../../lib/utils/AcknowledgingWritable');
 
@@ -95,7 +95,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
 
     const [error, response] = callback.getCall(0).args;
 
-    expect(error).to.be.instanceOf(InvalidArgumentError);
+    expect(error).to.be.instanceOf(InvalidArgumentGrpcError);
     expect(error.getMessage()).to.equal('Invalid argument: Invalid bloom filter: '
       + '"nHashFuncs" exceeded max size "50"');
 
@@ -123,7 +123,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
 
     const [error, response] = callback.getCall(0).args;
 
-    expect(error).to.be.instanceOf(InvalidArgumentError);
+    expect(error).to.be.instanceOf(InvalidArgumentGrpcError);
     expect(error.getMessage()).to.equal(
       'Invalid argument: Either fromBlockHash or fromBlockHeight should be specified',
     );
@@ -154,7 +154,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
 
     const [error, response] = callback.getCall(0).args;
 
-    expect(error).to.be.instanceOf(InvalidArgumentError);
+    expect(error).to.be.instanceOf(InvalidArgumentGrpcError);
     expect(error.getMessage()).to.equal('Invalid argument: fromBlockHeight is bigger than block count');
 
     expect(response).to.be.null();
@@ -185,7 +185,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
 
     const [error, response] = callback.getCall(0).args;
 
-    expect(error).to.be.instanceOf(InvalidArgumentError);
+    expect(error).to.be.instanceOf(InvalidArgumentGrpcError);
     expect(error.getMessage()).to.equal(
       'Invalid argument: count is too big, could not fetch more than blockchain length',
     );
