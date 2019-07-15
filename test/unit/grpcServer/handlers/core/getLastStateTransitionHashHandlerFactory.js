@@ -36,7 +36,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
   });
 
   beforeEach(function beforeEach() {
-    userId = Buffer.alloc(256);
+    userId = Buffer.alloc(256, 1);
     subTxs = [
       '6f6e65',
       '6f6e66',
@@ -44,7 +44,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     ];
 
     call = new GrpcCallMock(this.sinon, {
-      getUserId: () => userId,
+      getUserId_asU8: () => new Uint8Array(userId),
     });
 
     coreAPIMock = {
@@ -56,9 +56,9 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     );
   });
 
-  it('should throw an error if userId is not of correct length', async function it() {
+  it('should throw an error if userId is not specified', async function it() {
     call = new GrpcCallMock(this.sinon, {
-      getUserId: () => Buffer.from('SomeOtherId'),
+      getUserId_asU8: () => new Uint8Array([]),
     });
 
     coreAPIMock.getUser.resolves(undefined);
@@ -69,7 +69,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       expect.fail('Error was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid argument: userId length is not 256 bytes');
+      expect(e.getMessage()).to.equal('Invalid argument: userId is not specified');
     }
   });
 
