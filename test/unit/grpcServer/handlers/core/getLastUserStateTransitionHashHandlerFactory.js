@@ -6,7 +6,7 @@ const chaiAsPromised = require('chai-as-promised');
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
-const getLastStateTransitionHashHandlerFactory = require(
+const getLastUserStateTransitionHashHandlerFactory = require(
   '../../../../../lib/grpcServer/handlers/core/getLastUserStateTransitionHashHandlerFactory',
 );
 
@@ -16,9 +16,9 @@ use(sinonChai);
 use(chaiAsPromised);
 use(dirtyChai);
 
-describe('getLastStateTransitionHashHandlerFactory', () => {
+describe('getLastUserStateTransitionHashHandlerFactory', () => {
   let coreAPIMock;
-  let getLastStateTransitionHashHandler;
+  let getLastUserStateTransitionHashHandler;
   let userId;
   let subTxs;
   let call;
@@ -51,7 +51,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       getUser: this.sinon.stub(),
     };
 
-    getLastStateTransitionHashHandler = getLastStateTransitionHashHandlerFactory(
+    getLastUserStateTransitionHashHandler = getLastUserStateTransitionHashHandlerFactory(
       coreAPIMock,
     );
   });
@@ -64,7 +64,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     coreAPIMock.getUser.resolves(undefined);
 
     try {
-      await getLastStateTransitionHashHandler(call);
+      await getLastUserStateTransitionHashHandler(call);
 
       expect.fail('Error was not thrown');
     } catch (e) {
@@ -79,7 +79,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
     coreAPIMock.getUser.throws(userNotFoundError);
 
     try {
-      await getLastStateTransitionHashHandler(call);
+      await getLastUserStateTransitionHashHandler(call);
 
       expect.fail('Error was not thrown');
     } catch (e) {
@@ -96,7 +96,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       subtx: [],
     });
 
-    const response = await getLastStateTransitionHashHandler(call);
+    const response = await getLastUserStateTransitionHashHandler(call);
 
     expect(response.getStateTransitionHash()).to.equal('');
   });
@@ -106,7 +106,7 @@ describe('getLastStateTransitionHashHandlerFactory', () => {
       subtx: subTxs,
     });
 
-    const response = await getLastStateTransitionHashHandler(call);
+    const response = await getLastUserStateTransitionHashHandler(call);
 
     expect(response.getStateTransitionHash()).to.deep.equal(
       Buffer.from(subTxs[subTxs.length - 1], 'hex'),
