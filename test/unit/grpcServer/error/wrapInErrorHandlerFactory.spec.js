@@ -51,40 +51,44 @@ describe('wrapInErrorHandlerFactory', () => {
   });
 
   describe('wrapped RPC method', () => {
-    it('should call a method', () => {
+    it('should call a method', async () => {
+      const result = 42;
+
+      rpcMethod.resolves(result);
+
       const wrappedRpcMethod = wrapInErrorHandler(rpcMethod);
 
-      wrappedRpcMethod(call, callback);
+      await wrappedRpcMethod(call, callback);
 
-      expect(rpcMethod).to.be.calledOnceWith(call, callback);
-      expect(callback).to.not.be.called();
+      expect(rpcMethod).to.be.calledOnceWith(call);
+      expect(callback).to.be.calledOnceWith(null, result);
       expect(loggerMock.error).to.not.be.called();
     });
 
-    it('should call callback with GrpcError if it was thrown from the method', () => {
+    it('should call callback with GrpcError if it was thrown from the method', async () => {
       const wrappedRpcMethod = wrapInErrorHandler(rpcMethod);
 
       const grpcError = new InvalidArgumentGrpcError('Something wrong');
 
       rpcMethod.throws(grpcError);
 
-      wrappedRpcMethod(call, callback);
+      await wrappedRpcMethod(call, callback);
 
-      expect(rpcMethod).to.be.calledOnceWith(call, callback);
-      expect(callback).to.be.calledOnceWith(grpcError);
+      expect(rpcMethod).to.be.calledOnceWith(call);
+      expect(callback).to.be.calledOnceWith(grpcError, null);
       expect(loggerMock.error).to.not.be.called();
     });
 
-    it('should log and call callback with InternalGrpcError if some error except GrpcError was thrown from the method', () => {
+    it('should log and call callback with InternalGrpcError if some error except GrpcError was thrown from the method', async () => {
       const wrappedRpcMethod = wrapInErrorHandler(rpcMethod);
 
       const someError = new Error();
 
       rpcMethod.throws(someError);
 
-      wrappedRpcMethod(call, callback);
+      await wrappedRpcMethod(call, callback);
 
-      expect(rpcMethod).to.be.calledOnceWith(call, callback);
+      expect(rpcMethod).to.be.calledOnceWith(call);
 
       expect(callback).to.be.calledOnce();
       expect(callback.getCall(0).args).to.have.lengthOf(2);
