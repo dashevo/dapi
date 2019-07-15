@@ -9,6 +9,7 @@ const {
   MerkleBlock,
   PrivateKey,
   BloomFilter,
+  util: { buffer: BufferUtils },
 } = require('@dashevo/dashcore-lib');
 
 const BloomFilterEmitterCollection = require('../../../lib/bloomFilter/emitter/BloomFilterEmitterCollection');
@@ -19,6 +20,12 @@ const testTransactionsAgainstFilter = require('../../../lib/transactionsFilter/t
 
 use(chaiAsPromised);
 use(dirtyChai);
+
+function reverseHash(hash) {
+  return BufferUtils.reverse(
+    Buffer.from(hash, 'hex'),
+  );
+}
 
 describe('subscribeToNewTransactions', () => {
   let bloomFilter;
@@ -118,9 +125,9 @@ describe('subscribeToNewTransactions', () => {
       MerkleBlock.build(
         blocks[0].header,
         [
-          transactions[0].hash,
-          transactions[1].hash,
-          transactions[2].hash,
+          reverseHash(transactions[0].hash),
+          reverseHash(transactions[1].hash),
+          reverseHash(transactions[2].hash),
         ],
         [true, true, false],
       ),
@@ -163,9 +170,9 @@ describe('subscribeToNewTransactions', () => {
       MerkleBlock.build(
         blocks[0].header,
         [
-          transactions[0].hash,
-          transactions[1].hash,
-          transactions[2].hash,
+          reverseHash(transactions[0].hash),
+          reverseHash(transactions[1].hash),
+          reverseHash(transactions[2].hash),
         ],
         [true, true, false],
       ),
@@ -216,8 +223,8 @@ describe('subscribeToNewTransactions', () => {
       MerkleBlock.build(
         blocks[1].header,
         [
-          transactions[3].hash,
-          transactions[4].hash,
+          reverseHash(transactions[3].hash),
+          reverseHash(transactions[4].hash),
         ],
         [true, false],
       ),
