@@ -2,18 +2,19 @@ const chai = require('chai');
 const dirtyChai = require('dirty-chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
-const { MerkleBlock, Transaction } = require('@dashevo/dashcore-lib');
+const { MerkleBlock, Transaction, BloomFilter } = require('@dashevo/dashcore-lib');
 
-const fetchHistoricalTransactionsFactory = require('../../../lib/transactionsFilter/getHistoricalTransactionsIteratorFactory');
+const getHistoricalTransactionsIteratorFactory = require('../../../lib/transactionsFilter/getHistoricalTransactionsIteratorFactory');
 
 const { expect } = chai;
 chai.use(dirtyChai);
 chai.use(chaiAsPromised);
 
-describe('fetchHistoricalTransactions', () => {
+describe('getHistoricalTransactionsIteratorFactory', () => {
   let mockData;
   let rawMerkleBlock;
   let coreRpcMock;
+  let bloomFilter;
 
   beforeEach(() => {
     rawMerkleBlock = '03000000' // Version
@@ -89,11 +90,12 @@ describe('fetchHistoricalTransactions', () => {
     mockData.blocks.forEach((mockedBlockData) => {
       coreRpcMock.getBlockHash.withArgs(mockedBlockData.height).resolves(mockedBlockData.hash);
     });
+
+    bloomFilter = BloomFilter.create(1, 0.001);
   });
 
   it('count is lesser than max block headers', async () => {
-    const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
-    const bloomFilter = '0fa00001';
+    const fetchHistoricalTransactions = getHistoricalTransactionsIteratorFactory(coreRpcMock);
     const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
     const count = 580;
 
@@ -114,7 +116,7 @@ describe('fetchHistoricalTransactions', () => {
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(1);
     expect(
       coreRpcMock.getMerkleBlocks.getCall(0).calledWith(
-        bloomFilter, mockData.blocks[0].hash, 580,
+        bloomFilter.toBuffer().toString('hex'), mockData.blocks[0].hash, 580,
       ),
     ).to.be.true();
 
@@ -130,8 +132,7 @@ describe('fetchHistoricalTransactions', () => {
   });
 
   it('count is bigger than max block headers', async () => {
-    const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
-    const bloomFilter = '0fa00001';
+    const fetchHistoricalTransactions = getHistoricalTransactionsIteratorFactory(coreRpcMock);
     const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
     const count = 4123;
 
@@ -152,7 +153,7 @@ describe('fetchHistoricalTransactions', () => {
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(1);
     expect(
       coreRpcMock.getMerkleBlocks.getCall(0).calledWith(
-        bloomFilter, mockData.blocks[0].hash, 2000,
+        bloomFilter.toBuffer().toString('hex'), mockData.blocks[0].hash, 2000,
       ),
     ).to.be.true();
 
@@ -172,7 +173,7 @@ describe('fetchHistoricalTransactions', () => {
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(2);
     expect(
       coreRpcMock.getMerkleBlocks.getCall(1).calledWith(
-        bloomFilter, mockData.blocks[2].hash, 2000,
+        bloomFilter.toBuffer().toString('hex'), mockData.blocks[2].hash, 2000,
       ),
     ).to.be.true();
 
@@ -186,7 +187,7 @@ describe('fetchHistoricalTransactions', () => {
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(3);
     expect(
       coreRpcMock.getMerkleBlocks.getCall(2).calledWith(
-        bloomFilter, mockData.blocks[3].hash, 123,
+        bloomFilter.toBuffer().toString('hex'), mockData.blocks[3].hash, 123,
       ),
     ).to.be.true();
 
@@ -200,8 +201,7 @@ describe('fetchHistoricalTransactions', () => {
       .withArgs()
       .resolves([rawMerkleBlock, rawMerkleBlock]);
 
-    const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
-    const bloomFilter = '0fa00001';
+    const fetchHistoricalTransactions = getHistoricalTransactionsIteratorFactory(coreRpcMock);
     const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
     const count = 580;
 
@@ -222,7 +222,7 @@ describe('fetchHistoricalTransactions', () => {
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(1);
     expect(
       coreRpcMock.getMerkleBlocks.getCall(0).calledWith(
-        bloomFilter, mockData.blocks[0].hash, 580,
+        bloomFilter.toBuffer().toString('hex'), mockData.blocks[0].hash, 580,
       ),
     ).to.be.true();
 
@@ -255,7 +255,6 @@ describe('fetchHistoricalTransactions', () => {
   });
 
   it('should skip interval with no merkle blocks', async () => {
-    const bloomFilter = '0fa00001';
     coreRpcMock.getMerkleBlocks
       .withArgs(bloomFilter, mockData.blocks[2].hash, 2000)
       .resolves([]);
@@ -263,7 +262,7 @@ describe('fetchHistoricalTransactions', () => {
     const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
     const count = 4123;
 
-    const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
+    const fetchHistoricalTransactions = getHistoricalTransactionsIteratorFactory(coreRpcMock);
 
     const merkleBlocksIterator = fetchHistoricalTransactions(
       bloomFilter,
@@ -279,7 +278,9 @@ describe('fetchHistoricalTransactions', () => {
     await merkleBlocksIterator.next();
 
     expect(coreRpcMock.getMerkleBlocks.getCall(1)
-      .calledWith(bloomFilter, mockData.blocks[2].hash, 2000)).to.be.true();
+      .calledWith(bloomFilter.toBuffer().toString('hex'), mockData.blocks[2].hash, 2000)).to.be.true();
+
+    await merkleBlocksIterator.next();
 
     // As there will be one interval (4002-6002) with no merkle blocks,
     // all call count should increase by 2
@@ -288,7 +289,6 @@ describe('fetchHistoricalTransactions', () => {
   });
 
   it('should proceed straight to done if all ranges are empty', async () => {
-    const bloomFilter = '0fa00001';
     coreRpcMock.getMerkleBlocks
       .withArgs()
       .resolves([]);
@@ -296,7 +296,7 @@ describe('fetchHistoricalTransactions', () => {
     const fromBlockHash = '45afbfe270014d5593cb065562f1fed726f767fe334d8b3f4379025cfa5be8c5';
     const count = 4123;
 
-    const fetchHistoricalTransactions = fetchHistoricalTransactionsFactory(coreRpcMock);
+    const fetchHistoricalTransactions = getHistoricalTransactionsIteratorFactory(coreRpcMock);
 
     const merkleBlocksIterator = fetchHistoricalTransactions(
       bloomFilter,
