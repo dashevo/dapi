@@ -79,7 +79,7 @@ describe('TransactionHashesCache', () => {
       expect(transactionHashesCache.transactions).to.deep.equal([
         {
           transaction: firstTx,
-          isSent: false,
+          isRetrieved: false,
         },
       ]);
     });
@@ -114,15 +114,15 @@ describe('TransactionHashesCache', () => {
       transactionHashesCache.addBlock(blocks[2]);
 
       expect(transactionHashesCache.transactions).to.deep.equal([
-        { transaction: transactions[2], isSent: false },
-        { transaction: transactions[3], isSent: false },
-        { transaction: transactions[4], isSent: false },
-        { transaction: transactions[5], isSent: false },
+        { transaction: transactions[2], isRetrieved: false },
+        { transaction: transactions[3], isRetrieved: false },
+        { transaction: transactions[4], isRetrieved: false },
+        { transaction: transactions[5], isRetrieved: false },
       ]);
 
       expect(transactionHashesCache.merkleBlocks).to.deep.equal([
-        { merkleBlock: merkleBlocks[1], isSent: false },
-        { merkleBlock: merkleBlocks[2], isSent: false },
+        { merkleBlock: merkleBlocks[1], isRetrieved: false },
+        { merkleBlock: merkleBlocks[2], isRetrieved: false },
       ]);
 
       expect(transactionHashesCache.blocks).to.deep.equal(
@@ -160,14 +160,14 @@ describe('TransactionHashesCache', () => {
       transactionHashesCache.removeDataByBlockHash(blocks[0].hash);
 
       expect(transactionHashesCache.transactions).to.deep.equal([
-        { transaction: transactions[2], isSent: false },
-        { transaction: transactions[3], isSent: false },
-        { transaction: transactions[4], isSent: false },
-        { transaction: transactions[5], isSent: false },
+        { transaction: transactions[2], isRetrieved: false },
+        { transaction: transactions[3], isRetrieved: false },
+        { transaction: transactions[4], isRetrieved: false },
+        { transaction: transactions[5], isRetrieved: false },
       ]);
 
       expect(transactionHashesCache.merkleBlocks).to.deep.equal([
-        { merkleBlock: merkleBlocks[1], isSent: false },
+        { merkleBlock: merkleBlocks[1], isRetrieved: false },
       ]);
 
       expect(transactionHashesCache.blocks).to.deep.equal(
@@ -176,21 +176,21 @@ describe('TransactionHashesCache', () => {
     });
   });
 
-  describe('#getUnsentTrasactions', () => {
+  describe('#getUnretrievedTrasactions', () => {
     it('should return unsent transactions and mark them as sent', () => {
       transactionHashesCache.addTransaction(transactions[0]);
       transactionHashesCache.addTransaction(transactions[1]);
 
-      expect(transactionHashesCache.getUnsentTransactions()).to.deep.equal([
+      expect(transactionHashesCache.getUnretrievedTransactions()).to.deep.equal([
         transactions[0],
         transactions[1],
       ]);
 
-      expect(transactionHashesCache.getUnsentTransactions()).to.deep.equal([]);
+      expect(transactionHashesCache.getUnretrievedTransactions()).to.deep.equal([]);
     });
   });
 
-  describe('#getUnsentMerkleBlocks', () => {
+  describe('#getUnretrievedMerkleBlocks', () => {
     it('should return unsent merkle blocks and mark them as sent', () => {
       transactionHashesCache.addTransaction(transactions[0]);
       transactionHashesCache.addTransaction(transactions[1]);
@@ -200,12 +200,12 @@ describe('TransactionHashesCache', () => {
       transactionHashesCache.addBlock(blocks[0]);
       transactionHashesCache.addBlock(blocks[1]);
 
-      expect(transactionHashesCache.getUnsentMerkleBlocks()).to.deep.equal([
+      expect(transactionHashesCache.getUnretrievedMerkleBlocks()).to.deep.equal([
         merkleBlocks[0],
         merkleBlocks[1],
       ]);
 
-      expect(transactionHashesCache.getUnsentMerkleBlocks()).to.deep.equal([]);
+      expect(transactionHashesCache.getUnretrievedMerkleBlocks()).to.deep.equal([]);
     });
   });
 });
