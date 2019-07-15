@@ -4,7 +4,12 @@ const sinonChai = require('sinon-chai');
 const dirtyChai = require('dirty-chai');
 const chaiAsPromised = require('chai-as-promised');
 
-const { TransactionsWithProofsResponse, RawTransactions } = require('@dashevo/dapi-grpc');
+const {
+  TransactionsWithProofsRequest,
+  TransactionsWithProofsResponse,
+  RawTransactions,
+  BloomFilter,
+} = require('@dashevo/dapi-grpc');
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 const subscribeToTransactionsWithProofsHandlerFactory = require(
@@ -35,7 +40,6 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
   });
 
   let call;
-  let callback;
   let subscribeToTransactionsWithProofsHandler;
   let bloomFilterEmitterCollectionMock;
   let historicalTxData;
@@ -45,8 +49,18 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
   let coreAPIMock;
 
   beforeEach(function beforeEach() {
-    call = new GrpcCallMock(this.sinon);
-    callback = this.sinon.stub();
+    const bloomFilterMessage = new BloomFilter();
+
+    bloomFilterMessage.setVData(new Uint8Array());
+    bloomFilterMessage.setNTweak(1000);
+    bloomFilterMessage.setNFlags(100);
+    bloomFilterMessage.setNHashFuncs(10);
+
+    const request = new TransactionsWithProofsRequest();
+
+    request.setBloomFilter(bloomFilterMessage);
+
+    call = new GrpcCallMock(this.sinon, request);
 
     bloomFilterEmitterCollectionMock = {};
 
@@ -78,136 +92,86 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
   });
 
   it('should respond with error if bloom filter is not valid', async () => {
-    // Create a wrong bloom filter
-    call.request = {
-      bloomFilter: {
-        nHashFuncs: 100,
-        nTweak: 1000,
-        nFlags: 100,
-        vData: [],
-      },
-    };
+    const bloomFilterMessage = new BloomFilter();
 
-    await subscribeToTransactionsWithProofsHandler(call, callback);
+    bloomFilterMessage.setVData(new Uint8Array());
+    bloomFilterMessage.setNTweak(1000);
+    bloomFilterMessage.setNFlags(100);
+    bloomFilterMessage.setNHashFuncs(100);
 
-    expect(callback).to.have.been.calledOnce();
-    expect(callback.getCall(0).args).to.have.lengthOf(2);
+    const request = new TransactionsWithProofsRequest();
 
-    const [error, response] = callback.getCall(0).args;
+    request.setBloomFilter(bloomFilterMessage);
 
-    expect(error).to.be.instanceOf(InvalidArgumentGrpcError);
-    expect(error.getMessage()).to.equal('Invalid argument: Invalid bloom filter: '
-      + '"nHashFuncs" exceeded max size "50"');
+    call.request = request;
 
-    expect(response).to.be.null();
+    try {
+      await subscribeToTransactionsWithProofsHandler(call);
 
-    expect(call.write).to.not.have.been.called();
-    expect(call.end).to.not.have.been.called();
+      expect.fail('Error was not thrown');
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal('Invalid argument: Invalid bloom filter: '
+        + '"nHashFuncs" exceeded max size "50"');
+
+      expect(call.write).to.not.have.been.called();
+      expect(call.end).to.not.have.been.called();
+    }
   });
 
   it('should respond with error if both fromBlockHash and fromBlockHeight are not specified', async () => {
-    // Create a wrong bloom filter
-    call.request = {
-      bloomFilter: {
-        nHashFuncs: 10,
-        nTweak: 1000,
-        nFlags: 100,
-        vData: [],
-      },
-    };
+    try {
+      await subscribeToTransactionsWithProofsHandler(call);
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal(
+        'Invalid argument: Either fromBlockHash or fromBlockHeight should be specified',
+      );
 
-    await subscribeToTransactionsWithProofsHandler(call, callback);
-
-    expect(callback).to.have.been.calledOnce();
-    expect(callback.getCall(0).args).to.have.lengthOf(2);
-
-    const [error, response] = callback.getCall(0).args;
-
-    expect(error).to.be.instanceOf(InvalidArgumentGrpcError);
-    expect(error.getMessage()).to.equal(
-      'Invalid argument: Either fromBlockHash or fromBlockHeight should be specified',
-    );
-
-    expect(response).to.be.null();
-
-    expect(call.write).to.not.have.been.called();
-    expect(call.end).to.not.have.been.called();
+      expect(call.write).to.not.have.been.called();
+      expect(call.end).to.not.have.been.called();
+    }
   });
 
   it('should respond with error if fromBlockHeight exceeded blockchain length', async () => {
-    call.request = {
-      bloomFilter: {
-        nHashFuncs: 50,
-        nTweak: 1000,
-        nFlags: 100,
-        vData: [],
-      },
-      fromBlockHeight: 100,
-    };
+    call.request.setFromBlockHeight(100);
 
     coreAPIMock.getBestBlockHeight.resolves(10);
 
-    await subscribeToTransactionsWithProofsHandler(call, callback);
+    try {
+      await subscribeToTransactionsWithProofsHandler(call);
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal('Invalid argument: fromBlockHeight is bigger than block count');
 
-    expect(callback).to.have.been.calledOnce();
-    expect(callback.getCall(0).args).to.have.lengthOf(2);
-
-    const [error, response] = callback.getCall(0).args;
-
-    expect(error).to.be.instanceOf(InvalidArgumentGrpcError);
-    expect(error.getMessage()).to.equal('Invalid argument: fromBlockHeight is bigger than block count');
-
-    expect(response).to.be.null();
-
-    expect(call.write).to.not.have.been.called();
-    expect(call.end).to.not.have.been.called();
+      expect(call.write).to.not.have.been.called();
+      expect(call.end).to.not.have.been.called();
+    }
   });
 
   it('should respond with error if requested data length exceeded blockchain length', async () => {
-    call.request = {
-      bloomFilter: {
-        nHashFuncs: 50,
-        nTweak: 1000,
-        nFlags: 100,
-        vData: [],
-      },
-      fromBlockHash: 'someBlockHash',
-      count: 100,
-    };
+    call.request.setFromBlockHash('someBlockHash');
+    call.request.setCount(100);
 
     coreAPIMock.getBlock.resolves({ height: 1 });
     coreAPIMock.getBestBlockHeight.resolves(10);
 
-    await subscribeToTransactionsWithProofsHandler(call, callback);
+    try {
+      await subscribeToTransactionsWithProofsHandler(call);
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal(
+        'Invalid argument: count is too big, could not fetch more than blockchain length',
+      );
 
-    expect(callback).to.have.been.calledOnce();
-    expect(callback.getCall(0).args).to.have.lengthOf(2);
-
-    const [error, response] = callback.getCall(0).args;
-
-    expect(error).to.be.instanceOf(InvalidArgumentGrpcError);
-    expect(error.getMessage()).to.equal(
-      'Invalid argument: count is too big, could not fetch more than blockchain length',
-    );
-
-    expect(response).to.be.null();
-
-    expect(call.write).to.not.have.been.called();
-    expect(call.end).to.not.have.been.called();
+      expect(call.write).to.not.have.been.called();
+      expect(call.end).to.not.have.been.called();
+    }
   });
 
-
   it('should subscribe to new transactions if count is not specified', async function it() {
-    call.request = {
-      bloomFilter: {
-        nHashFuncs: 50,
-        nTweak: 1000,
-        nFlags: 100,
-        vData: [],
-      },
-      fromBlockHash: 'someBlockHash',
-      count: 0,
-    };
+    call.request.setFromBlockHash('someBlockHash');
+    call.request.setCount(0);
 
     const writableStub = this.sinon.stub(AcknowledgingWritable.prototype, 'write');
 
@@ -230,7 +194,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
       ],
     });
 
-    await subscribeToTransactionsWithProofsHandler(call, callback);
+    await subscribeToTransactionsWithProofsHandler(call);
 
     expect(subscribeToNewTransactionsMock).to.have.been.calledOnce();
     expect(writableStub).to.have.been.calledTwice();
@@ -246,37 +210,29 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     secondResponse.setRawMerkleBlock(historicalTxData[0].merkleBlock.toBuffer());
 
     expect(writableStub.getCall(0).args).to.deep.equal(
-      [firstResponse.toObject()],
+      [firstResponse],
     );
 
     expect(writableStub.getCall(1).args).to.deep.equal(
-      [secondResponse.toObject()],
+      [secondResponse],
     );
   });
 
   it('should end call and emit CLIENT_DISCONNECTED event when client disconnects', async () => {
-    call.request = {
-      bloomFilter: {
-        nHashFuncs: 50,
-        nTweak: 1000,
-        nFlags: 100,
-        vData: [],
-      },
-      fromBlockHash: 'someHash',
-    };
+    call.request.setFromBlockHash('someHash');
+    coreAPIMock.getBlock.resolves({ height: 1 });
 
-    await subscribeToTransactionsWithProofsHandler(call, callback);
+    await subscribeToTransactionsWithProofsHandler(call);
 
     // Client disconnects
     call.emit('cancelled');
 
     // Bloom filters was removed when client disconnects
-    expect(ProcessMediator.prototype.emit).to.be.calledOnceWith(
+    expect(ProcessMediator.prototype.emit.getCall(1)).to.be.calledWith(
       ProcessMediator.EVENTS.CLIENT_DISCONNECTED,
     );
 
     expect(call.write).to.not.have.been.called();
     expect(call.end).to.have.been.calledOnce();
-    expect(callback).to.have.been.calledOnceWith(null, null);
   });
 });
