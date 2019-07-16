@@ -1,6 +1,6 @@
 {
   "name": "@dashevo/dapi",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "A decentralized API for the Dash network",
   "scripts": {
     "core": "node scripts/core.js",
@@ -39,7 +39,7 @@
     "grpc": "^1.20.0",
     "grpc-health-check": "^1.6.6",
     "jayson": "^2.0.4",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.14",
     "node-cache": "^4.1.1",
     "request": "^2.87.0",
     "request-promise-native": "^1.0.5",
