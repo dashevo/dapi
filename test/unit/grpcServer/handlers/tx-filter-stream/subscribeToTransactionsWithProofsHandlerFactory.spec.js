@@ -11,6 +11,8 @@ const {
   BloomFilter,
 } = require('@dashevo/dapi-grpc');
 
+const { BloomFilter: CoreBloomFilter } = require('@dashevo/dashcore-lib');
+
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 const subscribeToTransactionsWithProofsHandlerFactory = require(
   '../../../../../lib/grpcServer/handlers/tx-filter-stream/subscribeToTransactionsWithProofsHandlerFactory',
@@ -65,11 +67,11 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     bloomFilterEmitterCollectionMock = {};
 
     historicalTxData = [];
-    getHistoricalTransactionsIteratorMock = function* generator() {
+    getHistoricalTransactionsIteratorMock = this.sinon.spy(function* generator() {
       for (let i = 0; i < historicalTxData.length; i++) {
         yield historicalTxData[i];
       }
-    };
+    });
 
     subscribeToNewTransactionsMock = this.sinon.stub();
     testTransactionAgainstFilterMock = this.sinon.stub();
@@ -195,6 +197,20 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     });
 
     await subscribeToTransactionsWithProofsHandler(call);
+
+    const filter = new CoreBloomFilter({
+      vData: new Uint8Array([]),
+      nTweak: 1000,
+      nFlags: 100,
+      nHashFuncs: 10,
+    });
+
+    expect(getHistoricalTransactionsIteratorMock).to.have.been
+      .calledOnceWith(
+        filter,
+        Buffer.from('someBlockHash').toString('hex'),
+        10,
+      );
 
     expect(subscribeToNewTransactionsMock).to.have.been.calledOnce();
     expect(writableStub).to.have.been.calledTwice();

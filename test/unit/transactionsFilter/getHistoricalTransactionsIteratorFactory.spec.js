@@ -310,8 +310,4 @@ describe('getHistoricalTransactionsIteratorFactory', () => {
     expect(coreRpcMock.getMerkleBlocks.callCount).to.be.equal(3);
     expect(done).to.be.true();
   });
-
-  it('if count is 0, than return scan all blocks until best block', () => {
-    expect.fail('Not Implemented');
-  });
 });
