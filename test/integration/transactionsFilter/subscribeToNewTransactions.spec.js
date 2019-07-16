@@ -236,7 +236,7 @@ describe('subscribeToNewTransactions', () => {
         Buffer.from(transactions[3].hash, 'hex'),
         Buffer.from(transactions[4].hash, 'hex'),
       ],
-      [truee, false],
+      [true, false],
     );
 
     expectedMerkleBlock.hashes = expectedMerkleBlock.hashes
