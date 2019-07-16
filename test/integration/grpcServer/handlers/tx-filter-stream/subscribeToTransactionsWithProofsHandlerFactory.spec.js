@@ -392,6 +392,26 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
 
     expect(receivedTransactionsSize).to.equal(receivedTransactionsSizeAfterReorg);
 
-    // TODO: check that we've received last merkle block and it is correct one
+    ({ result: merkleBlockStrings } = await coreAPI.getMerkleBlocks(
+      bloomFilter.toBuffer().toString('hex'),
+      fromBlockHash,
+    ));
+
+    const lastHistoricalMerkleBlock = new MerkleBlock(
+      Buffer.from(
+        merkleBlockStrings[merkleBlockStrings.length - 1],
+        'hex',
+      ),
+    );
+
+    const lastReceivedMerkleBlock = new MerkleBlock(
+      Buffer.from(
+        receivedMerkleBlocks[receivedMerkleBlocks.length - 1],
+        'hex',
+      ),
+    );
+
+    expect(lastHistoricalMerkleBlock.toObject()).to.deep
+      .equal(lastReceivedMerkleBlock.toObject());
   });
 });
