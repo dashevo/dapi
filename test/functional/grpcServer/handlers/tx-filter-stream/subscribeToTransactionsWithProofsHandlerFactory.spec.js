@@ -279,7 +279,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     expect(rcvMB).to.deep.equal(hstMB);
   });
 
-  it('should respond with a proper data in case of reorganization', async () => {
+  it('should respond with a proper historical and new data in case of reorganization', async () => {
     const receivedTransactions = [];
     const receivedMerkleBlocks = [];
 
@@ -414,4 +414,6 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     expect(lastHistoricalMerkleBlock.toObject()).to.deep
       .equal(lastReceivedMerkleBlock.toObject());
   });
+
+  it('should respond with only new data');
 });
