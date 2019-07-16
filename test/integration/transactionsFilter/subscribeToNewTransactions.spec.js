@@ -21,10 +21,16 @@ const testTransactionsAgainstFilter = require('../../../lib/transactionsFilter/t
 use(chaiAsPromised);
 use(dirtyChai);
 
+/**
+ * Reverse the hash
+ *
+ * @param {string} hash
+ * @returns {string}
+ */
 function reverseHash(hash) {
   return BufferUtils.reverse(
     Buffer.from(hash, 'hex'),
-  );
+  ).toString('hex');
 }
 
 describe('subscribeToNewTransactions', () => {
@@ -120,18 +126,21 @@ describe('subscribeToNewTransactions', () => {
       transactions[1],
     ]);
 
-    expect(receivedBlocks).to.have.a.lengthOf(1);
-    expect(receivedBlocks[0]).to.deep.equal(
-      MerkleBlock.build(
-        blocks[0].header,
-        [
-          reverseHash(transactions[0].hash),
-          reverseHash(transactions[1].hash),
-          reverseHash(transactions[2].hash),
-        ],
-        [true, true, false],
-      ),
+    const expectedMerkleBlock = MerkleBlock.build(
+      blocks[0].header,
+      [
+        Buffer.from(transactions[0].hash, 'hex'),
+        Buffer.from(transactions[1].hash, 'hex'),
+        Buffer.from(transactions[2].hash, 'hex'),
+      ],
+      [true, true, false],
     );
+
+    expectedMerkleBlock.hashes = expectedMerkleBlock.hashes
+      .map(hash => reverseHash(hash));
+
+    expect(receivedBlocks).to.have.a.lengthOf(1);
+    expect(receivedBlocks[0]).to.deep.equal(expectedMerkleBlock);
   });
 
   it('should scan block for matching transactions if it is the first one arrived', () => {
@@ -165,18 +174,21 @@ describe('subscribeToNewTransactions', () => {
       transactions[1],
     ]);
 
-    expect(receivedBlocks).to.have.a.lengthOf(1);
-    expect(receivedBlocks[0]).to.deep.equal(
-      MerkleBlock.build(
-        blocks[0].header,
-        [
-          reverseHash(transactions[0].hash),
-          reverseHash(transactions[1].hash),
-          reverseHash(transactions[2].hash),
-        ],
-        [true, true, false],
-      ),
+    const expectedMerkleBlock = MerkleBlock.build(
+      blocks[0].header,
+      [
+        Buffer.from(transactions[0].hash, 'hex'),
+        Buffer.from(transactions[1].hash, 'hex'),
+        Buffer.from(transactions[2].hash, 'hex'),
+      ],
+      [true, true, false],
     );
+
+    expectedMerkleBlock.hashes = expectedMerkleBlock.hashes
+      .map(hash => reverseHash(hash));
+
+    expect(receivedBlocks).to.have.a.lengthOf(1);
+    expect(receivedBlocks[0]).to.deep.equal(expectedMerkleBlock);
   });
 
   it('should remove historical data from cache and send only data that is left', () => {
@@ -218,16 +230,19 @@ describe('subscribeToNewTransactions', () => {
       transactions[3],
     ]);
 
-    expect(receivedBlocks).to.have.a.lengthOf(1);
-    expect(receivedBlocks[0]).to.deep.equal(
-      MerkleBlock.build(
-        blocks[1].header,
-        [
-          reverseHash(transactions[3].hash),
-          reverseHash(transactions[4].hash),
-        ],
-        [true, false],
-      ),
+    const expectedMerkleBlock = MerkleBlock.build(
+      blocks[1].header,
+      [
+        Buffer.from(transactions[3].hash, 'hex'),
+        Buffer.from(transactions[4].hash, 'hex'),
+      ],
+      [truee, false],
     );
+
+    expectedMerkleBlock.hashes = expectedMerkleBlock.hashes
+      .map(hash => reverseHash(hash));
+
+    expect(receivedBlocks).to.have.a.lengthOf(1);
+    expect(receivedBlocks[0]).to.deep.equal(expectedMerkleBlock);
   });
 });
