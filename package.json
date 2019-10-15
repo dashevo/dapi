@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@dashevo/dp-services-ctl": "^0.7.3",
+    "@dashevo/dpp": "^0.7.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "dirty-chai": "^2.0.1",
