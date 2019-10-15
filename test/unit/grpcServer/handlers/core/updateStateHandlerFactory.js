@@ -60,13 +60,15 @@ describe('updateStateHandlerFactory', () => {
       },
     });
 
+    const code = 0;
+
     response = {
       id: '',
       jsonrpc: '2.0',
       error: '',
       result: {
-        check_tx: log,
-        deliver_tx: log,
+        check_tx: { code, log },
+        deliver_tx: { code, log },
         hash:
         'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
         height: '24',
@@ -135,7 +137,7 @@ describe('updateStateHandlerFactory', () => {
       error: '',
       result: {
         check_tx: { code: 1, log },
-        deliver_tx: { log },
+        deliver_tx: { code: 0, log },
         hash: 'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
         height: '24',
       },
@@ -166,7 +168,7 @@ describe('updateStateHandlerFactory', () => {
       jsonrpc: '2.0',
       error: '',
       result: {
-        check_tx: { log },
+        check_tx: { code: 0, log },
         deliver_tx: { code: 1, log },
         hash:
           'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
