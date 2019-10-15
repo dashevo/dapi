@@ -151,7 +151,7 @@ describe('updateStateHandlerFactory', () => {
     try {
       await updateStateHandler(call);
 
-      expect.fail('Error was not thrown');
+      expect.fail('InvalidArgumentGrpcError was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: some message');
@@ -177,7 +177,7 @@ describe('updateStateHandlerFactory', () => {
     try {
       await updateStateHandler(call);
 
-      expect.fail('Error was not thrown');
+      expect.fail('InvalidArgumentGrpcError was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: some message');
@@ -203,7 +203,7 @@ describe('updateStateHandlerFactory', () => {
     try {
       await updateStateHandler(call);
 
-      expect.fail('Error was not thrown');
+      expect.fail('InternalGrpcError was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InternalGrpcError);
       expect(e.getError()).to.deep.equal(error);
