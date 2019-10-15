@@ -31,6 +31,7 @@ describe('updateStateHandlerFactory', () => {
   let response;
   let stHeader;
   let stPacket;
+  let log;
 
   beforeEach(function beforeEach() {
     if (!this.sinon) {
@@ -50,9 +51,16 @@ describe('updateStateHandlerFactory', () => {
       getPacket: this.sinon.stub().returns(stPacket),
     });
 
+    log = JSON.stringify({
+      error: {
+        message: 'some message',
+        data: 'some data',
+      },
+    });
+
     response = {
-      check_tx: { log: 'some logs' },
-      deliver_tx: { log: 'some logs' },
+      check_tx: log,
+      deliver_tx: log,
       hash:
         'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
       height: '24',
@@ -113,8 +121,8 @@ describe('updateStateHandlerFactory', () => {
 
   it('should throw InvalidArgumentGrpcError if Tendermint Core returns check_tx with non zero code', async () => {
     rpcClientMock.request.resolves({
-      check_tx: { code: 1, log: 'check_tx not passed' },
-      deliver_tx: { log: 'some logs' },
+      check_tx: { code: 1, log },
+      deliver_tx: { log },
       hash:
         'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
       height: '24',
@@ -126,14 +134,15 @@ describe('updateStateHandlerFactory', () => {
       expect.fail('Error was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid argument: check_tx not passed');
+      expect(e.getMessage()).to.equal('Invalid argument: some message');
+      expect(e.getMetadata()).to.equal('some data');
     }
   });
 
   it('should throw InvalidArgumentGrpcError if Tendermint Core returns deliver_tx with non zero code', async () => {
     rpcClientMock.request.resolves({
-      check_tx: { log: 'some logs' },
-      deliver_tx: { code: 1, log: 'deliver_tx not passed' },
+      check_tx: { log },
+      deliver_tx: { code: 1, log },
       hash:
         'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
       height: '24',
@@ -145,7 +154,8 @@ describe('updateStateHandlerFactory', () => {
       expect.fail('Error was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid argument: deliver_tx not passed');
+      expect(e.getMessage()).to.equal('Invalid argument: some message');
+      expect(e.getMetadata()).to.equal('some data');
     }
   });
 
