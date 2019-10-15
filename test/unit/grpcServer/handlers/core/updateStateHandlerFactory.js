@@ -54,16 +54,23 @@ describe('updateStateHandlerFactory', () => {
     log = JSON.stringify({
       error: {
         message: 'some message',
-        data: 'some data',
+        data: {
+          error: 'some data',
+        },
       },
     });
 
     response = {
-      check_tx: log,
-      deliver_tx: log,
-      hash:
+      id: '',
+      jsonrpc: '2.0',
+      error: '',
+      result: {
+        check_tx: log,
+        deliver_tx: log,
+        hash:
         'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
-      height: '24',
+        height: '24',
+      },
     };
 
     rpcClientMock = {
@@ -79,29 +86,31 @@ describe('updateStateHandlerFactory', () => {
     this.sinon.restore();
   });
 
-  it('should throw an error if header is not specified', async () => {
+  it('should throw an InvalidArgumentGrpcError if header is not specified', async () => {
     call.request.getHeader.returns(null);
 
     try {
       await updateStateHandler(call);
 
-      expect.fail('Error was not thrown');
+      expect.fail('InvalidArgumentGrpcError was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: header is not specified');
+      expect(rpcClientMock.request).to.not.be.called();
     }
   });
 
-  it('should throw an error if packet is not specified', async () => {
+  it('should throw an InvalidArgumentGrpcError if packet is not specified', async () => {
     call.request.getPacket.returns(null);
 
     try {
       await updateStateHandler(call);
 
-      expect.fail('Error was not thrown');
+      expect.fail('InvalidArgumentGrpcError was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: packet is not specified');
+      expect(rpcClientMock.request).to.not.be.called();
     }
   });
 
@@ -113,7 +122,7 @@ describe('updateStateHandlerFactory', () => {
       packet: Buffer.from(stPacket),
     };
 
-    const tx = cbor.encode(st).toString('base64');
+    const tx = cbor.encodeCanonical(st).toString('base64');
 
     expect(result).to.be.an.instanceOf(UpdateStateTransitionResponse);
     expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
@@ -121,12 +130,23 @@ describe('updateStateHandlerFactory', () => {
 
   it('should throw InvalidArgumentGrpcError if Tendermint Core returns check_tx with non zero code', async () => {
     rpcClientMock.request.resolves({
-      check_tx: { code: 1, log },
-      deliver_tx: { log },
-      hash:
-        'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
-      height: '24',
+      id: '',
+      jsonrpc: '2.0',
+      error: '',
+      result: {
+        check_tx: { code: 1, log },
+        deliver_tx: { log },
+        hash: 'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
+        height: '24',
+      },
     });
+
+    const st = {
+      header: Buffer.from(stHeader).toString('hex'),
+      packet: Buffer.from(stPacket),
+    };
+
+    const tx = cbor.encodeCanonical(st).toString('base64');
 
     try {
       await updateStateHandler(call);
@@ -135,17 +155,23 @@ describe('updateStateHandlerFactory', () => {
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: some message');
-      expect(e.getMetadata()).to.equal('some data');
+      expect(e.getMetadata()).to.deep.equal({ error: 'some data' });
+      expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
     }
   });
 
   it('should throw InvalidArgumentGrpcError if Tendermint Core returns deliver_tx with non zero code', async () => {
     rpcClientMock.request.resolves({
-      check_tx: { log },
-      deliver_tx: { code: 1, log },
-      hash:
-        'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
-      height: '24',
+      id: '',
+      jsonrpc: '2.0',
+      error: '',
+      result: {
+        check_tx: { log },
+        deliver_tx: { code: 1, log },
+        hash:
+          'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
+        height: '24',
+      },
     });
 
     try {
@@ -155,16 +181,24 @@ describe('updateStateHandlerFactory', () => {
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: some message');
-      expect(e.getMetadata()).to.equal('some data');
+      expect(e.getMetadata()).to.deep.equal({ error: 'some data' });
     }
   });
 
-  it('should return error if timeout happened', async () => {
-
-  });
+  it('should return error if timeout happened');
 
   it('should return InternalGrpcError if Tendermint Core throws an error', async () => {
-    rpcClientMock.request.throws(new Error('Test error'));
+    const error = {
+      code: -32603,
+      message: 'Internal error',
+      data: 'just error',
+    };
+
+    rpcClientMock.request.resolves({
+      id: '',
+      jsonrpc: '2.0',
+      error,
+    });
 
     try {
       await updateStateHandler(call);
@@ -172,7 +206,7 @@ describe('updateStateHandlerFactory', () => {
       expect.fail('Error was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InternalGrpcError);
-      expect(e.getMessage()).to.equal('Internal error');
+      expect(e.getError()).to.deep.equal(error);
     }
   });
 });
