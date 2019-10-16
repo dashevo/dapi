@@ -23,7 +23,7 @@ const {
     TransactionsWithProofsRequest: PBJSTransactionsWithProofsRequest,
     TransactionsWithProofsResponse: PBJSTransactionsWithProofsResponse,
   },
-  getTransactionFilterStreamDefinition,
+  getTransactionsFilterStreamDefinition,
 } = require('@dashevo/dapi-grpc');
 
 const config = require('../lib/config');
@@ -119,7 +119,7 @@ async function main() {
   );
 
   const grpcServer = createServer(
-    getTransactionFilterStreamDefinition(),
+    getTransactionsFilterStreamDefinition(),
     {
       subscribeToTransactionsWithProofs: wrappedSubscribeToTransactionsWithProofs,
     },
