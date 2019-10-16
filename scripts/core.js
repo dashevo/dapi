@@ -3,18 +3,31 @@ const dotenv = require('dotenv');
 const grpc = require('grpc');
 
 const {
+  client: {
+    converters: {
+      jsonToProtobufFactory,
+      protobufToJsonFactory,
+    },
+  },
+  server: {
+    createServer,
+    jsonToProtobufHandlerWrapper,
+    error: {
+      wrapInErrorHandlerFactory,
+    },
+  },
+} = require('@dashevo/grpc-common');
+
+const {
   StateTransition,
   LastUserStateTransitionHashRequest,
-  utils: {
-    jsonToProtobufFactory,
-    protobufToJsonFactory,
-  },
   pbjs: {
     LastUserStateTransitionHashRequest: PBJSLastUserStateTransitionHashRequest,
     LastUserStateTransitionHashResponse: PBJSLastUserStateTransitionHashResponse,
     StateTransition: PBJSStateTransition,
     StateTransitionResponse: PBJSStateTransitionResponse,
   },
+  getCoreDefinition,
 } = require('@dashevo/dapi-grpc');
 
 const { client: RpcClient } = require('jayson/promise');
@@ -33,12 +46,12 @@ const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
 const userIndex = require('../lib/services/userIndex');
 
-const createServer = require('../lib/grpcServer/createServer');
-const wrapInErrorHandlerFactory = require('../lib/grpcServer/error/wrapInErrorHandlerFactory');
-const getLastUserStateTransitionHashHandlerFactory = require('../lib/grpcServer/handlers/core/getLastUserStateTransitionHashHandlerFactory');
-const updateStateHandlerFactory = require('../lib/grpcServer/handlers/core/updateStateHandlerFactory');
-
-const jsonToProtobufHandlerWrapper = require('../lib/grpcServer/jsonToProtobufHandlerWrapper');
+const getLastUserStateTransitionHashHandlerFactory = require(
+  '../lib/grpcServer/handlers/core/getLastUserStateTransitionHashHandlerFactory',
+);
+const updateStateHandlerFactory = require(
+  '../lib/grpcServer/handlers/core/updateStateHandlerFactory',
+);
 
 async function main() {
   /* Application start */
@@ -133,7 +146,7 @@ async function main() {
     wrapInErrorHandler(updateStateHandler),
   );
 
-  const grpcServer = createServer('Core', {
+  const grpcServer = createServer(getCoreDefinition(), {
     getLastUserStateTransitionHash: wrappedGetLastUserStateTransitionHash,
     updateState: wrappedUpdateState,
   });

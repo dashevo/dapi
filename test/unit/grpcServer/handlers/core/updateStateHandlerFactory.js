@@ -7,6 +7,15 @@ const chaiAsPromised = require('chai-as-promised');
 const cbor = require('cbor');
 
 const {
+  server: {
+    error: {
+      InternalGrpcError,
+      InvalidArgumentGrpcError,
+    },
+  },
+} = require('@dashevo/grpc-common');
+
+const {
   UpdateStateTransitionResponse,
 } = require('@dashevo/dapi-grpc');
 
@@ -17,8 +26,6 @@ const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 const updateStateHandlerFactory = require(
   '../../../../../lib/grpcServer/handlers/core/updateStateHandlerFactory',
 );
-const InvalidArgumentGrpcError = require('../../../../../lib/grpcServer/error/InvalidArgumentGrpcError');
-const InternalGrpcError = require('../../../../../lib/grpcServer/error/InternalGrpcError');
 
 use(sinonChai);
 use(chaiAsPromised);
