@@ -138,17 +138,7 @@ describe('updateStateHandlerFactory', () => {
   });
 
   it('should throw InvalidArgumentGrpcError if Tendermint Core returns check_tx with non zero code', async () => {
-    rpcClientMock.request.resolves({
-      id: '',
-      jsonrpc: '2.0',
-      error: '',
-      result: {
-        check_tx: { code: 1, log },
-        deliver_tx: { code: 0, log },
-        hash: 'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
-        height: '24',
-      },
-    });
+    response.result.check_tx.code = 1;
 
     const st = {
       header: Buffer.from(stHeader).toString('hex'),
@@ -170,18 +160,7 @@ describe('updateStateHandlerFactory', () => {
   });
 
   it('should throw InvalidArgumentGrpcError if Tendermint Core returns deliver_tx with non zero code', async () => {
-    rpcClientMock.request.resolves({
-      id: '',
-      jsonrpc: '2.0',
-      error: '',
-      result: {
-        check_tx: { code: 0, log },
-        deliver_tx: { code: 1, log },
-        hash:
-          'B762539A7C17C33A65C46727BFCF2C701390E6AD7DE5190B6CC1CF843CA7E262',
-        height: '24',
-      },
-    });
+    response.result.deliver_tx.code = 1;
 
     try {
       await updateStateHandler(call);
