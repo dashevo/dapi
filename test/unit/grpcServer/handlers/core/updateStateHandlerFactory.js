@@ -4,8 +4,6 @@ const sinonChai = require('sinon-chai');
 const dirtyChai = require('dirty-chai');
 const chaiAsPromised = require('chai-as-promised');
 
-const cbor = require('cbor');
-
 const {
   server: {
     error: {
@@ -51,7 +49,7 @@ describe('updateStateHandlerFactory', () => {
     stateTransitionFixture = await getDataContractStateTransitionFixture(dataContractFixture);
 
     call = new GrpcCallMock(this.sinon, {
-      getStateTransition: this.sinon.stub().returns(stateTransitionFixture.serialize()),
+      getData: this.sinon.stub().returns(stateTransitionFixture.serialize()),
     });
 
     log = JSON.stringify({
@@ -92,7 +90,7 @@ describe('updateStateHandlerFactory', () => {
   });
 
   it('should throw an InvalidArgumentGrpcError if stateTransition is not specified', async () => {
-    call.request.getStateTransition.returns(null);
+    call.request.getData.returns(null);
 
     try {
       await updateStateHandler(call);
@@ -108,7 +106,7 @@ describe('updateStateHandlerFactory', () => {
   it('should return valid result', async () => {
     const result = await updateStateHandler(call);
 
-    const tx = cbor.encodeCanonical(stateTransitionFixture.serialize()).toString('base64');
+    const tx = stateTransitionFixture.serialize().toString('base64');
 
     expect(result).to.be.an.instanceOf(UpdateStateTransitionResponse);
     expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
@@ -117,7 +115,7 @@ describe('updateStateHandlerFactory', () => {
   it('should throw InvalidArgumentGrpcError if Tendermint Core returns check_tx with non zero code', async () => {
     response.result.check_tx.code = 1;
 
-    const tx = cbor.encodeCanonical(stateTransitionFixture.serialize()).toString('base64');
+    const tx = stateTransitionFixture.serialize().toString('base64');
 
     try {
       await updateStateHandler(call);
