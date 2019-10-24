@@ -1,9 +1,3 @@
-const { expect, use } = require('chai');
-const sinon = require('sinon');
-const sinonChai = require('sinon-chai');
-const dirtyChai = require('dirty-chai');
-const chaiAsPromised = require('chai-as-promised');
-
 const {
   server: {
     error: {
@@ -17,18 +11,14 @@ const {
   UpdateStateTransitionResponse,
 } = require('@dashevo/dapi-grpc');
 
-const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
-const getDataContractStateTransitionFixture = require('../../../../../lib/test/fixtures/getDataContractStateTransitionFixture');
+const DashPlatformProtocol = require('@dashevo/dpp');
+const getDataContractFixture = require('@dashevo/dpp/lib/test/fixtures/getDataContractFixture');
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
 const updateStateHandlerFactory = require(
   '../../../../../lib/grpcServer/handlers/core/updateStateHandlerFactory',
 );
-
-use(sinonChai);
-use(chaiAsPromised);
-use(dirtyChai);
 
 describe('updateStateHandlerFactory', () => {
   let call;
@@ -39,14 +29,10 @@ describe('updateStateHandlerFactory', () => {
   let log;
 
   beforeEach(async function beforeEach() {
-    if (!this.sinon) {
-      this.sinon = sinon.createSandbox();
-    } else {
-      this.sinon.restore();
-    }
+    const dpp = new DashPlatformProtocol();
 
     const dataContractFixture = getDataContractFixture();
-    stateTransitionFixture = await getDataContractStateTransitionFixture(dataContractFixture);
+    stateTransitionFixture = dpp.dataContract.createStateTransition(dataContractFixture);
 
     call = new GrpcCallMock(this.sinon, {
       getData: this.sinon.stub().returns(stateTransitionFixture.serialize()),
