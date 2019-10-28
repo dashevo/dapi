@@ -76,6 +76,8 @@ describe('updateStateHandlerFactory', function main() {
 
     ({ result: userId } = await coreAPI.sendrawtransaction(transaction.serialize()));
 
+    await coreAPI.generate(1);
+
     const dataContract = getDataContractFixture(userId);
 
     stateTransition = new DataContractStateTransition(dataContract);
