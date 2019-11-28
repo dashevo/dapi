@@ -96,15 +96,5 @@ describe('updateStateHandlerFactory', function main() {
     expect(contract).to.deep.equal(stateTransition.getDataContract().toJSON());
   });
 
-  it('should respond with error if contract is invalid', async () => {
-    stateTransition.getDataContract().contractId = null;
-
-    try {
-      await dapiClient.updateState(stateTransition);
-
-      expect.fail('should throw invalid argument error');
-    } catch (e) {
-      expect(e);
-    }
-  });
+  it('should respond with error if contract is invalid');
 });
