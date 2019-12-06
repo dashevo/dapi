@@ -19,13 +19,16 @@ const {
 } = require('@dashevo/grpc-common');
 
 const {
-  StateTransition,
+  UpdateStateRequest,
+  FetchIdentityRequest,
   LastUserStateTransitionHashRequest,
   pbjs: {
     LastUserStateTransitionHashRequest: PBJSLastUserStateTransitionHashRequest,
     LastUserStateTransitionHashResponse: PBJSLastUserStateTransitionHashResponse,
-    StateTransition: PBJSStateTransition,
-    UpdateStateTransitionResponse: PBJSStateTransitionResponse,
+    UpdateStateRequest: PBJSUpdateStateRequest,
+    UpdateStateResponse: PBJSUpdateStateResponse,
+    FetchIdentityRequest: PBJSFetchIdentityRequest,
+    FetchIdentityResponse: PBJSFetchIdentityResponse,
   },
   getCoreDefinition,
 } = require('@dashevo/dapi-grpc');
@@ -45,12 +48,16 @@ const DriveAdapter = require('../lib/externalApis/driveAdapter');
 const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
 const userIndex = require('../lib/services/userIndex');
+const handleResponse = require('../lib/grpcServer/handlers/handleResponse');
 
 const getLastUserStateTransitionHashHandlerFactory = require(
   '../lib/grpcServer/handlers/core/getLastUserStateTransitionHashHandlerFactory',
 );
 const updateStateHandlerFactory = require(
   '../lib/grpcServer/handlers/core/updateStateHandlerFactory',
+);
+const fetchIdentityHandlerFactory = require(
+  '../lib/grpcServer/handlers/core/fetchIdentityHandlerFactory',
 );
 
 async function main() {
@@ -134,21 +141,35 @@ async function main() {
     port: config.tendermintCore.port,
   });
 
-  const updateStateHandler = updateStateHandlerFactory(rpcClient);
+  const updateStateHandler = updateStateHandlerFactory(rpcClient, handleResponse);
   const wrappedUpdateState = jsonToProtobufHandlerWrapper(
     jsonToProtobufFactory(
-      StateTransition,
-      PBJSStateTransition,
+      UpdateStateRequest,
+      PBJSUpdateStateRequest,
     ),
     protobufToJsonFactory(
-      PBJSStateTransitionResponse,
+      PBJSUpdateStateResponse,
     ),
     wrapInErrorHandler(updateStateHandler),
+  );
+
+  const fetchIdentityHandler = fetchIdentityHandlerFactory(rpcClient, handleResponse);
+
+  const wrappedFetchIdentity = jsonToProtobufHandlerWrapper(
+    jsonToProtobufFactory(
+      FetchIdentityRequest,
+      PBJSFetchIdentityRequest,
+    ),
+    protobufToJsonFactory(
+      PBJSFetchIdentityResponse,
+    ),
+    wrapInErrorHandler(fetchIdentityHandler),
   );
 
   const grpcServer = createServer(getCoreDefinition(), {
     getLastUserStateTransitionHash: wrappedGetLastUserStateTransitionHash,
     updateState: wrappedUpdateState,
+    fetchIdentity: wrappedFetchIdentity,
   });
 
   grpcServer.bind(

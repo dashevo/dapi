@@ -8,7 +8,7 @@ const {
 } = require('@dashevo/grpc-common');
 
 const {
-  UpdateStateTransitionResponse,
+  UpdateStateResponse,
 } = require('@dashevo/dapi-grpc');
 
 const DashPlatformProtocol = require('@dashevo/dpp');
@@ -27,6 +27,8 @@ describe('updateStateHandlerFactory', () => {
   let response;
   let stateTransitionFixture;
   let log;
+  let code;
+  let handleResponseMock;
 
   beforeEach(async function beforeEach() {
     const dpp = new DashPlatformProtocol();
@@ -35,7 +37,7 @@ describe('updateStateHandlerFactory', () => {
     stateTransitionFixture = dpp.dataContract.createStateTransition(dataContractFixture);
 
     call = new GrpcCallMock(this.sinon, {
-      getData: this.sinon.stub().returns(stateTransitionFixture.serialize()),
+      getStateTransition: this.sinon.stub().returns(stateTransitionFixture.serialize()),
     });
 
     log = JSON.stringify({
@@ -47,7 +49,7 @@ describe('updateStateHandlerFactory', () => {
       },
     });
 
-    const code = 0;
+    code = 0;
 
     response = {
       id: '',
@@ -66,8 +68,11 @@ describe('updateStateHandlerFactory', () => {
       request: this.sinon.stub().resolves(response),
     };
 
+    handleResponseMock = this.sinon.stub();
+
     updateStateHandler = updateStateHandlerFactory(
       rpcClientMock,
+      handleResponseMock,
     );
   });
 
@@ -76,7 +81,7 @@ describe('updateStateHandlerFactory', () => {
   });
 
   it('should throw an InvalidArgumentGrpcError if stateTransition is not specified', async () => {
-    call.request.getData.returns(null);
+    call.request.getStateTransition.returns(null);
 
     try {
       await updateStateHandler(call);
@@ -86,6 +91,7 @@ describe('updateStateHandlerFactory', () => {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: State Transition is not specified');
       expect(rpcClientMock.request).to.not.be.called();
+      expect(handleResponseMock).to.not.be.called();
     }
   });
 
@@ -94,109 +100,27 @@ describe('updateStateHandlerFactory', () => {
 
     const tx = stateTransitionFixture.serialize().toString('base64');
 
-    expect(result).to.be.an.instanceOf(UpdateStateTransitionResponse);
+    expect(result).to.be.an.instanceOf(UpdateStateResponse);
     expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
+    expect(handleResponseMock).to.be.calledTwice();
+    expect(handleResponseMock).to.be.calledWith({ code, log });
   });
 
-  it('should throw InternalGrpcError if Tendermint Core returns check_tx with code 1 (internal error)', async () => {
-    response.result.check_tx.code = 1;
+  it('should throw error if handleResponseMock throws an error', async () => {
+    const error = new Error();
 
-    const tx = stateTransitionFixture.serialize().toString('base64');
+    handleResponseMock.throws(error);
 
     try {
       await updateStateHandler(call);
 
       expect.fail('InternalGrpcError was not thrown');
     } catch (e) {
-      expect(e).to.be.an.instanceOf(InternalGrpcError);
-      expect(e.getMetadata()).to.deep.equal({ error: 'some data' });
-      expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
+      expect(e).to.equal(error);
     }
   });
 
-  it('should throw InvalidArgumentGrpcError if Tendermint Core returns check_tx with code 2 (invalid argument)', async () => {
-    response.result.check_tx.code = 2;
-
-    const tx = stateTransitionFixture.serialize().toString('base64');
-
-    try {
-      await updateStateHandler(call);
-
-      expect.fail('InvalidArgumentGrpcError was not thrown');
-    } catch (e) {
-      expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid argument: some message');
-      expect(e.getMetadata()).to.deep.equal({ error: 'some data' });
-      expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
-    }
-  });
-
-  it('should throw InternalGrpcError if Tendermint Core returns check_tx with unknown code', async () => {
-    response.result.check_tx.code = 4;
-
-    const tx = stateTransitionFixture.serialize().toString('base64');
-
-    try {
-      await updateStateHandler(call);
-
-      expect.fail('InternalGrpcError was not thrown');
-    } catch (e) {
-      expect(e).to.be.an.instanceOf(InternalGrpcError);
-      expect(e.getMetadata()).to.deep.equal({ error: 'some data' });
-      expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
-    }
-  });
-
-  it('should throw InternalGrpcError if Tendermint Core returns deliver_tx with code 1 (internal error)', async () => {
-    response.result.deliver_tx.code = 1;
-
-    const tx = stateTransitionFixture.serialize().toString('base64');
-
-    try {
-      await updateStateHandler(call);
-
-      expect.fail('InternalGrpcError was not thrown');
-    } catch (e) {
-      expect(e).to.be.an.instanceOf(InternalGrpcError);
-      expect(e.getMetadata()).to.deep.equal({ error: 'some data' });
-      expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
-    }
-  });
-
-  it('should throw InvalidArgumentGrpcError if Tendermint Core returns deliver_tx with code 2 (invalid argument)', async () => {
-    response.result.deliver_tx.code = 2;
-
-    const tx = stateTransitionFixture.serialize().toString('base64');
-
-    try {
-      await updateStateHandler(call);
-
-      expect.fail('InvalidArgumentGrpcError was not thrown');
-    } catch (e) {
-      expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid argument: some message');
-      expect(e.getMetadata()).to.deep.equal({ error: 'some data' });
-      expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
-    }
-  });
-
-  it('should throw InternalGrpcError if Tendermint Core returns deliver_tx with unknown code', async () => {
-    response.result.deliver_tx.code = 4;
-
-    const tx = stateTransitionFixture.serialize().toString('base64');
-
-    try {
-      await updateStateHandler(call);
-
-      expect.fail('InternalGrpcError was not thrown');
-    } catch (e) {
-      expect(e).to.be.an.instanceOf(InternalGrpcError);
-      expect(e.getMetadata()).to.deep.equal({ error: 'some data' });
-      expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
-    }
-  });
-
-  it('should return error if timeout happened');
+  it.skip('should return error if timeout happened');
 
   it('should return InternalGrpcError if Tendermint Core throws an error', async () => {
     const error = {
@@ -218,6 +142,19 @@ describe('updateStateHandlerFactory', () => {
     } catch (e) {
       expect(e).to.be.an.instanceOf(InternalGrpcError);
       expect(e.getError()).to.deep.equal(error);
+    }
+  });
+
+  it('should throw an error when handleResponse throws an error', async () => {
+    const error = new Error();
+    handleResponseMock.throws(error);
+
+    try {
+      await updateStateHandler(call);
+
+      expect.fail('should throw an error');
+    } catch (e) {
+      expect(e).to.equal(error);
     }
   });
 });
