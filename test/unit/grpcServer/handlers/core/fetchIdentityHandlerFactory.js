@@ -65,6 +65,7 @@ describe('fetchIdentityHandlerFactory', () => {
 
     rpcClientMock = {
       request: this.sinon.stub().resolves(rpcResponse),
+      getId: this.sinon.stub(),
     };
 
     fetchIdentityHandler = fetchIdentityHandlerFactory(rpcClientMock, handleResponseMock);
@@ -80,7 +81,7 @@ describe('fetchIdentityHandlerFactory', () => {
   });
 
   it('should throw an InvalidArgumentGrpcError if id is not specified', async () => {
-    call.getId().returns(null);
+    call.request.getId.returns(null);
 
     try {
       await fetchIdentityHandler(call);
