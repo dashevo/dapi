@@ -37,7 +37,7 @@ describe('updateStateHandlerFactory', () => {
     stateTransitionFixture = dpp.dataContract.createStateTransition(dataContractFixture);
 
     call = new GrpcCallMock(this.sinon, {
-      getData: this.sinon.stub().returns(stateTransitionFixture.serialize()),
+      getStateTransition: this.sinon.stub().returns(stateTransitionFixture.serialize()),
     });
 
     log = JSON.stringify({
@@ -81,7 +81,7 @@ describe('updateStateHandlerFactory', () => {
   });
 
   it('should throw an InvalidArgumentGrpcError if stateTransition is not specified', async () => {
-    call.request.getData.returns(null);
+    call.request.getStateTransition.returns(null);
 
     try {
       await updateStateHandler(call);
