@@ -1,4 +1,4 @@
-FROM node:10-alpine
+FROM node:12-alpine
 
 RUN apk update && \
     apk --no-cache upgrade && \
@@ -16,12 +16,7 @@ COPY package.json package-lock.json ./
 ENV npm_config_zmq_external=true
 RUN npm ci --production
 
-FROM node:10-alpine
-
-# While we're using this image for tests
-# We have to run `npm i` and zeromq build fails
-RUN apk add zeromq-dev
-RUN echo npm_config_zmq_external=true >> /etc/environment
+FROM node:12-alpine
 
 # While we're using this image for tests
 # We have to run `npm i` and zeromq build fails
