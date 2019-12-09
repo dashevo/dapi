@@ -48,7 +48,7 @@ const DriveAdapter = require('../lib/externalApis/driveAdapter');
 const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
 const userIndex = require('../lib/services/userIndex');
-const handleResponse = require('../lib/grpcServer/handlers/handleResponse');
+const handleAbciResponse = require('../lib/grpcServer/handlers/handleAbciResponse');
 
 const getLastUserStateTransitionHashHandlerFactory = require(
   '../lib/grpcServer/handlers/core/getLastUserStateTransitionHashHandlerFactory',
@@ -141,7 +141,7 @@ async function main() {
     port: config.tendermintCore.port,
   });
 
-  const updateStateHandler = updateStateHandlerFactory(rpcClient, handleResponse);
+  const updateStateHandler = updateStateHandlerFactory(rpcClient, handleAbciResponse);
   const wrappedUpdateState = jsonToProtobufHandlerWrapper(
     jsonToProtobufFactory(
       UpdateStateRequest,
@@ -153,7 +153,7 @@ async function main() {
     wrapInErrorHandler(updateStateHandler),
   );
 
-  const fetchIdentityHandler = fetchIdentityHandlerFactory(rpcClient, handleResponse);
+  const fetchIdentityHandler = fetchIdentityHandlerFactory(rpcClient, handleAbciResponse);
 
   const wrappedFetchIdentity = jsonToProtobufHandlerWrapper(
     jsonToProtobufFactory(

@@ -30,8 +30,6 @@ before_script:
   - npm run lint
   - docker build . -t dapi-dev
   - echo SERVICE_IMAGE_DAPI=dapi-dev >> .env
-  - echo SERVICE_IMAGE_MACHINE=dashpay/js-machine:0.3.0-dev.3 >> .env
-  - echo SERVICE_IMAGE_DRIVE=dashpay/drive:0.7.0-dev.2 >> .env
 
 deploy:
   skip_cleanup: true

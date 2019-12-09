@@ -7,9 +7,9 @@ const {
   },
 } = require('@dashevo/grpc-common');
 
-const handleResponse = require('../../../../lib/grpcServer/handlers/handleResponse');
+const handleAbciResponse = require('../../../../lib/grpcServer/handlers/handleAbciResponse');
 
-describe('handleResponse', () => {
+describe('handleAbciResponse', () => {
   let response;
   let message;
   let data;
@@ -31,7 +31,7 @@ describe('handleResponse', () => {
 
   it('should not throw error if response code is 0', () => {
     try {
-      handleResponse(response);
+      handleAbciResponse(response);
     } catch (e) {
       expect.fail('should not throw any error');
     }
@@ -41,7 +41,7 @@ describe('handleResponse', () => {
     response.code = 2;
 
     try {
-      handleResponse(response);
+      handleAbciResponse(response);
 
       expect.fail('should throw InvalidArgumentGrpcError error');
     } catch (e) {
@@ -55,7 +55,7 @@ describe('handleResponse', () => {
     response.code = 1;
 
     try {
-      handleResponse(response);
+      handleAbciResponse(response);
 
       expect.fail('should throw InternalGrpcError error');
     } catch (e) {
@@ -71,7 +71,7 @@ describe('handleResponse', () => {
     response.code = 'a';
 
     try {
-      handleResponse(response);
+      handleAbciResponse(response);
 
       expect.fail('should throw InternalGrpcError error');
     } catch (e) {
