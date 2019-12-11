@@ -15,7 +15,7 @@ const fetchIdentityHandlerFactory = require('../../../../../lib/grpcServer/handl
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
-describe('fetchIdentityHandlerFactory', () => {
+describe.skip('fetchIdentityHandlerFactory', () => {
   let call;
   let rpcClientMock;
   let id;

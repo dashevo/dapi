@@ -20,7 +20,7 @@ const updateStateHandlerFactory = require(
   '../../../../../lib/grpcServer/handlers/core/updateStateHandlerFactory',
 );
 
-describe('updateStateHandlerFactory', () => {
+describe.skip('updateStateHandlerFactory', () => {
   let call;
   let rpcClientMock;
   let updateStateHandler;
