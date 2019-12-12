@@ -111,7 +111,7 @@ async function main() {
 
   grpcCoreServer.start();
 
-  const platformHandlers = platformHandlersFactory(rpcClient);
+  const platformHandlers = platformHandlersFactory(rpcClient, driveAPI);
 
   const grpcPlatformServer = createServer(getPlatformDefinition(), platformHandlers);
 
