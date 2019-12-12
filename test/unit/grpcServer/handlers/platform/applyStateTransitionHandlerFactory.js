@@ -8,7 +8,7 @@ const {
 } = require('@dashevo/grpc-common');
 
 const {
-  UpdateStateResponse,
+  ApplyStateTransitionResponse,
 } = require('@dashevo/dapi-grpc');
 
 const DashPlatformProtocol = require('@dashevo/dpp');
@@ -20,7 +20,7 @@ const applyStateTransitionHandlerFactory = require(
   '../../../../../lib/grpcServer/handlers/platform/applyStateTransitionHandlerFactory',
 );
 
-describe.skip('applyStateTransitionHandlerFactory', () => {
+describe('applyStateTransitionHandlerFactory', () => {
   let call;
   let rpcClientMock;
   let applyStateTransitionHandler;
@@ -100,7 +100,7 @@ describe.skip('applyStateTransitionHandlerFactory', () => {
 
     const tx = stateTransitionFixture.serialize().toString('base64');
 
-    expect(result).to.be.an.instanceOf(UpdateStateResponse);
+    expect(result).to.be.an.instanceOf(ApplyStateTransitionResponse);
     expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
     expect(handleResponseMock).to.be.calledTwice();
     expect(handleResponseMock).to.be.calledWith({ code, log });

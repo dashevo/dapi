@@ -8,7 +8,7 @@ const {
 } = require('@dashevo/grpc-common');
 
 const {
-  FetchIdentityResponse,
+  GetIdentityResponse,
 } = require('@dashevo/dapi-grpc');
 
 const getIdentityHandlerFactory = require('../../../../../lib/grpcServer/handlers/platform/getIdentityHandlerFactory');
@@ -74,7 +74,7 @@ describe.skip('getIdentityHandlerFactory', () => {
   it('should return valid result', async () => {
     const result = await getIdentityHandler(call);
 
-    expect(result).to.be.an.instanceOf(FetchIdentityResponse);
+    expect(result).to.be.an.instanceOf(GetIdentityResponse);
 
     expect(rpcClientMock.request).to.be.calledOnceWith('abci_query', { path: '/identity', data: hexId });
     expect(handleResponseMock).to.be.calledOnceWith(response);
