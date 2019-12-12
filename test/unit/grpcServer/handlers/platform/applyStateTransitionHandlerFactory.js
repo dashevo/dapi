@@ -16,14 +16,14 @@ const getDataContractFixture = require('@dashevo/dpp/lib/test/fixtures/getDataCo
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
-const updateStateHandlerFactory = require(
-  '../../../../../lib/grpcServer/handlers/core/updateStateHandlerFactory',
+const applyStateTransitionHandlerFactory = require(
+  '../../../../../lib/grpcServer/handlers/platform/applyStateTransitionHandlerFactory',
 );
 
-describe.skip('updateStateHandlerFactory', () => {
+describe.skip('applyStateTransitionHandlerFactory', () => {
   let call;
   let rpcClientMock;
-  let updateStateHandler;
+  let applyStateTransitionHandler;
   let response;
   let stateTransitionFixture;
   let log;
@@ -70,7 +70,7 @@ describe.skip('updateStateHandlerFactory', () => {
 
     handleResponseMock = this.sinon.stub();
 
-    updateStateHandler = updateStateHandlerFactory(
+    applyStateTransitionHandler = applyStateTransitionHandlerFactory(
       rpcClientMock,
       handleResponseMock,
     );
@@ -84,7 +84,7 @@ describe.skip('updateStateHandlerFactory', () => {
     call.request.getStateTransition.returns(null);
 
     try {
-      await updateStateHandler(call);
+      await applyStateTransitionHandler(call);
 
       expect.fail('InvalidArgumentGrpcError was not thrown');
     } catch (e) {
@@ -96,7 +96,7 @@ describe.skip('updateStateHandlerFactory', () => {
   });
 
   it('should return valid result', async () => {
-    const result = await updateStateHandler(call);
+    const result = await applyStateTransitionHandler(call);
 
     const tx = stateTransitionFixture.serialize().toString('base64');
 
@@ -112,7 +112,7 @@ describe.skip('updateStateHandlerFactory', () => {
     handleResponseMock.throws(error);
 
     try {
-      await updateStateHandler(call);
+      await applyStateTransitionHandler(call);
 
       expect.fail('InternalGrpcError was not thrown');
     } catch (e) {
@@ -136,7 +136,7 @@ describe.skip('updateStateHandlerFactory', () => {
     });
 
     try {
-      await updateStateHandler(call);
+      await applyStateTransitionHandler(call);
 
       expect.fail('InternalGrpcError was not thrown');
     } catch (e) {
@@ -150,7 +150,7 @@ describe.skip('updateStateHandlerFactory', () => {
     handleResponseMock.throws(error);
 
     try {
-      await updateStateHandler(call);
+      await applyStateTransitionHandler(call);
 
       expect.fail('should throw an error');
     } catch (e) {

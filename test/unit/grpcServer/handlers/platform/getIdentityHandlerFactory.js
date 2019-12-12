@@ -11,16 +11,16 @@ const {
   FetchIdentityResponse,
 } = require('@dashevo/dapi-grpc');
 
-const fetchIdentityHandlerFactory = require('../../../../../lib/grpcServer/handlers/core/fetchIdentityHandlerFactory');
+const getIdentityHandlerFactory = require('../../../../../lib/grpcServer/handlers/platform/getIdentityHandlerFactory');
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
-describe.skip('fetchIdentityHandlerFactory', () => {
+describe.skip('getIdentityHandlerFactory', () => {
   let call;
   let rpcClientMock;
   let id;
   let handleResponseMock;
-  let fetchIdentityHandler;
+  let getIdentityHandler;
   let response;
   let rpcResponse;
   let hexId;
@@ -68,11 +68,11 @@ describe.skip('fetchIdentityHandlerFactory', () => {
       getId: this.sinon.stub(),
     };
 
-    fetchIdentityHandler = fetchIdentityHandlerFactory(rpcClientMock, handleResponseMock);
+    getIdentityHandler = getIdentityHandlerFactory(rpcClientMock, handleResponseMock);
   });
 
   it('should return valid result', async () => {
-    const result = await fetchIdentityHandler(call);
+    const result = await getIdentityHandler(call);
 
     expect(result).to.be.an.instanceOf(FetchIdentityResponse);
 
@@ -84,7 +84,7 @@ describe.skip('fetchIdentityHandlerFactory', () => {
     call.request.getId.returns(null);
 
     try {
-      await fetchIdentityHandler(call);
+      await getIdentityHandler(call);
 
       expect.fail('should throw an error');
     } catch (e) {
@@ -101,7 +101,7 @@ describe.skip('fetchIdentityHandlerFactory', () => {
     rpcClientMock.request.throws(error);
 
     try {
-      await fetchIdentityHandler(call);
+      await getIdentityHandler(call);
 
       expect.fail('should throw an error');
     } catch (e) {
@@ -117,7 +117,7 @@ describe.skip('fetchIdentityHandlerFactory', () => {
     rpcResponse.error = error;
 
     try {
-      await fetchIdentityHandler(call);
+      await getIdentityHandler(call);
 
       expect.fail('should throw an error');
     } catch (e) {
@@ -133,7 +133,7 @@ describe.skip('fetchIdentityHandlerFactory', () => {
     handleResponseMock.throws(error);
 
     try {
-      await fetchIdentityHandler(call);
+      await getIdentityHandler(call);
 
       expect.fail('should throw an error');
     } catch (e) {
