@@ -120,8 +120,6 @@ describe('applyStateTransitionHandlerFactory', () => {
     }
   });
 
-  it.skip('should return error if timeout happened');
-
   it('should return InternalGrpcError if Tendermint Core throws an error', async () => {
     const error = {
       code: -32603,

@@ -1,5 +1,3 @@
-const cbor = require('cbor');
-
 const {
   server: {
     error: {
@@ -13,6 +11,10 @@ const {
   GetDataContractResponse,
 } = require('@dashevo/dapi-grpc');
 
+const createDPPMock = require('@dashevo/dpp/lib/test/mocks/createDPPMock');
+
+const getDataContractFixture = require('@dashevo/dpp/lib/test/fixtures/getDataContractFixture');
+
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
 const getDataContractHandlerFactory = require(
@@ -25,7 +27,8 @@ describe('getDataContractHandlerFactory', () => {
   let driveApiMock;
   let request;
   let id;
-  let contractFixture;
+  let dataContractFixture;
+  let dppMock;
 
   beforeEach(function beforeEach() {
     id = 1;
@@ -35,15 +38,16 @@ describe('getDataContractHandlerFactory', () => {
 
     call = new GrpcCallMock(this.sinon, request);
 
-    contractFixture = {
-      data: 'someData',
-    };
+    dataContractFixture = getDataContractFixture();
 
     driveApiMock = {
-      fetchContract: this.sinon.stub().resolves(contractFixture),
+      fetchContract: this.sinon.stub().resolves(dataContractFixture.toJSON()),
     };
 
-    getDataContractHandler = getDataContractHandlerFactory(driveApiMock);
+    dppMock = createDPPMock(this.sinon);
+    dppMock.dataContract.createFromObject.returns(dataContractFixture);
+
+    getDataContractHandler = getDataContractHandlerFactory(driveApiMock, dppMock);
   });
 
   it('should return valid data', async () => {
@@ -54,8 +58,11 @@ describe('getDataContractHandlerFactory', () => {
     const contractBinary = result.getDataContract();
     expect(contractBinary).to.be.an.instanceOf(Buffer);
 
-    const returnedContract = cbor.decode(contractBinary);
-    expect(returnedContract).to.deep.equal(contractFixture);
+    expect(dppMock.dataContract.createFromObject).to.be.calledOnceWith(
+      dataContractFixture.toJSON(),
+    );
+
+    expect(contractBinary).to.deep.equal(dataContractFixture.serialize());
   });
 
   it('should throw InvalidArgumentGrpcError error if id is not specified', async () => {
@@ -70,6 +77,7 @@ describe('getDataContractHandlerFactory', () => {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: id is not specified');
       expect(driveApiMock.fetchContract).to.be.not.called();
+      expect(dppMock.dataContract.createFromObject).to.be.not.called();
     }
   });
 
@@ -85,6 +93,7 @@ describe('getDataContractHandlerFactory', () => {
       expect(e).to.be.instanceOf(InternalGrpcError);
       expect(e.getError()).to.equal(error);
       expect(driveApiMock.fetchContract).to.be.calledOnceWith(id);
+      expect(dppMock.dataContract.createFromObject).to.be.not.called();
     }
   });
 });

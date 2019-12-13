@@ -13,6 +13,10 @@ const {
   GetDocumentsResponse,
 } = require('@dashevo/dapi-grpc');
 
+const createDPPMock = require('@dashevo/dpp/lib/test/mocks/createDPPMock');
+
+const getDocumentsFixture = require('@dashevo/dpp/lib/test/fixtures/getDocumentsFixture');
+
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
 const getDocumentsHandlerFactory = require(
@@ -34,6 +38,8 @@ describe('getDocumentsHandlerFactory', () => {
   let startAfter;
   let startAt;
   let options;
+  let dppMock;
+  let documentsJSONFixture;
 
   beforeEach(function beforeEach() {
     dataContractId = 'contractId';
@@ -64,15 +70,20 @@ describe('getDocumentsHandlerFactory', () => {
 
     call = new GrpcCallMock(this.sinon, request);
 
-    documentsFixture = [{
-      document: 'some data',
-    }];
+    const [document] = getDocumentsFixture();
+
+    documentsFixture = [document];
+
+    documentsJSONFixture = documentsFixture.map(document => document.toJSON());
 
     driveApiMock = {
-      fetchDocuments: this.sinon.stub().resolves(documentsFixture),
+      fetchDocuments: this.sinon.stub().resolves(documentsJSONFixture),
     };
 
-    getDocumentsHandler = getDocumentsHandlerFactory(driveApiMock);
+    dppMock = createDPPMock(this.sinon);
+    dppMock.document.createFromObject.returns(document);
+
+    getDocumentsHandler = getDocumentsHandlerFactory(driveApiMock, dppMock);
   });
 
   it('should return valid result', async () => {
@@ -84,10 +95,13 @@ describe('getDocumentsHandlerFactory', () => {
     expect(documentsBinary).to.be.an('array');
     expect(documentsBinary).to.have.lengthOf(documentsFixture.length);
 
-    const returnedDocuments = documentsBinary.map(documentBinary => cbor.decode(documentBinary));
-    expect(returnedDocuments).to.deep.equal(documentsFixture);
+    expect(dppMock.document.createFromObject).to.be.calledOnceWith(
+      documentsJSONFixture[0],
+    );
 
     expect(driveApiMock.fetchDocuments).to.be.calledOnceWith(dataContractId, documentType, options);
+
+    expect(documentsBinary[0]).to.deep.equal(documentsFixture[0].serialize());
   });
 
   it('should throw InvalidArgumentGrpcError if dataContractId is not specified', async () => {
@@ -102,6 +116,7 @@ describe('getDocumentsHandlerFactory', () => {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: dataContractId is not specified');
       expect(driveApiMock.fetchDocuments).to.be.not.called();
+      expect(dppMock.document.createFromObject).to.be.not.called();
     }
   });
 
@@ -117,6 +132,7 @@ describe('getDocumentsHandlerFactory', () => {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: documentType is not specified');
       expect(driveApiMock.fetchDocuments).to.be.not.called();
+      expect(dppMock.document.createFromObject).to.be.not.called();
     }
   });
 
@@ -136,6 +152,7 @@ describe('getDocumentsHandlerFactory', () => {
         documentType,
         options,
       );
+      expect(dppMock.document.createFromObject).to.be.not.called();
     }
   });
 });
