@@ -1,5 +1,3 @@
-const cbor = require('cbor');
-
 const {
   server: {
     error: {
@@ -13,6 +11,8 @@ const {
   GetTransactionResponse,
 } = require('@dashevo/dapi-grpc');
 
+const { Transaction } = require('@dashevo/dashcore-lib');
+
 const getTransactionHandlerFactory = require('../../../../../lib/grpcServer/handlers/core/getTransactionHandlerFactory');
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
@@ -21,15 +21,13 @@ describe('getTransactionHandlerFactory', () => {
   let call;
   let request;
   let id;
-  let transaction;
+  let rawTransactionFixture;
   let getTransactionHandler;
   let insightAPIMock;
 
   beforeEach(function beforeEach() {
     id = 'id';
-    transaction = {
-      transaction: 'transaction data',
-    };
+    rawTransactionFixture = '0200000001d3145639d750ce104d740f7b2bb46381202e4798f9eb678cb361467195aa5b96000000006a4730440220156ea3d61ea7dce612a1608beed374138c8bf58aad7d76292d39d648e2b1346b022051f28f100bfa9d0dae0e2d8d76d00007f32611c8d69d49203f059ffc3c2fac58012102c9228c1cd1e778062de766376580e9dbeb301a4aa2cb0c535ada5a58f6ec5532ffffffff018dec9f00000000001976a914bf7f49e8e8c8aa0fcf1af8e53e117d25db30207288ac00000000';
 
     request = {
       getId: this.sinon.stub().returns(id),
@@ -38,7 +36,7 @@ describe('getTransactionHandlerFactory', () => {
     call = new GrpcCallMock(this.sinon, request);
 
     insightAPIMock = {
-      getTransactionById: this.sinon.stub().resolves(transaction),
+      getRawTransactionById: this.sinon.stub().resolves(rawTransactionFixture),
     };
 
     getTransactionHandler = getTransactionHandlerFactory(insightAPIMock);
@@ -49,15 +47,15 @@ describe('getTransactionHandlerFactory', () => {
 
     expect(result).to.be.an.instanceOf(GetTransactionResponse);
 
-    const transactionBinary = result.getTransaction();
+    const transactionSerialized = result.getTransaction();
 
-    expect(transactionBinary).to.be.an.instanceOf(Buffer);
+    expect(transactionSerialized).to.be.an.instanceOf(Buffer);
 
-    const returnedTransaction = cbor.decode(transactionBinary);
+    const returnedTransaction = new Transaction(transactionSerialized);
 
-    expect(returnedTransaction).to.deep.equal(transaction);
+    expect(returnedTransaction.toString()).to.deep.equal(rawTransactionFixture);
 
-    expect(insightAPIMock.getTransactionById).to.be.calledOnceWith(id);
+    expect(insightAPIMock.getRawTransactionById).to.be.calledOnceWith(id);
   });
 
   it('should throw InvalidArgumentGrpcError error if id is not specified', async () => {
@@ -71,13 +69,13 @@ describe('getTransactionHandlerFactory', () => {
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: id is not specified');
-      expect(insightAPIMock.getTransactionById).to.be.not.called();
+      expect(insightAPIMock.getRawTransactionById).to.be.not.called();
     }
   });
 
   it('should throw InternalGrpcError if insightAPI throws an error', async () => {
     const error = new Error('some error');
-    insightAPIMock.getTransactionById.throws(error);
+    insightAPIMock.getRawTransactionById.throws(error);
 
     try {
       await getTransactionHandler(call);
@@ -86,7 +84,7 @@ describe('getTransactionHandlerFactory', () => {
     } catch (e) {
       expect(e).to.be.instanceOf(InternalGrpcError);
       expect(e.getError()).to.equal(error);
-      expect(insightAPIMock.getTransactionById).to.be.calledOnceWith(id);
+      expect(insightAPIMock.getRawTransactionById).to.be.calledOnceWith(id);
     }
   });
 });
