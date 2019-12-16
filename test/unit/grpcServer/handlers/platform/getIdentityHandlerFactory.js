@@ -15,7 +15,7 @@ const getIdentityHandlerFactory = require('../../../../../lib/grpcServer/handler
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
-describe.skip('getIdentityHandlerFactory', () => {
+describe('getIdentityHandlerFactory', () => {
   let call;
   let rpcClientMock;
   let id;
@@ -91,23 +91,6 @@ describe.skip('getIdentityHandlerFactory', () => {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: id is not specified');
       expect(rpcClientMock.request).to.not.be.called();
-      expect(handleResponseMock).to.not.be.called();
-    }
-  });
-
-  it('should throw InternalGrpcError if rpcClient thrown an error', async () => {
-    const error = new Error();
-
-    rpcClientMock.request.throws(error);
-
-    try {
-      await getIdentityHandler(call);
-
-      expect.fail('should throw an error');
-    } catch (e) {
-      expect(e).to.be.instanceOf(InternalGrpcError);
-      expect(e.getError()).to.equal(error);
-      expect(rpcClientMock.request).to.be.calledOnceWith('abci_query', { path: '/identity', data: hexId });
       expect(handleResponseMock).to.not.be.called();
     }
   });

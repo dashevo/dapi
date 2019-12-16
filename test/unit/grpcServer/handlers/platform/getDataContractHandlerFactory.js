@@ -1,7 +1,6 @@
 const {
   server: {
     error: {
-      InternalGrpcError,
       InvalidArgumentGrpcError,
     },
   },
@@ -77,22 +76,6 @@ describe('getDataContractHandlerFactory', () => {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: id is not specified');
       expect(driveApiMock.fetchContract).to.be.not.called();
-      expect(dppMock.dataContract.createFromObject).to.be.not.called();
-    }
-  });
-
-  it('should throw InternalGrpcError if driveAPI throws an error', async () => {
-    const error = new Error('some error');
-    driveApiMock.fetchContract.throws(error);
-
-    try {
-      await getDataContractHandler(call);
-
-      expect.fail('should thrown InternalGrpcError error');
-    } catch (e) {
-      expect(e).to.be.instanceOf(InternalGrpcError);
-      expect(e.getError()).to.equal(error);
-      expect(driveApiMock.fetchContract).to.be.calledOnceWith(id);
       expect(dppMock.dataContract.createFromObject).to.be.not.called();
     }
   });

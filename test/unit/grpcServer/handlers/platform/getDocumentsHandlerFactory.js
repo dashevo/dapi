@@ -3,7 +3,6 @@ const cbor = require('cbor');
 const {
   server: {
     error: {
-      InternalGrpcError,
       InvalidArgumentGrpcError,
     },
   },
@@ -22,7 +21,6 @@ const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 const getDocumentsHandlerFactory = require(
   '../../../../../lib/grpcServer/handlers/platform/getDocumentsHandlerFactory',
 );
-
 
 describe('getDocumentsHandlerFactory', () => {
   let call;
@@ -74,7 +72,7 @@ describe('getDocumentsHandlerFactory', () => {
 
     documentsFixture = [document];
 
-    documentsJSONFixture = documentsFixture.map(document => document.toJSON());
+    documentsJSONFixture = documentsFixture.map(documentItem => documentItem.toJSON());
 
     driveApiMock = {
       fetchDocuments: this.sinon.stub().resolves(documentsJSONFixture),
@@ -132,26 +130,6 @@ describe('getDocumentsHandlerFactory', () => {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: documentType is not specified');
       expect(driveApiMock.fetchDocuments).to.be.not.called();
-      expect(dppMock.document.createFromObject).to.be.not.called();
-    }
-  });
-
-  it('should throw InternalGrpcError if driveAPI throws an error', async () => {
-    const error = new Error('some error');
-    driveApiMock.fetchDocuments.throws(error);
-
-    try {
-      await getDocumentsHandler(call);
-
-      expect.fail('should thrown InternalGrpcError error');
-    } catch (e) {
-      expect(e).to.be.instanceOf(InternalGrpcError);
-      expect(e.getError()).to.equal(error);
-      expect(driveApiMock.fetchDocuments).to.be.calledOnceWith(
-        dataContractId,
-        documentType,
-        options,
-      );
       expect(dppMock.document.createFromObject).to.be.not.called();
     }
   });
