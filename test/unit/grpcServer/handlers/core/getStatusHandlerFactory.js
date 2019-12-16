@@ -1,12 +1,4 @@
 const {
-  server: {
-    error: {
-      InternalGrpcError,
-    },
-  },
-} = require('@dashevo/grpc-common');
-
-const {
   GetStatusResponse,
 } = require('@dashevo/dapi-grpc');
 
@@ -63,20 +55,5 @@ describe('getStatusHandlerFactory', () => {
     expect(result.getNetwork()).to.equal(info.network);
 
     expect(insightAPIMock.getStatus).to.be.calledOnceWith('getInfo');
-  });
-
-  it('should throw InternalGrpcError if insightAPI throws an error', async () => {
-    const error = new Error('some error');
-    insightAPIMock.getStatus.throws(error);
-
-    try {
-      await getStatusHandler(call);
-
-      expect.fail('should thrown InternalGrpcError error');
-    } catch (e) {
-      expect(e).to.be.instanceOf(InternalGrpcError);
-      expect(e.getError()).to.equal(error);
-      expect(insightAPIMock.getStatus).to.be.calledOnceWith('getInfo');
-    }
   });
 });

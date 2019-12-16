@@ -1,7 +1,6 @@
 const {
   server: {
     error: {
-      InternalGrpcError,
       InvalidArgumentGrpcError,
     },
   },
@@ -70,21 +69,6 @@ describe('getTransactionHandlerFactory', () => {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: id is not specified');
       expect(insightAPIMock.getRawTransactionById).to.be.not.called();
-    }
-  });
-
-  it('should throw InternalGrpcError if insightAPI throws an error', async () => {
-    const error = new Error('some error');
-    insightAPIMock.getRawTransactionById.throws(error);
-
-    try {
-      await getTransactionHandler(call);
-
-      expect.fail('should thrown InternalGrpcError error');
-    } catch (e) {
-      expect(e).to.be.instanceOf(InternalGrpcError);
-      expect(e.getError()).to.equal(error);
-      expect(insightAPIMock.getRawTransactionById).to.be.calledOnceWith(id);
     }
   });
 });
