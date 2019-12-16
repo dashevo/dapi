@@ -1,12 +1,4 @@
 const {
-  server: {
-    error: {
-      InternalGrpcError,
-    },
-  },
-} = require('@dashevo/grpc-common');
-
-const {
   GetEstimatedTransactionFeeResponse,
 } = require('@dashevo/dapi-grpc');
 
@@ -61,23 +53,5 @@ describe('getEstimatedTransactionFeeHandlerFactory', () => {
     const returnedFee = result.getFee();
 
     expect(returnedFee).to.equal(fee);
-  });
-
-  it('should throw InternalGrpcError if insightAPI throws an error', async () => {
-    const error = new Error('some error');
-    insightAPIMock.estimateFee.throws(error);
-
-    blocks = 4;
-    request.getBlocks.returns(blocks);
-
-    try {
-      await getEstimatedTransactionFeeHandler(call);
-
-      expect.fail('should thrown InternalGrpcError error');
-    } catch (e) {
-      expect(e).to.be.instanceOf(InternalGrpcError);
-      expect(e.getError()).to.equal(error);
-      expect(insightAPIMock.estimateFee).to.be.calledOnceWith(blocks);
-    }
   });
 });

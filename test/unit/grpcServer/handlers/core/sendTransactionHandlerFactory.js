@@ -1,7 +1,6 @@
 const {
   server: {
     error: {
-      InternalGrpcError,
       InvalidArgumentGrpcError,
     },
   },
@@ -95,21 +94,6 @@ describe('sendTransactionHandlerFactory', () => {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: invalid transaction: Invalid Argument: Must provide an object or string to deserialize a transaction');
       expect(insightAPIMock.sendTransaction).to.be.not.called();
-    }
-  });
-
-  it('should throw InternalGrpcError if insightAPI throws an error', async () => {
-    const error = new Error('some error');
-    insightAPIMock.sendTransaction.throws(error);
-
-    try {
-      await sendTransactionHandler(call);
-
-      expect.fail('should thrown InternalGrpcError error');
-    } catch (e) {
-      expect(e).to.be.instanceOf(InternalGrpcError);
-      expect(e.getError()).to.equal(error);
-      expect(insightAPIMock.sendTransaction).to.be.calledOnceWith(serializedTransaction);
     }
   });
 });
