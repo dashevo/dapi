@@ -22,6 +22,8 @@ const getDocumentsHandlerFactory = require(
   '../../../../../lib/grpcServer/handlers/platform/getDocumentsHandlerFactory',
 );
 
+const RPCError = require('../../../../../lib/rpcServer/RPCError');
+
 describe('getDocumentsHandlerFactory', () => {
   let call;
   let getDocumentsHandler;
@@ -109,7 +111,7 @@ describe('getDocumentsHandlerFactory', () => {
     try {
       await getDocumentsHandler(call);
 
-      expect.fail('should thrown InvalidArgumentGrpcError error');
+      expect.fail('should throw InvalidArgumentGrpcError error');
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: dataContractId is not specified');
@@ -125,11 +127,63 @@ describe('getDocumentsHandlerFactory', () => {
     try {
       await getDocumentsHandler(call);
 
-      expect.fail('should thrown InvalidArgumentGrpcError error');
+      expect.fail('should throw InvalidArgumentGrpcError error');
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid argument: documentType is not specified');
       expect(driveApiMock.fetchDocuments).to.be.not.called();
+      expect(dppMock.document.createFromObject).to.be.not.called();
+    }
+  });
+
+  it('should throw InvalidArgumentGrpcError if driveAPI throws RPCError with code -32602', async () => {
+    const code = -32602;
+    const message = 'message';
+    const data = {
+      data: 'some data',
+    };
+    const error = new RPCError(code, message, data);
+
+    driveApiMock.fetchDocuments.throws(error);
+
+    try {
+      await getDocumentsHandler(call);
+
+      expect.fail('should throw InvalidArgumentGrpcError error');
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal(`Invalid argument: ${message}`);
+      expect(e.getMetadata()).to.deep.equal(data);
+      expect(driveApiMock.fetchDocuments).to.be.calledOnceWith(
+        dataContractId,
+        documentType,
+        options,
+      );
+      expect(dppMock.document.createFromObject).to.be.not.called();
+    }
+  });
+
+  it('should throw error if driveAPI throws RPCError with code not equal -32602', async () => {
+    const code = -32600;
+    const message = 'message';
+    const data = {
+      data: 'some data',
+    };
+    const error = new RPCError(code, message, data);
+
+    driveApiMock.fetchDocuments.throws(error);
+
+    try {
+      await getDocumentsHandler(call);
+
+      expect.fail('should throw error');
+    } catch (e) {
+      expect(e).to.equal(error);
+      expect(driveApiMock.fetchDocuments).to.be.calledOnceWith(
+        dataContractId,
+        documentType,
+        options,
+      );
       expect(dppMock.document.createFromObject).to.be.not.called();
     }
   });

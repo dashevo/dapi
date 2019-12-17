@@ -107,29 +107,28 @@ async function main() {
   });
 
   const coreHandlers = coreHandlersFactory(insightAPI);
+  const platformHandlers = platformHandlersFactory(rpcClient, driveAPI, dpp);
 
-  const grpcCoreServer = createServer(getCoreDefinition(), coreHandlers);
+  const handlers = {
+    ...coreHandlers,
+    ...platformHandlers,
+  };
 
-  grpcCoreServer.bind(
+  const definitions = {
+    ...getCoreDefinition(),
+    ...getPlatformDefinition(),
+  };
+
+  const grpcApiServer = createServer(definitions, handlers);
+
+  grpcApiServer.bind(
     `0.0.0.0:${config.core.grpcServer.port}`,
     grpc.ServerCredentials.createInsecure(),
   );
 
-  grpcCoreServer.start();
+  grpcApiServer.start();
 
-  const platformHandlers = platformHandlersFactory(rpcClient, driveAPI, dpp);
-
-  const grpcPlatformServer = createServer(getPlatformDefinition(), platformHandlers);
-
-  grpcPlatformServer.bind(
-    `0.0.0.0:${config.platform.grpcServer.port}`,
-    grpc.ServerCredentials.createInsecure(),
-  );
-
-  grpcPlatformServer.start();
-
-  log.info(`GRPC Core RPC server is listening on port ${config.core.grpcServer.port}`);
-  log.info(`GRPC Platfoem RPC server is listening on port ${config.platform.grpcServer.port}`);
+  log.info(`GRPC API RPC server is listening on port ${config.core.grpcServer.port}`);
 
   // Display message that everything is ok
   log.info(`Insight uri is ${config.insightUri}`);

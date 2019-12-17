@@ -110,7 +110,7 @@ describe('getIdentityHandlerFactory', function main() {
 
     identityCreateTransition.sign(identityPublicKey, privateKey);
 
-    await dapiClient.apply(identityCreateTransition);
+    await dapiClient.applyStateTransition(identityCreateTransition);
   });
 
   afterEach(async () => {

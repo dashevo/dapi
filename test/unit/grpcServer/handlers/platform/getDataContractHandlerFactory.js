@@ -20,6 +20,8 @@ const getDataContractHandlerFactory = require(
   '../../../../../lib/grpcServer/handlers/platform/getDataContractHandlerFactory',
 );
 
+const RPCError = require('../../../../../lib/rpcServer/RPCError');
+
 describe('getDataContractHandlerFactory', () => {
   let call;
   let getDataContractHandler;
@@ -62,6 +64,8 @@ describe('getDataContractHandlerFactory', () => {
     );
 
     expect(contractBinary).to.deep.equal(dataContractFixture.serialize());
+
+    expect(driveApiMock.fetchContract).to.be.calledOnceWith(id);
   });
 
   it('should throw InvalidArgumentGrpcError error if id is not specified', async () => {
@@ -77,6 +81,50 @@ describe('getDataContractHandlerFactory', () => {
       expect(e.getMessage()).to.equal('Invalid argument: id is not specified');
       expect(driveApiMock.fetchContract).to.be.not.called();
       expect(dppMock.dataContract.createFromObject).to.be.not.called();
+    }
+  });
+
+  it('should throw InvalidArgumentGrpcError if driveAPI throws RPCError with code -32602', async () => {
+    const code = -32602;
+    const message = 'message';
+    const data = {
+      data: 'some data',
+    };
+    const error = new RPCError(code, message, data);
+
+    driveApiMock.fetchContract.throws(error);
+
+    try {
+      await getDataContractHandler(call);
+
+      expect.fail('should throw InvalidArgumentGrpcError error');
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal(`Invalid argument: ${message}`);
+      expect(e.getMetadata()).to.deep.equal(data);
+      expect(driveApiMock.fetchContract).to.be.calledOnceWith(id);
+      expect(dppMock.document.createFromObject).to.be.not.called();
+    }
+  });
+
+  it('should throw error if driveAPI throws RPCError with code not equal -32602', async () => {
+    const code = -32600;
+    const message = 'message';
+    const data = {
+      data: 'some data',
+    };
+    const error = new RPCError(code, message, data);
+
+    driveApiMock.fetchContract.throws(error);
+
+    try {
+      await getDataContractHandler(call);
+
+      expect.fail('should throw error');
+    } catch (e) {
+      expect(e).to.equal(error);
+      expect(driveApiMock.fetchContract).to.be.calledOnceWith(id);
+      expect(dppMock.document.createFromObject).to.be.not.called();
     }
   });
 });

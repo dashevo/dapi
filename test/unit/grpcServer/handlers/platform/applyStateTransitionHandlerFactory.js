@@ -1,7 +1,6 @@
 const {
   server: {
     error: {
-      InternalGrpcError,
       InvalidArgumentGrpcError,
     },
   },
@@ -117,29 +116,6 @@ describe('applyStateTransitionHandlerFactory', () => {
       expect.fail('InternalGrpcError was not thrown');
     } catch (e) {
       expect(e).to.equal(error);
-    }
-  });
-
-  it('should return InternalGrpcError if Tendermint Core throws an error', async () => {
-    const error = {
-      code: -32603,
-      message: 'Internal error',
-      data: 'just error',
-    };
-
-    rpcClientMock.request.resolves({
-      id: '',
-      jsonrpc: '2.0',
-      error,
-    });
-
-    try {
-      await applyStateTransitionHandler(call);
-
-      expect.fail('InternalGrpcError was not thrown');
-    } catch (e) {
-      expect(e).to.be.an.instanceOf(InternalGrpcError);
-      expect(e.getError()).to.deep.equal(error);
     }
   });
 
