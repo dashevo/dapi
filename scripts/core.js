@@ -23,7 +23,6 @@ const {
   GetTransactionRequest,
   GetStatusRequest,
   GetBlockRequest,
-  GetEstimatedTransactionFeeRequest,
   pbjs: {
     SendTransactionRequest: PBJSSendTransactionRequest,
     SendTransactionResponse: PBJSSendTransactionResponse,
@@ -33,8 +32,6 @@ const {
     GetStatusResponse: PBJSGetStatusResponse,
     GetBlockRequest: PBJSGetBlockRequest,
     GetBlockResponse: PBJSGetBlockResponse,
-    GetEstimatedTransactionFeeRequest: PBJSGetEstimatedTransactionFeeRequest,
-    GetEstimatedTransactionFeeResponse: PBJSGetEstimatedTransactionFeeResponse,
   },
   getCoreDefinition,
 } = require('@dashevo/dapi-grpc');
@@ -55,9 +52,6 @@ const userIndex = require('../lib/services/userIndex');
 
 const getBlockHandlerFactory = require(
   '../lib/grpcServer/handlers/core/getBlockHandlerFactory',
-);
-const getEstimatedTransactionFeeHandlerFactory = require(
-  '../lib/grpcServer/handlers/core/getEstimatedTransactionFeeHandlerFactory',
 );
 const getStatusHandlerFactory = require(
   '../lib/grpcServer/handlers/core/getStatusHandlerFactory',
@@ -143,19 +137,6 @@ async function main() {
     wrapInErrorHandler(getBlockHandler),
   );
 
-  // getEstimatedTransactionFee
-  const getEstimatedTransactionFeeHandler = getEstimatedTransactionFeeHandlerFactory(insightAPI);
-  const wrappedGetEstimatedTransactionFee = jsonToProtobufHandlerWrapper(
-    jsonToProtobufFactory(
-      GetEstimatedTransactionFeeRequest,
-      PBJSGetEstimatedTransactionFeeRequest,
-    ),
-    protobufToJsonFactory(
-      PBJSGetEstimatedTransactionFeeResponse,
-    ),
-    wrapInErrorHandler(getEstimatedTransactionFeeHandler),
-  );
-
   // getStatus
   const getStatusHandler = getStatusHandlerFactory(insightAPI);
   const wrappedGetStatus = jsonToProtobufHandlerWrapper(
@@ -197,7 +178,6 @@ async function main() {
 
   const grpcServer = createServer(getCoreDefinition(), {
     getBlock: wrappedGetBlock,
-    getEstimatedTransactionFee: wrappedGetEstimatedTransactionFee,
     getStatus: wrappedGetStatus,
     getTransaction: wrappedGetTransaction,
     sendTransaction: wrappedSendTransaction,
