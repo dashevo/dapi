@@ -22,7 +22,7 @@ const Identity = require('@dashevo/dpp/lib/identity/Identity');
 
 const wait = require('../../../../../lib/utils/wait');
 
-describe('fetchIdentityHandlerFactory', function main() {
+describe.skip('fetchIdentityHandlerFactory', function main() {
   this.timeout(160000);
 
   let removeDapi;

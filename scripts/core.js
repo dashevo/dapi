@@ -19,21 +19,22 @@ const {
 } = require('@dashevo/grpc-common');
 
 const {
-  UpdateStateRequest,
-  FetchIdentityRequest,
-  LastUserStateTransitionHashRequest,
+  SendTransactionRequest,
+  GetTransactionRequest,
+  GetStatusRequest,
+  GetBlockRequest,
   pbjs: {
-    LastUserStateTransitionHashRequest: PBJSLastUserStateTransitionHashRequest,
-    LastUserStateTransitionHashResponse: PBJSLastUserStateTransitionHashResponse,
-    UpdateStateRequest: PBJSUpdateStateRequest,
-    UpdateStateResponse: PBJSUpdateStateResponse,
-    FetchIdentityRequest: PBJSFetchIdentityRequest,
-    FetchIdentityResponse: PBJSFetchIdentityResponse,
+    SendTransactionRequest: PBJSSendTransactionRequest,
+    SendTransactionResponse: PBJSSendTransactionResponse,
+    GetTransactionRequest: PBJSGetTransactionRequest,
+    GetTransactionResponse: PBJSGetTransactionResponse,
+    GetStatusRequest: PBJSGetStatusRequest,
+    GetStatusResponse: PBJSGetStatusResponse,
+    GetBlockRequest: PBJSGetBlockRequest,
+    GetBlockResponse: PBJSGetBlockResponse,
   },
   getCoreDefinition,
 } = require('@dashevo/dapi-grpc');
-
-const { client: RpcClient } = require('jayson/promise');
 
 // Load config from .env
 dotenv.config();
@@ -48,16 +49,18 @@ const DriveAdapter = require('../lib/externalApis/driveAdapter');
 const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
 const userIndex = require('../lib/services/userIndex');
-const handleAbciResponse = require('../lib/grpcServer/handlers/handleAbciResponse');
 
-const getLastUserStateTransitionHashHandlerFactory = require(
-  '../lib/grpcServer/handlers/core/getLastUserStateTransitionHashHandlerFactory',
+const getBlockHandlerFactory = require(
+  '../lib/grpcServer/handlers/core/getBlockHandlerFactory',
 );
-const updateStateHandlerFactory = require(
-  '../lib/grpcServer/handlers/core/updateStateHandlerFactory',
+const getStatusHandlerFactory = require(
+  '../lib/grpcServer/handlers/core/getStatusHandlerFactory',
 );
-const fetchIdentityHandlerFactory = require(
-  '../lib/grpcServer/handlers/core/fetchIdentityHandlerFactory',
+const getTransactionHandlerFactory = require(
+  '../lib/grpcServer/handlers/core/getTransactionHandlerFactory',
+);
+const sendTransactionHandlerFactory = require(
+  '../lib/grpcServer/handlers/core/sendTransactionHandlerFactory',
 );
 
 async function main() {
@@ -121,55 +124,63 @@ async function main() {
 
   const wrapInErrorHandler = wrapInErrorHandlerFactory(log);
 
-  const getLastUserStateTransitionHashHandler = getLastUserStateTransitionHashHandlerFactory(
-    dashCoreRpcClient,
-  );
-
-  const wrappedGetLastUserStateTransitionHash = jsonToProtobufHandlerWrapper(
+  // getBlock
+  const getBlockHandler = getBlockHandlerFactory(insightAPI);
+  const wrappedGetBlock = jsonToProtobufHandlerWrapper(
     jsonToProtobufFactory(
-      LastUserStateTransitionHashRequest,
-      PBJSLastUserStateTransitionHashRequest,
+      GetBlockRequest,
+      PBJSGetBlockRequest,
     ),
     protobufToJsonFactory(
-      PBJSLastUserStateTransitionHashResponse,
+      PBJSGetBlockResponse,
     ),
-    wrapInErrorHandler(getLastUserStateTransitionHashHandler),
+    wrapInErrorHandler(getBlockHandler),
   );
 
-  const rpcClient = RpcClient.http({
-    host: config.tendermintCore.host,
-    port: config.tendermintCore.port,
-  });
-
-  const updateStateHandler = updateStateHandlerFactory(rpcClient, handleAbciResponse);
-  const wrappedUpdateState = jsonToProtobufHandlerWrapper(
+  // getStatus
+  const getStatusHandler = getStatusHandlerFactory(insightAPI);
+  const wrappedGetStatus = jsonToProtobufHandlerWrapper(
     jsonToProtobufFactory(
-      UpdateStateRequest,
-      PBJSUpdateStateRequest,
+      GetStatusRequest,
+      PBJSGetStatusRequest,
     ),
     protobufToJsonFactory(
-      PBJSUpdateStateResponse,
+      PBJSGetStatusResponse,
     ),
-    wrapInErrorHandler(updateStateHandler),
+    wrapInErrorHandler(getStatusHandler),
   );
 
-  const fetchIdentityHandler = fetchIdentityHandlerFactory(rpcClient, handleAbciResponse);
-
-  const wrappedFetchIdentity = jsonToProtobufHandlerWrapper(
+  // getTransaction
+  const getTransactionHandler = getTransactionHandlerFactory(insightAPI);
+  const wrappedGetTransaction = jsonToProtobufHandlerWrapper(
     jsonToProtobufFactory(
-      FetchIdentityRequest,
-      PBJSFetchIdentityRequest,
+      GetTransactionRequest,
+      PBJSGetTransactionRequest,
     ),
     protobufToJsonFactory(
-      PBJSFetchIdentityResponse,
+      PBJSGetTransactionResponse,
     ),
-    wrapInErrorHandler(fetchIdentityHandler),
+    wrapInErrorHandler(getTransactionHandler),
+  );
+
+  // sendTransaction
+  const sendTransactionHandler = sendTransactionHandlerFactory(insightAPI);
+  const wrappedSendTransaction = jsonToProtobufHandlerWrapper(
+    jsonToProtobufFactory(
+      SendTransactionRequest,
+      PBJSSendTransactionRequest,
+    ),
+    protobufToJsonFactory(
+      PBJSSendTransactionResponse,
+    ),
+    wrapInErrorHandler(sendTransactionHandler),
   );
 
   const grpcServer = createServer(getCoreDefinition(), {
-    getLastUserStateTransitionHash: wrappedGetLastUserStateTransitionHash,
-    updateState: wrappedUpdateState,
-    fetchIdentity: wrappedFetchIdentity,
+    getBlock: wrappedGetBlock,
+    getStatus: wrappedGetStatus,
+    getTransaction: wrappedGetTransaction,
+    sendTransaction: wrappedSendTransaction,
   });
 
   grpcServer.bind(
