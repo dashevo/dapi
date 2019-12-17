@@ -16,7 +16,7 @@ describe('getEstimatedTransactionFeeHandlerFactory', () => {
 
   beforeEach(function beforeEach() {
     fee = 0.5;
-    blocks = null;
+    blocks = 0;
     request = {
       getBlocks: this.sinon.stub().returns(blocks),
     };
@@ -34,7 +34,7 @@ describe('getEstimatedTransactionFeeHandlerFactory', () => {
     const result = await getEstimatedTransactionFeeHandler(call);
 
     expect(result).to.be.an.instanceOf(GetEstimatedTransactionFeeResponse);
-    expect(insightAPIMock.estimateFee).to.be.calledOnceWith(3);
+    expect(insightAPIMock.estimateFee).to.be.calledOnceWith(blocks);
 
     const returnedFee = result.getFee();
 
