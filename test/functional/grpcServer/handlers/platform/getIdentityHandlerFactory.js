@@ -22,7 +22,7 @@ const Identity = require('@dashevo/dpp/lib/identity/Identity');
 
 const wait = require('../../../../../lib/utils/wait');
 
-describe.skip('getIdentityHandlerFactory', function main() {
+describe('getIdentityHandlerFactory', function main() {
   this.timeout(160000);
 
   let removeDapi;
@@ -118,7 +118,7 @@ describe.skip('getIdentityHandlerFactory', function main() {
   });
 
   it('should fetch created identity', async () => {
-    const serializedIdentity = await dapiClient.fetchIdentity(
+    const serializedIdentity = await dapiClient.getIdentity(
       identityCreateTransition.getIdentityId(),
     );
 
@@ -138,7 +138,7 @@ describe.skip('getIdentityHandlerFactory', function main() {
   });
 
   it('should respond with null if identity not found', async () => {
-    const identity = await dapiClient.fetchIdentity('unknownId');
+    const identity = await dapiClient.getIdentity('unknownId');
 
     expect(identity).to.be.null();
   });
