@@ -3,38 +3,19 @@ const dotenv = require('dotenv');
 const grpc = require('grpc');
 
 const {
-  client: {
-    converters: {
-      jsonToProtobufFactory,
-      protobufToJsonFactory,
-    },
-  },
   server: {
     createServer,
-    jsonToProtobufHandlerWrapper,
-    error: {
-      wrapInErrorHandlerFactory,
-    },
   },
 } = require('@dashevo/grpc-common');
 
 const {
-  SendTransactionRequest,
-  GetTransactionRequest,
-  GetStatusRequest,
-  GetBlockRequest,
-  pbjs: {
-    SendTransactionRequest: PBJSSendTransactionRequest,
-    SendTransactionResponse: PBJSSendTransactionResponse,
-    GetTransactionRequest: PBJSGetTransactionRequest,
-    GetTransactionResponse: PBJSGetTransactionResponse,
-    GetStatusRequest: PBJSGetStatusRequest,
-    GetStatusResponse: PBJSGetStatusResponse,
-    GetBlockRequest: PBJSGetBlockRequest,
-    GetBlockResponse: PBJSGetBlockResponse,
-  },
   getCoreDefinition,
+  getPlatformDefinition,
 } = require('@dashevo/dapi-grpc');
+
+const DashPlatformProtocol = require('@dashevo/dpp');
+
+const { client: RpcClient } = require('jayson/promise');
 
 // Load config from .env
 dotenv.config();
@@ -50,20 +31,18 @@ const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
 const userIndex = require('../lib/services/userIndex');
 
-const getBlockHandlerFactory = require(
-  '../lib/grpcServer/handlers/core/getBlockHandlerFactory',
+const coreHandlersFactory = require(
+  '../lib/grpcServer/handlers/core/coreHandlersFactory',
 );
-const getStatusHandlerFactory = require(
-  '../lib/grpcServer/handlers/core/getStatusHandlerFactory',
-);
-const getTransactionHandlerFactory = require(
-  '../lib/grpcServer/handlers/core/getTransactionHandlerFactory',
-);
-const sendTransactionHandlerFactory = require(
-  '../lib/grpcServer/handlers/core/sendTransactionHandlerFactory',
+const platformHandlersFactory = require(
+  '../lib/grpcServer/handlers/platform/platformHandlersFactory',
 );
 
 async function main() {
+  const dpp = new DashPlatformProtocol({
+    dataProvider: undefined,
+  });
+
   /* Application start */
   const configValidationResult = validateConfig(config);
   if (!configValidationResult.isValid) {
@@ -122,75 +101,34 @@ async function main() {
   // Start GRPC server
   log.info('Starting GRPC server');
 
-  const wrapInErrorHandler = wrapInErrorHandlerFactory(log);
-
-  // getBlock
-  const getBlockHandler = getBlockHandlerFactory(insightAPI);
-  const wrappedGetBlock = jsonToProtobufHandlerWrapper(
-    jsonToProtobufFactory(
-      GetBlockRequest,
-      PBJSGetBlockRequest,
-    ),
-    protobufToJsonFactory(
-      PBJSGetBlockResponse,
-    ),
-    wrapInErrorHandler(getBlockHandler),
-  );
-
-  // getStatus
-  const getStatusHandler = getStatusHandlerFactory(insightAPI);
-  const wrappedGetStatus = jsonToProtobufHandlerWrapper(
-    jsonToProtobufFactory(
-      GetStatusRequest,
-      PBJSGetStatusRequest,
-    ),
-    protobufToJsonFactory(
-      PBJSGetStatusResponse,
-    ),
-    wrapInErrorHandler(getStatusHandler),
-  );
-
-  // getTransaction
-  const getTransactionHandler = getTransactionHandlerFactory(insightAPI);
-  const wrappedGetTransaction = jsonToProtobufHandlerWrapper(
-    jsonToProtobufFactory(
-      GetTransactionRequest,
-      PBJSGetTransactionRequest,
-    ),
-    protobufToJsonFactory(
-      PBJSGetTransactionResponse,
-    ),
-    wrapInErrorHandler(getTransactionHandler),
-  );
-
-  // sendTransaction
-  const sendTransactionHandler = sendTransactionHandlerFactory(insightAPI);
-  const wrappedSendTransaction = jsonToProtobufHandlerWrapper(
-    jsonToProtobufFactory(
-      SendTransactionRequest,
-      PBJSSendTransactionRequest,
-    ),
-    protobufToJsonFactory(
-      PBJSSendTransactionResponse,
-    ),
-    wrapInErrorHandler(sendTransactionHandler),
-  );
-
-  const grpcServer = createServer(getCoreDefinition(), {
-    getBlock: wrappedGetBlock,
-    getStatus: wrappedGetStatus,
-    getTransaction: wrappedGetTransaction,
-    sendTransaction: wrappedSendTransaction,
+  const rpcClient = RpcClient.http({
+    host: config.tendermintCore.host,
+    port: config.tendermintCore.port,
   });
 
-  grpcServer.bind(
+  const coreHandlers = coreHandlersFactory(insightAPI);
+  const platformHandlers = platformHandlersFactory(rpcClient, driveAPI, dpp);
+
+  const handlers = {
+    ...coreHandlers,
+    ...platformHandlers,
+  };
+
+  const definitions = {
+    ...getCoreDefinition(),
+    ...getPlatformDefinition(),
+  };
+
+  const grpcApiServer = createServer(definitions, handlers);
+
+  grpcApiServer.bind(
     `0.0.0.0:${config.core.grpcServer.port}`,
     grpc.ServerCredentials.createInsecure(),
   );
 
-  grpcServer.start();
+  grpcApiServer.start();
 
-  log.info(`GRPC RPC server is listening on port ${config.core.grpcServer.port}`);
+  log.info(`GRPC API RPC server is listening on port ${config.core.grpcServer.port}`);
 
   // Display message that everything is ok
   log.info(`Insight uri is ${config.insightUri}`);

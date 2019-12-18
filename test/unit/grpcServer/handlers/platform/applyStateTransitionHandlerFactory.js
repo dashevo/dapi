@@ -1,14 +1,13 @@
 const {
   server: {
     error: {
-      InternalGrpcError,
       InvalidArgumentGrpcError,
     },
   },
 } = require('@dashevo/grpc-common');
 
 const {
-  UpdateStateResponse,
+  ApplyStateTransitionResponse,
 } = require('@dashevo/dapi-grpc');
 
 const DashPlatformProtocol = require('@dashevo/dpp');
@@ -16,14 +15,14 @@ const getDataContractFixture = require('@dashevo/dpp/lib/test/fixtures/getDataCo
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
-const updateStateHandlerFactory = require(
-  '../../../../../lib/grpcServer/handlers/core/updateStateHandlerFactory',
+const applyStateTransitionHandlerFactory = require(
+  '../../../../../lib/grpcServer/handlers/platform/applyStateTransitionHandlerFactory',
 );
 
-describe.skip('updateStateHandlerFactory', () => {
+describe('applyStateTransitionHandlerFactory', () => {
   let call;
   let rpcClientMock;
-  let updateStateHandler;
+  let applyStateTransitionHandler;
   let response;
   let stateTransitionFixture;
   let log;
@@ -70,7 +69,7 @@ describe.skip('updateStateHandlerFactory', () => {
 
     handleResponseMock = this.sinon.stub();
 
-    updateStateHandler = updateStateHandlerFactory(
+    applyStateTransitionHandler = applyStateTransitionHandlerFactory(
       rpcClientMock,
       handleResponseMock,
     );
@@ -84,7 +83,7 @@ describe.skip('updateStateHandlerFactory', () => {
     call.request.getStateTransition.returns(null);
 
     try {
-      await updateStateHandler(call);
+      await applyStateTransitionHandler(call);
 
       expect.fail('InvalidArgumentGrpcError was not thrown');
     } catch (e) {
@@ -96,11 +95,11 @@ describe.skip('updateStateHandlerFactory', () => {
   });
 
   it('should return valid result', async () => {
-    const result = await updateStateHandler(call);
+    const result = await applyStateTransitionHandler(call);
 
     const tx = stateTransitionFixture.serialize().toString('base64');
 
-    expect(result).to.be.an.instanceOf(UpdateStateResponse);
+    expect(result).to.be.an.instanceOf(ApplyStateTransitionResponse);
     expect(rpcClientMock.request).to.be.calledOnceWith('broadcast_tx_commit', { tx });
     expect(handleResponseMock).to.be.calledTwice();
     expect(handleResponseMock).to.be.calledWith({ code, log });
@@ -112,36 +111,11 @@ describe.skip('updateStateHandlerFactory', () => {
     handleResponseMock.throws(error);
 
     try {
-      await updateStateHandler(call);
+      await applyStateTransitionHandler(call);
 
       expect.fail('InternalGrpcError was not thrown');
     } catch (e) {
       expect(e).to.equal(error);
-    }
-  });
-
-  it.skip('should return error if timeout happened');
-
-  it('should return InternalGrpcError if Tendermint Core throws an error', async () => {
-    const error = {
-      code: -32603,
-      message: 'Internal error',
-      data: 'just error',
-    };
-
-    rpcClientMock.request.resolves({
-      id: '',
-      jsonrpc: '2.0',
-      error,
-    });
-
-    try {
-      await updateStateHandler(call);
-
-      expect.fail('InternalGrpcError was not thrown');
-    } catch (e) {
-      expect(e).to.be.an.instanceOf(InternalGrpcError);
-      expect(e.getError()).to.deep.equal(error);
     }
   });
 
@@ -150,7 +124,7 @@ describe.skip('updateStateHandlerFactory', () => {
     handleResponseMock.throws(error);
 
     try {
-      await updateStateHandler(call);
+      await applyStateTransitionHandler(call);
 
       expect.fail('should throw an error');
     } catch (e) {

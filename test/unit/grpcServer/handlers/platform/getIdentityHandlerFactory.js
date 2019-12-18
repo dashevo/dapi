@@ -1,26 +1,25 @@
 const {
   server: {
     error: {
-      InternalGrpcError,
       InvalidArgumentGrpcError,
     },
   },
 } = require('@dashevo/grpc-common');
 
 const {
-  FetchIdentityResponse,
+  GetIdentityResponse,
 } = require('@dashevo/dapi-grpc');
 
-const fetchIdentityHandlerFactory = require('../../../../../lib/grpcServer/handlers/core/fetchIdentityHandlerFactory');
+const getIdentityHandlerFactory = require('../../../../../lib/grpcServer/handlers/platform/getIdentityHandlerFactory');
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
-describe.skip('fetchIdentityHandlerFactory', () => {
+describe('getIdentityHandlerFactory', () => {
   let call;
   let rpcClientMock;
   let id;
   let handleResponseMock;
-  let fetchIdentityHandler;
+  let getIdentityHandler;
   let response;
   let rpcResponse;
   let hexId;
@@ -68,13 +67,13 @@ describe.skip('fetchIdentityHandlerFactory', () => {
       getId: this.sinon.stub(),
     };
 
-    fetchIdentityHandler = fetchIdentityHandlerFactory(rpcClientMock, handleResponseMock);
+    getIdentityHandler = getIdentityHandlerFactory(rpcClientMock, handleResponseMock);
   });
 
   it('should return valid result', async () => {
-    const result = await fetchIdentityHandler(call);
+    const result = await getIdentityHandler(call);
 
-    expect(result).to.be.an.instanceOf(FetchIdentityResponse);
+    expect(result).to.be.an.instanceOf(GetIdentityResponse);
 
     expect(rpcClientMock.request).to.be.calledOnceWith('abci_query', { path: '/identity', data: hexId });
     expect(handleResponseMock).to.be.calledOnceWith(response);
@@ -84,7 +83,7 @@ describe.skip('fetchIdentityHandlerFactory', () => {
     call.request.getId.returns(null);
 
     try {
-      await fetchIdentityHandler(call);
+      await getIdentityHandler(call);
 
       expect.fail('should throw an error');
     } catch (e) {
@@ -95,45 +94,12 @@ describe.skip('fetchIdentityHandlerFactory', () => {
     }
   });
 
-  it('should throw InternalGrpcError if rpcClient thrown an error', async () => {
-    const error = new Error();
-
-    rpcClientMock.request.throws(error);
-
-    try {
-      await fetchIdentityHandler(call);
-
-      expect.fail('should throw an error');
-    } catch (e) {
-      expect(e).to.be.instanceOf(InternalGrpcError);
-      expect(e.getError()).to.equal(error);
-      expect(rpcClientMock.request).to.be.calledOnceWith('abci_query', { path: '/identity', data: hexId });
-      expect(handleResponseMock).to.not.be.called();
-    }
-  });
-
-  it('should throw InternalGrpcError if rpcClient returns an error', async () => {
-    const error = new Error();
-    rpcResponse.error = error;
-
-    try {
-      await fetchIdentityHandler(call);
-
-      expect.fail('should throw an error');
-    } catch (e) {
-      expect(e).to.be.instanceOf(InternalGrpcError);
-      expect(e.getError()).to.equal(error);
-      expect(rpcClientMock.request).to.be.calledOnceWith('abci_query', { path: '/identity', data: hexId });
-      expect(handleResponseMock).to.not.be.called();
-    }
-  });
-
   it('should throw an error when handleResponse throws an error', async () => {
     const error = new Error();
     handleResponseMock.throws(error);
 
     try {
-      await fetchIdentityHandler(call);
+      await getIdentityHandler(call);
 
       expect.fail('should throw an error');
     } catch (e) {
