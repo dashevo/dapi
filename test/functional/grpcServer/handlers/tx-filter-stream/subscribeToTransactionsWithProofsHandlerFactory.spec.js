@@ -40,18 +40,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
       dashCore,
       dapiTxFilterStream,
       remove,
-    } = await startDapi({
-      dapi: {
-        cacheNodeModules: true,
-        localAppPath: process.cwd(),
-        container: {
-          volumes: [
-            `${process.cwd()}/lib:/usr/src/app/lib`,
-            `${process.cwd()}/scripts:/usr/src/app/scripts`,
-          ],
-        },
-      },
-    });
+    } = await startDapi();
 
     removeDapi = remove;
 
