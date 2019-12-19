@@ -30,7 +30,7 @@
     "all": true
   },
   "dependencies": {
-    "@dashevo/dapi-client": "0.8.0-dev.11",
+    "@dashevo/dapi-client": "dashevo/dapi-client#fix-ports",
     "@dashevo/dapi-grpc": "0.12.0-dev.10",
     "@dashevo/dashcore-lib": "0.18.0",
     "@dashevo/dashcore-p2p": "^1.1.9",
