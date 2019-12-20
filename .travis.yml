@@ -30,6 +30,7 @@ before_script:
   - npm run lint
   - docker build . -t dapi-dev
   - echo SERVICE_IMAGE_DAPI=dapi-dev >> .env
+  - docker run -it dashpay/drive:0.7.0-dev.5 npm run updateState; docker rm -fv $(docker ps -aq)
 
 deploy:
   skip_cleanup: true
