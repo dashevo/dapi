@@ -122,13 +122,13 @@ async function main() {
   const grpcApiServer = createServer(definitions, handlers);
 
   grpcApiServer.bind(
-    `0.0.0.0:${config.core.grpcServer.port}`,
+    `0.0.0.0:${config.grpcServer.port}`,
     grpc.ServerCredentials.createInsecure(),
   );
 
   grpcApiServer.start();
 
-  log.info(`GRPC API RPC server is listening on port ${config.core.grpcServer.port}`);
+  log.info(`GRPC API RPC server is listening on port ${config.grpcServer.port}`);
 
   // Display message that everything is ok
   log.info(`Insight uri is ${config.insightUri}`);
