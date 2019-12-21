@@ -53,8 +53,8 @@ describe('getDocumentsHandlerFactory', () => {
     request = {
       getDataContractId: this.sinon.stub().returns(dataContractId),
       getDocumentType: this.sinon.stub().returns(documentType),
-      getWhere: this.sinon.stub().returns(cbor.encodeCanonical(where)),
-      getOrderBy: this.sinon.stub().returns(cbor.encodeCanonical(orderBy)),
+      getWhere: this.sinon.stub().returns(new Uint8Array(cbor.encode(where))),
+      getOrderBy: this.sinon.stub().returns(new Uint8Array(cbor.encode(orderBy))),
       getLimit: this.sinon.stub().returns(limit),
       getStartAfter: this.sinon.stub().returns(startAfter),
       getStartAt: this.sinon.stub().returns(startAt),
