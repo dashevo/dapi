@@ -37,7 +37,6 @@ describe('getDocumentsHandlerFactory', () => {
   let limit;
   let startAfter;
   let startAt;
-  let options;
   let dppMock;
   let documentsJSONFixture;
 
@@ -58,14 +57,6 @@ describe('getDocumentsHandlerFactory', () => {
       getLimit: this.sinon.stub().returns(limit),
       getStartAfter: this.sinon.stub().returns(startAfter),
       getStartAt: this.sinon.stub().returns(startAt),
-    };
-
-    options = {
-      where,
-      orderBy,
-      limit,
-      startAfter,
-      startAt,
     };
 
     call = new GrpcCallMock(this.sinon, request);
@@ -99,7 +90,13 @@ describe('getDocumentsHandlerFactory', () => {
       documentsJSONFixture[0],
     );
 
-    expect(driveApiMock.fetchDocuments).to.be.calledOnceWith(dataContractId, documentType, options);
+    expect(driveApiMock.fetchDocuments).to.be.calledOnceWith(dataContractId, documentType, {
+      where,
+      orderBy,
+      limit,
+      startAfter,
+      startAt: undefined,
+    });
 
     expect(documentsBinary[0]).to.deep.equal(documentsFixture[0].serialize());
   });
@@ -157,7 +154,13 @@ describe('getDocumentsHandlerFactory', () => {
       expect(driveApiMock.fetchDocuments).to.be.calledOnceWith(
         dataContractId,
         documentType,
-        options,
+        {
+          where,
+          orderBy,
+          limit,
+          startAfter,
+          startAt: undefined,
+        },
       );
       expect(dppMock.document.createFromObject).to.be.not.called();
     }
@@ -182,7 +185,13 @@ describe('getDocumentsHandlerFactory', () => {
       expect(driveApiMock.fetchDocuments).to.be.calledOnceWith(
         dataContractId,
         documentType,
-        options,
+        {
+          where,
+          orderBy,
+          limit,
+          startAfter,
+          startAt: undefined,
+        },
       );
       expect(dppMock.document.createFromObject).to.be.not.called();
     }
