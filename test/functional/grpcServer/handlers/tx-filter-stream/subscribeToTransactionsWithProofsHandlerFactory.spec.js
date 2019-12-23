@@ -14,7 +14,7 @@ const {
 const wait = require('../../../../../lib/utils/wait');
 
 describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
-  this.timeout(600000);
+  this.timeout(160000);
 
   let coreAPI;
   let dapiClient;
@@ -40,7 +40,18 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
       dashCore,
       dapiTxFilterStream,
       remove,
-    } = await startDapi();
+    } = await startDapi({
+      dapi: {
+        cacheNodeModules: true,
+        localAppPath: process.cwd(),
+        container: {
+          volumes: [
+            `${process.cwd()}/lib:/usr/src/app/lib`,
+            `${process.cwd()}/scripts:/usr/src/app/scripts`,
+          ],
+        },
+      },
+    });
 
     removeDapi = remove;
 
