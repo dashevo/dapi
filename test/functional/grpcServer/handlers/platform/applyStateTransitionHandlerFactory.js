@@ -3,7 +3,7 @@ const {
 } = require('@dashevo/dp-services-ctl');
 
 const {
-  UpdateStateResponse,
+  ApplyStateTransitionResponse,
 } = require('@dashevo/dapi-grpc');
 
 const {
@@ -35,7 +35,7 @@ const getDataContractFixture = require(
 
 const wait = require('../../../../../lib/utils/wait');
 
-describe.skip('updateStateHandlerFactory', function main() {
+describe('applyStateTransitionHandlerFactory', function main() {
   this.timeout(160000);
 
   let removeDapi;
@@ -131,16 +131,16 @@ describe.skip('updateStateHandlerFactory', function main() {
     stateTransition = new DataContractStateTransition(dataContract);
     stateTransition.sign(identityPublicKey, privateKey);
 
-    let result = await dapiClient.updateState(identityCreateTransition);
+    let result = await dapiClient.applyStateTransition(identityCreateTransition);
 
-    expect(result).to.be.an.instanceOf(UpdateStateResponse);
+    expect(result).to.be.an.instanceOf(ApplyStateTransitionResponse);
 
-    result = await dapiClient.updateState(stateTransition);
+    result = await dapiClient.applyStateTransition(stateTransition);
 
     const contractId = stateTransition.getDataContract().getId();
     const { result: contract } = await driveClient.request('fetchContract', { contractId });
 
-    expect(result).to.be.an.instanceOf(UpdateStateResponse);
+    expect(result).to.be.an.instanceOf(ApplyStateTransitionResponse);
     expect(contract).to.deep.equal(stateTransition.getDataContract().toJSON());
   });
 
@@ -148,12 +148,12 @@ describe.skip('updateStateHandlerFactory', function main() {
     const dataContract = getDataContractFixture(identityCreateTransition.getIdentityId());
     const unsignedStateTransition = new DataContractStateTransition(dataContract);
 
-    const result = await dapiClient.updateState(identityCreateTransition);
+    const result = await dapiClient.applyStateTransition(identityCreateTransition);
 
-    expect(result).to.be.an.instanceOf(UpdateStateResponse);
+    expect(result).to.be.an.instanceOf(ApplyStateTransitionResponse);
 
     try {
-      await dapiClient.updateState(unsignedStateTransition);
+      await dapiClient.applyStateTransition(unsignedStateTransition);
 
       expect.fail('should throw an error');
     } catch (e) {

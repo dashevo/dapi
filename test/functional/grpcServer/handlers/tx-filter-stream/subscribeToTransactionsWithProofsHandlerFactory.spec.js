@@ -13,7 +13,7 @@ const {
 
 const wait = require('../../../../../lib/utils/wait');
 
-describe.skip('subscribeToTransactionsWithProofsHandlerFactory', function main() {
+describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
   this.timeout(160000);
 
   let coreAPI;
