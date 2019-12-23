@@ -24,12 +24,10 @@ const config = require('../lib/config');
 const { validateConfig } = require('../lib/config/validator');
 const log = require('../lib/log');
 const rpcServer = require('../lib/rpcServer/server');
-const QuorumService = require('../lib/services/quorum');
 const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
 const DriveAdapter = require('../lib/externalApis/driveAdapter');
 const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
-const userIndex = require('../lib/services/userIndex');
 
 const coreHandlersFactory = require(
   '../lib/grpcServer/handlers/core/coreHandlersFactory',
@@ -62,28 +60,11 @@ async function main() {
   await dashCoreZmqClient.start();
   log.info('Connection to ZMQ established.');
 
-  log.info('Staring quorum service');
-  const quorumService = new QuorumService({
-    dashCoreRpcClient,
-    dashCoreZmqClient,
-    log,
-  });
-  quorumService.start(dashCoreZmqClient);
-  log.info('Quorum service started');
-
   log.info('Connecting to Drive');
   const driveAPI = new DriveAdapter({
     host: config.drive.host,
     port: config.drive.port,
   });
-
-  log.info('Starting username index service');
-  userIndex.start({
-    dashCoreZmqClient,
-    dashCoreRpcClient,
-    log,
-  });
-  log.info('Username index service started');
 
   // Start JSON RPC server
   log.info('Starting JSON RPC server');
@@ -92,8 +73,6 @@ async function main() {
     networkType: config.network,
     insightAPI,
     dashcoreAPI: dashCoreRpcClient,
-    driveAPI,
-    userIndex,
     log,
   });
   log.info(`JSON RPC server is listening on port ${config.rpcServer.port}`);

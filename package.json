@@ -1,6 +1,6 @@
 {
   "name": "@dashevo/dapi",
-  "version": "0.9.0-dev.7",
+  "version": "0.9.0-dev.8",
   "description": "A decentralized API for the Dash network",
   "scripts": {
     "api": "node scripts/api.js",
@@ -30,24 +30,19 @@
     "all": true
   },
   "dependencies": {
-    "@dashevo/dapi-client": "0.8.0-dev.14",
     "@dashevo/dapi-grpc": "0.12.0-dev.10",
     "@dashevo/dashcore-lib": "0.18.0",
-    "@dashevo/dashcore-p2p": "^1.1.9",
     "@dashevo/dashd-rpc": "^1.3.1",
     "@dashevo/dpp": "0.10.0-dev.12",
     "@dashevo/grpc-common": "^0.2.0",
-    "@grpc/proto-loader": "^0.5.1",
     "ajv": "^6.4.0",
     "cbor": "^4.1.5",
     "dotenv": "^6.0.0",
     "dotenv-expand": "^5.1.0",
     "dotenv-safe": "^8.1.0",
     "grpc": "^1.24.0",
-    "grpc-health-check": "^1.7.0",
     "jayson": "^2.0.4",
     "lodash": "^4.17.14",
-    "node-cache": "^4.1.1",
     "request": "^2.87.0",
     "request-promise-native": "^1.0.5",
     "zeromq": "^5.1.0"
@@ -60,13 +55,10 @@
     "eslint": "^5.12.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
     "mocha-sinon": "^2.1.0",
     "nodemon": "^1.18.9",
     "nyc": "^14.0.0",
-    "proxyquire": "^2.1.0",
-    "should": "^13.2.3",
     "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0",
     "swagger-jsdoc": "^3.2.9"
