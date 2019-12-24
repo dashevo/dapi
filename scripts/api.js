@@ -24,7 +24,6 @@ const config = require('../lib/config');
 const { validateConfig } = require('../lib/config/validator');
 const log = require('../lib/log');
 const rpcServer = require('../lib/rpcServer/server');
-const ZmqClient = require('../lib/externalApis/dashcore/ZmqClient');
 const DriveAdapter = require('../lib/externalApis/driveAdapter');
 const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
@@ -48,17 +47,6 @@ async function main() {
     log.log('Aborting DAPI startup due to config validation errors');
     process.exit();
   }
-
-  // Subscribe to events from dashcore
-  const dashCoreZmqClient = new ZmqClient(config.dashcore.zmq.host, config.dashcore.zmq.port);
-  // Bind logs on ZMQ connection events
-  dashCoreZmqClient.on(ZmqClient.events.DISCONNECTED, log.warn);
-  dashCoreZmqClient.on(ZmqClient.events.CONNECTION_DELAY, log.warn);
-  dashCoreZmqClient.on(ZmqClient.events.MONITOR_ERROR, log.warn);
-  // Wait until zmq connection is established
-  log.info(`Connecting to dashcore ZMQ on ${dashCoreZmqClient.connectionString}`);
-  await dashCoreZmqClient.start();
-  log.info('Connection to ZMQ established.');
 
   log.info('Connecting to Drive');
   const driveAPI = new DriveAdapter({
