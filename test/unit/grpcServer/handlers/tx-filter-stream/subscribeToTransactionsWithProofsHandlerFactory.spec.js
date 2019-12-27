@@ -128,20 +128,6 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     }
   });
 
-  it('should respond with error if both fromBlockHash and fromBlockHeight are not specified', async () => {
-    try {
-      await subscribeToTransactionsWithProofsHandler(call);
-    } catch (e) {
-      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal(
-        'Invalid argument: Either fromBlockHash or fromBlockHeight should be specified',
-      );
-
-      expect(call.write).to.not.have.been.called();
-      expect(call.end).to.not.have.been.called();
-    }
-  });
-
   it('should respond with error if fromBlockHeight exceeded blockchain length', async () => {
     call.request.setFromBlockHeight(100);
 
