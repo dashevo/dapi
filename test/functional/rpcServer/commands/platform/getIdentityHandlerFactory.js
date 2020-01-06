@@ -2,7 +2,7 @@ const {
   startDapi,
 } = require('@dashevo/dp-services-ctl');
 
-const jayson = require('jayson');
+const jayson = require('jayson/promise');
 
 const {
   PrivateKey,
@@ -25,7 +25,7 @@ const Identity = require('@dashevo/dpp/lib/identity/Identity');
 const wait = require('../../../../../lib/utils/wait');
 
 describe('getIdentityHandlerFactory', function main() {
-  this.timeout(160000);
+  this.timeout(320000);
 
   let removeDapi;
   let dapiClient;
@@ -33,6 +33,7 @@ describe('getIdentityHandlerFactory', function main() {
   let identityCreateTransition;
   let publicKeys;
   let publicKeyId;
+  let dapiRpc;
 
   beforeEach(async () => {
     const {
@@ -113,45 +114,31 @@ describe('getIdentityHandlerFactory', function main() {
     identityCreateTransition.sign(identityPublicKey, privateKey);
 
     await dapiClient.applyStateTransition(identityCreateTransition);
+
+    dapiRpc = jayson.client.http({
+      host: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service,
+      port: dapiClient.DAPIPort,
+    });
   });
 
   afterEach(async () => {
     await removeDapi();
   });
 
-  it("should not return an identity if there's no identity", async () => {
-    const rpcClient = new jayson.HttpClient({
-      host: '127.0.0.1',
-      port: '3000',
-    });
-
-    rpcClient.request('getIdentity', { id: '123' });
-  });
-
   it('should fetch created identity', async () => {
-    throw new Error('Not implemented');
-    const serializedIdentity = await dapiClient.getIdentity(
-      identityCreateTransition.getIdentityId(),
-    );
-
-    expect(serializedIdentity).to.be.not.null();
+    const response = await dapiRpc.request('getIdentity', { id: identityCreateTransition.getIdentityId() });
 
     const createdIdentity = dpp.identity.applyIdentityStateTransition(
       identityCreateTransition,
       null,
     );
-
-    const identity = dpp.identity.createFromSerialized(
-      serializedIdentity,
-      { skipValidation: true },
-    );
-
+    const identity = dpp.identity.createFromSerialized(Buffer.from(response.result.identity, 'base64'), { skipValidation: true });
     expect(createdIdentity.toJSON()).to.deep.equal(identity.toJSON());
   });
 
   it('should respond with null if identity not found', async () => {
-    const identity = await dapiClient.getIdentity('unknownId');
+    const response = await dapiRpc.request('getIdentity', { id: 'unknownId' });
 
-    expect(identity).to.be.null();
+    expect(response.result.identity).to.be.undefined();
   });
 });

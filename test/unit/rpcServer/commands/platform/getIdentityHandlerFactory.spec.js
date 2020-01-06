@@ -3,7 +3,6 @@ const dirtyChai = require('dirty-chai');
 const chaiAsPromised = require('chai-as-promised');
 
 const sinon = require('sinon');
-const bs58 = require('bs58');
 
 const getIdentityHandlerFactory = require('../../../../../lib/rpcServer/commands/platform/getIdentityHandlerFactory');
 const ArgumentsValidationError = require('../../../../../lib/errors/ArgumentsValidationError');
@@ -34,7 +33,7 @@ describe('getIdentityHandlerFactory', () => {
     expect(tendermintRpcMock.request.calledOnce).to.be.true();
     expect(tendermintRpcMock.request.calledWithExactly('abci_query', {
       path: '/identity',
-      data: bs58.decode(testId).toString('hex'),
+      data: Buffer.from(testId).toString('hex'),
     })).to.be.true();
   });
 
