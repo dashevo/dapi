@@ -139,6 +139,6 @@ describe('getIdentityHandlerFactory', function main() {
   it('should respond with null if identity not found', async () => {
     const response = await dapiRpc.request('getIdentity', { id: 'unknownId' });
 
-    expect(response.result.identity).to.be.undefined();
+    expect(response.result).to.be.undefined();
   });
 });
