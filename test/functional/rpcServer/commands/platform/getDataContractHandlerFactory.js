@@ -141,7 +141,9 @@ describe('getIdentityHandlerFactory', function main() {
       Buffer.from(response.result.dataContract, 'base64'),
       { skipValidation: true },
     );
-    expect(getDataContractFixture().toJSON()).to.deep.equal(fetchedContract.toJSON());
+    expect(
+      getDataContractFixture(identityCreateTransition.getIdentityId()).toJSON(),
+    ).to.deep.equal(dpp.dataContract.createFromObject(fetchedContract).toJSON());
   });
 
   it('should respond with an error if contract not found', async () => {

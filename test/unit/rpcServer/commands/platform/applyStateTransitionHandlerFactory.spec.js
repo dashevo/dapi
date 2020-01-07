@@ -24,7 +24,7 @@ describe('applyStateTransitionHandlerFactory', () => {
     const res = await getIdentity({ stateTransition: st });
 
     expect(res).to.be.equal(true);
-    expect(tendermintRpcMock.request.calledOnce).to.be.true;
-    expect(tendermintRpcMock.request.calledWithExactly('/broadcast_tx_commit', { tx: st })).to.be.true;
+    expect(tendermintRpcMock.request.calledOnce).to.be.true();
+    expect(tendermintRpcMock.request.calledWithExactly('/broadcast_tx_commit', { tx: st })).to.be.true();
   });
 });
