@@ -134,7 +134,7 @@ describe('getIdentityHandlerFactory', function main() {
     await removeDapi();
   });
 
-  it('should fetch created identity', async () => {
+  it('should fetch created data contract', async () => {
     const response = await dapiRpc.request('getDataContract', { id: identityCreateTransition.getIdentityId() });
 
     const fetchedContract = dpp.dataContract.createFromSerialized(
@@ -144,7 +144,7 @@ describe('getIdentityHandlerFactory', function main() {
     expect(getDataContractFixture().toJSON()).to.deep.equal(fetchedContract.toJSON());
   });
 
-  it('should respond with null if identity not found', async () => {
+  it('should respond with an error if contract not found', async () => {
     const response = await dapiRpc.request('getDataContract', { id: 'FQJtYcWqM8mMvTMerJNTixMPqbp8qdYm8uESp6DVQNFK' });
 
     expect(response.result).to.be.undefined();
