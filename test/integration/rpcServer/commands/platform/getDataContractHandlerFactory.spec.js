@@ -5,6 +5,8 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 
 const ArgumentsValidationError = require('../../../../../lib/errors/ArgumentsValidationError');
+const Validator = require('../../../../../lib/utils/Validator');
+const argsSchema = require('../../../../../lib/rpcServer/commands/platform/schemas/getDataContract');
 
 chai.use(dirtyChai);
 chai.use(chaiAsPromised);
@@ -15,6 +17,7 @@ const getDataContractHandlerFactory = require('../../../../../lib/rpcServer/comm
 describe('getDataContractHandlerFactory', () => {
   let driveAdapterMock;
   let dppMock;
+  let validator;
 
   beforeEach(() => {
     driveAdapterMock = {
@@ -25,10 +28,11 @@ describe('getDataContractHandlerFactory', () => {
         createFromObject: sinon.stub().returns({ serialize() { return Buffer.from('ff', 'hex'); } }),
       },
     };
+    validator = new Validator(argsSchema);
   });
 
   it('should call the right method with the correct args', async () => {
-    const getIdentity = getDataContractHandlerFactory(driveAdapterMock, dppMock);
+    const getIdentity = getDataContractHandlerFactory(driveAdapterMock, dppMock, validator);
     const testId = '2UErKUaV3rPBbvjbMdEkjTGNyuVKpdtHQ3KoDyoogzR7';
 
     const res = await getIdentity({ id: testId });
@@ -39,7 +43,7 @@ describe('getDataContractHandlerFactory', () => {
   });
 
   it("should throw an error if args don't match the arg schema", async () => {
-    const getIdentity = getDataContractHandlerFactory(driveAdapterMock, dppMock);
+    const getIdentity = getDataContractHandlerFactory(driveAdapterMock, dppMock, validator);
 
     await expect(getIdentity(1)).to.be.rejectedWith('params should be object');
     try {
