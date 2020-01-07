@@ -52,4 +52,17 @@ describe('getIdentityHandlerFactory', () => {
       expect(e.message).to.be.equal('params.id should NOT be shorter than 42 characters');
     }
   });
+
+  it('should throw an error if machine returned error', async () => {
+    tendermintRpcMock.request.returns({ result: null, error: 'Machine returned an error' });
+    const getIdentity = getIdentityHandlerFactory(tendermintRpcMock, handleAbciMock, validator);
+    const testId = '2UErKUaV3rPBbvjbMdEkjTGNyuVKpdtHQ3KoDyoogzR7';
+
+    try {
+      await getIdentity({ id: testId });
+    } catch (e) {
+      expect(e).to.be.instanceOf(Error);
+      expect(e.message).to.be.equal('Machine returned an error');
+    }
+  });
 });
