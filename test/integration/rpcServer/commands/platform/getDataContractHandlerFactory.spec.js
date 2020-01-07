@@ -32,10 +32,12 @@ describe('getDataContractHandlerFactory', () => {
   });
 
   it('should call the right method with the correct args', async () => {
-    const getIdentity = getDataContractHandlerFactory(driveAdapterMock, dppMock, validator);
+    const getDataContractHandler = getDataContractHandlerFactory(
+      driveAdapterMock, dppMock, validator,
+    );
     const testId = '2UErKUaV3rPBbvjbMdEkjTGNyuVKpdtHQ3KoDyoogzR7';
 
-    const res = await getIdentity({ id: testId });
+    const res = await getDataContractHandler({ id: testId });
 
     expect(res).to.be.deep.equal({ dataContract: '/w==' });
     expect(driveAdapterMock.fetchContract.calledOnce).to.be.true();
@@ -43,14 +45,27 @@ describe('getDataContractHandlerFactory', () => {
   });
 
   it("should throw an error if args don't match the arg schema", async () => {
-    const getIdentity = getDataContractHandlerFactory(driveAdapterMock, dppMock, validator);
+    const getDataContractHandler = getDataContractHandlerFactory(
+      driveAdapterMock, dppMock, validator,
+    );
 
-    await expect(getIdentity(1)).to.be.rejectedWith('params should be object');
+    await expect(getDataContractHandler(1)).to.be.rejectedWith('params should be object');
     try {
-      await getIdentity({ id: '123' });
+      await getDataContractHandler({ id: '123' });
     } catch (e) {
       expect(e).to.be.instanceOf(ArgumentsValidationError);
       expect(e.message).to.be.equal('params.id should NOT be shorter than 42 characters');
     }
+  });
+
+  it('should throw an error if drive return an error', async () => {
+    const testId = '2UErKUaV3rPBbvjbMdEkjTGNyuVKpdtHQ3KoDyoogzR7';
+
+    driveAdapterMock.fetchContract.throws(new Error('Something went wrong with drive'));
+    const getDataContractHandler = getDataContractHandlerFactory(
+      driveAdapterMock, dppMock, validator,
+    );
+
+    await expect(getDataContractHandler({ id: testId })).to.be.rejectedWith('Something went wrong with drive');
   });
 });
