@@ -17,7 +17,7 @@ describe('applyStateTransitionHandlerFactory', () => {
     handleAbciMock = sinon.stub();
   });
 
-  it('Should call the right method with the correct args', async () => {
+  it('should call the right method with the correct args', async () => {
     const getIdentity = applyStateTransitionHandlerFactory(tendermintRpcMock, handleAbciMock);
     const st = 'MC4yMTU1ODUyOTQxMTAxMzgzOA==';
 

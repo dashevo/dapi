@@ -27,7 +27,7 @@ describe('getDataContractHandlerFactory', () => {
     };
   });
 
-  it('Should call the right method with the correct args', async () => {
+  it('should call the right method with the correct args', async () => {
     const getIdentity = getDataContractHandlerFactory(driveAdapterMock, dppMock);
     const testId = '2UErKUaV3rPBbvjbMdEkjTGNyuVKpdtHQ3KoDyoogzR7';
 
@@ -38,7 +38,7 @@ describe('getDataContractHandlerFactory', () => {
     expect(driveAdapterMock.fetchContract.calledWithExactly(testId)).to.be.true();
   });
 
-  it("Should throw an error if args don't match the arg schema", async () => {
+  it("should throw an error if args don't match the arg schema", async () => {
     const getIdentity = getDataContractHandlerFactory(driveAdapterMock, dppMock);
 
     await expect(getIdentity(1)).to.be.rejectedWith('params should be object');

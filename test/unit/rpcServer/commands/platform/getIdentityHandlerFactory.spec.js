@@ -23,7 +23,7 @@ describe('getIdentityHandlerFactory', () => {
     handleAbciMock = sinon.stub();
   });
 
-  it('Should call the right method with the correct args', async () => {
+  it('should call the right method with the correct args', async () => {
     const getIdentity = getIdentityHandlerFactory(tendermintRpcMock, handleAbciMock);
     const testId = '2UErKUaV3rPBbvjbMdEkjTGNyuVKpdtHQ3KoDyoogzR7';
 
@@ -37,7 +37,7 @@ describe('getIdentityHandlerFactory', () => {
     })).to.be.true();
   });
 
-  it("Should throw an error if args don't match the arg schema", async () => {
+  it("should throw an error if args don't match the arg schema", async () => {
     const getIdentity = getIdentityHandlerFactory(tendermintRpcMock, handleAbciMock);
 
     await expect(getIdentity(1)).to.be.rejectedWith('params should be object');
