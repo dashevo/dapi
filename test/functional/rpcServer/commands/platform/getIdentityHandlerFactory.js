@@ -2,6 +2,7 @@ const {
   startDapi,
 } = require('@dashevo/dp-services-ctl');
 
+const sinon = require('sinon');
 const jayson = require('jayson/promise');
 
 const {
@@ -11,6 +12,7 @@ const {
 } = require('@dashevo/dashcore-lib');
 
 const DashPlatformProtocol = require('@dashevo/dpp');
+const DAPIClient = require('@dashevo/dapi-client');
 
 const IdentityPublicKey = require(
   '@dashevo/dpp/lib/identity/IdentityPublicKey',
@@ -34,6 +36,7 @@ describe('getIdentityHandlerFactory', function main() {
   let publicKeys;
   let publicKeyId;
   let dapiRpc;
+  let forcedClient;
 
   beforeEach(async () => {
     const {
@@ -119,6 +122,16 @@ describe('getIdentityHandlerFactory', function main() {
       host: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service,
       port: dapiClient.DAPIPort,
     });
+
+    forcedClient = new DAPIClient({
+      seeds: [{ service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service }],
+      forceJsonRpc: true,
+      port: dapiClient.DAPIPort,
+    });
+
+    sinon.stub(forcedClient.MNDiscovery, 'getRandomMasternode').returns(
+      { service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service },
+    );
   });
 
   afterEach(async () => {
@@ -140,5 +153,25 @@ describe('getIdentityHandlerFactory', function main() {
     const response = await dapiRpc.request('getIdentity', { id: 'unknownId' });
 
     expect(response.result).to.be.undefined();
+  });
+
+  it('should return same result as grpc method', async () => {
+    const identityNotForced = await dapiClient.getIdentity(
+      identityCreateTransition.getIdentityId(),
+    );
+    const identityFromForcedClient = await forcedClient.getIdentity(
+      identityCreateTransition.getIdentityId(),
+    );
+
+    expect(identityNotForced).to.be.deep.equal(identityFromForcedClient);
+
+    const createdIdentity = dpp.identity.applyIdentityStateTransition(
+      identityCreateTransition,
+      null,
+    );
+    const identity = dpp.identity.createFromSerialized(identityFromForcedClient, {
+      skipValidation: true,
+    });
+    expect(createdIdentity.toJSON()).to.deep.equal(identity.toJSON());
   });
 });
