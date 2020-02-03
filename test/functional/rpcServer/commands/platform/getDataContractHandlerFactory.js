@@ -3,12 +3,14 @@ const {
 } = require('@dashevo/dp-services-ctl');
 
 const jayson = require('jayson/promise');
+const sinon = require('sinon');
 
 const {
   PrivateKey,
   PublicKey,
   Transaction,
 } = require('@dashevo/dashcore-lib');
+const DAPIClient = require('@dashevo/dapi-client');
 
 const DashPlatformProtocol = require('@dashevo/dpp');
 
@@ -36,6 +38,7 @@ describe('getIdentityHandlerFactory', function main() {
   let publicKeyId;
   let dataContractStateTransition;
   let dapiRpc;
+  let forcedClient;
 
   beforeEach(async () => {
     const {
@@ -128,6 +131,21 @@ describe('getIdentityHandlerFactory', function main() {
       host: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service,
       port: dapiClient.DAPIPort,
     });
+
+    forcedClient = new DAPIClient({
+      seeds: [{ service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service }],
+      forceJsonRpc: true,
+      port: dapiClient.DAPIPort,
+    });
+
+    sinon.stub(forcedClient.MNDiscovery, 'getRandomMasternode').returns(
+      {
+        service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service,
+        getIp() {
+          return dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service.split(':')[0];
+        },
+      },
+    );
   });
 
   afterEach(async () => {
@@ -139,6 +157,25 @@ describe('getIdentityHandlerFactory', function main() {
 
     const fetchedContract = dpp.dataContract.createFromSerialized(
       Buffer.from(response.result.dataContract, 'base64'),
+      { skipValidation: true },
+    );
+    expect(
+      getDataContractFixture(identityCreateTransition.getIdentityId()).toJSON(),
+    ).to.deep.equal(dpp.dataContract.createFromObject(fetchedContract).toJSON());
+  });
+
+  it('should return the same result as grpc client', async () => {
+    const contractFromForcedClient = await forcedClient.getDataContract(
+      identityCreateTransition.getIdentityId(),
+    );
+    const contractFromGrpc = await dapiClient.getDataContract(
+      identityCreateTransition.getIdentityId(),
+    );
+
+    expect(contractFromForcedClient).to.be.deep.equal(contractFromGrpc);
+
+    const fetchedContract = dpp.dataContract.createFromSerialized(
+      contractFromForcedClient,
       { skipValidation: true },
     );
     expect(

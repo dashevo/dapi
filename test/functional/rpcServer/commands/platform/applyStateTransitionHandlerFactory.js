@@ -1,6 +1,12 @@
+const sinon = require('sinon');
+
 const {
   startDapi,
 } = require('@dashevo/dp-services-ctl');
+
+const {
+  ApplyStateTransitionResponse,
+} = require('@dashevo/dapi-grpc');
 
 const {
   PrivateKey,
@@ -11,6 +17,8 @@ const {
 const IdentityPublicKey = require(
   '@dashevo/dpp/lib/identity/IdentityPublicKey',
 );
+
+const DAPIClient = require('@dashevo/dapi-client');
 
 const stateTransitionTypes = require(
   '@dashevo/dpp/lib/stateTransition/stateTransitionTypes',
@@ -44,6 +52,7 @@ describe('applyStateTransitionHandlerFactory', function main() {
   let identityPublicKey;
   let privateKey;
   let dapiJsonRpcClient;
+  let forcedClient;
 
   beforeEach(async () => {
     const {
@@ -123,6 +132,16 @@ describe('applyStateTransitionHandlerFactory', function main() {
       host: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service,
       port: dapiClient.DAPIPort,
     });
+
+    forcedClient = new DAPIClient({
+      seeds: [{ service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service }],
+      forceJsonRpc: true,
+      port: dapiClient.DAPIPort,
+    });
+
+    sinon.stub(forcedClient.MNDiscovery, 'getRandomMasternode').returns(
+      { service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service },
+    );
   });
 
   afterEach(async () => {
@@ -170,5 +189,26 @@ describe('applyStateTransitionHandlerFactory', function main() {
     expect(response.result).to.be.undefined();
 
     expect(response.error).to.be.deep.equal({ code: -32602, message: 'Invalid argument: Invalid argument: State Transition is invalid' });
+  });
+
+  it('client should return same result as grpc method', async () => {
+    expect(forcedClient.forceJsonRpc).to.be.true();
+    const dataContract = getDataContractFixture(identityCreateTransition.getIdentityId());
+
+    stateTransition = new DataContractStateTransition(dataContract);
+    stateTransition.sign(identityPublicKey, privateKey);
+
+    const result = await dapiClient.applyStateTransition(identityCreateTransition);
+
+    expect(result).to.be.an.instanceOf(ApplyStateTransitionResponse);
+
+    const resultFromForcedClient = await forcedClient.applyStateTransition(stateTransition);
+
+    expect(resultFromForcedClient).to.be.an.instanceOf(ApplyStateTransitionResponse);
+
+    const contractId = stateTransition.getDataContract().getId();
+    const { result: contract } = await driveClient.request('fetchContract', { contractId });
+
+    expect(contract).to.deep.equal(stateTransition.getDataContract().toJSON());
   });
 });
