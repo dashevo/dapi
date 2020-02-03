@@ -7,6 +7,7 @@ const {
   PublicKey,
   Transaction,
 } = require('@dashevo/dashcore-lib');
+const DAPIClient = require('@dashevo/dapi-client');
 
 const IdentityPublicKey = require(
   '@dashevo/dpp/lib/identity/IdentityPublicKey',
@@ -17,6 +18,7 @@ const stateTransitionTypes = require(
 );
 
 const jayson = require('jayson/promise');
+const sinon = require('sinon');
 
 const IdentityCreateTransition = require('@dashevo/dpp/lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition');
 
@@ -46,6 +48,7 @@ describe('applyStateTransitionHandlerFactory', function main() {
   let dapiJsonRpcClient;
   let dataContract;
   let contractId;
+  let forcedClient;
 
   beforeEach(async () => {
     const {
@@ -140,6 +143,21 @@ describe('applyStateTransitionHandlerFactory', function main() {
     });
 
     contractId = stateTransition.getDataContract().getId();
+
+    forcedClient = new DAPIClient({
+      seeds: [{ service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service }],
+      forceJsonRpc: true,
+      port: dapiClient.DAPIPort,
+    });
+
+    sinon.stub(forcedClient.MNDiscovery, 'getRandomMasternode').returns(
+      {
+        service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service,
+        getIp() {
+          return dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service.split(':')[0];
+        },
+      },
+    );
   });
 
   afterEach(async () => {
@@ -171,5 +189,33 @@ describe('applyStateTransitionHandlerFactory', function main() {
 
     expect(response.result.length).to.be.equal(1);
     expect(response.result[0]).to.be.deep.equal(documentModels[0].toJSON());
+  });
+
+  it('forced client should give the same result as grpc method', async () => {
+    const docType = 'indexedDocument';
+    const documents = [{ type: docType, data: { firstName: 'Test', lastName: 'Demo' } }];
+    const identityId = identityCreateTransition.getIdentityId();
+
+    const documentModels = documents.map(
+      doc => dpp.document.create(
+        dataContract, identityId, doc.type, doc.data,
+      ),
+    );
+    const documentsStateTransition = dpp.document.createStateTransition(documentModels);
+    documentsStateTransition.sign(identityPublicKey, privateKey);
+
+    await dapiClient.applyStateTransition(documentsStateTransition);
+
+    await wait(5000);
+
+    const options = { where: [['$userId', '==', identityId]] };
+    const documentsFromForcedClient = await forcedClient.getDocuments(contractId, docType, options);
+
+    expect(documentsFromForcedClient.length).to.be.equal(1);
+    expect(
+      documentsFromForcedClient[0],
+    ).to.be.deep.equal(
+      documentModels[0].serialize(),
+    );
   });
 });
