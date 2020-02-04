@@ -36,7 +36,7 @@ const getDataContractFixture = require(
 const wait = require('../../../../../lib/utils/wait');
 
 describe('applyStateTransitionHandlerFactory', function main() {
-  this.timeout(160000);
+  this.timeout(200000);
 
   let dpp;
   let removeDapi;
