@@ -28,6 +28,7 @@ install:
 before_script:
   - npm run check-package
   - npm run lint
+  - docker pull dashpay/insight-api:latest
 
 deploy:
   skip_cleanup: true
