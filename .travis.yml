@@ -28,7 +28,7 @@ install:
 before_script:
   - npm run check-package
   - npm run lint
-  - docker pull dashpay/insight-api:latest
+  - export NODE_OPTIONS=–max_old_space_size=4096
 
 deploy:
   skip_cleanup: true
