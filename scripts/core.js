@@ -3,17 +3,32 @@ const dotenv = require('dotenv');
 const grpc = require('grpc');
 
 const {
+  client: {
+    converters: {
+      jsonToProtobufFactory,
+      protobufToJsonFactory,
+    },
+  },
   server: {
     createServer,
+    jsonToProtobufHandlerWrapper,
+    error: {
+      wrapInErrorHandlerFactory,
+    },
   },
 } = require('@dashevo/grpc-common');
 
 const {
+  StateTransition,
+  LastUserStateTransitionHashRequest,
+  pbjs: {
+    LastUserStateTransitionHashRequest: PBJSLastUserStateTransitionHashRequest,
+    LastUserStateTransitionHashResponse: PBJSLastUserStateTransitionHashResponse,
+    StateTransition: PBJSStateTransition,
+    UpdateStateTransitionResponse: PBJSStateTransitionResponse,
+  },
   getCoreDefinition,
-  getPlatformDefinition,
 } = require('@dashevo/dapi-grpc');
-
-const DashPlatformProtocol = require('@dashevo/dpp');
 
 const { client: RpcClient } = require('jayson/promise');
 
@@ -31,18 +46,14 @@ const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
 const userIndex = require('../lib/services/userIndex');
 
-const coreHandlersFactory = require(
-  '../lib/grpcServer/handlers/core/coreHandlersFactory',
+const getLastUserStateTransitionHashHandlerFactory = require(
+  '../lib/grpcServer/handlers/core/getLastUserStateTransitionHashHandlerFactory',
 );
-const platformHandlersFactory = require(
-  '../lib/grpcServer/handlers/platform/platformHandlersFactory',
+const updateStateHandlerFactory = require(
+  '../lib/grpcServer/handlers/core/updateStateHandlerFactory',
 );
 
 async function main() {
-  const dpp = new DashPlatformProtocol({
-    dataProvider: undefined,
-  });
-
   /* Application start */
   const configValidationResult = validateConfig(config);
   if (!configValidationResult.isValid) {
@@ -85,11 +96,6 @@ async function main() {
   });
   log.info('Username index service started');
 
-  const rpcClient = RpcClient.http({
-    host: config.tendermintCore.host,
-    port: config.tendermintCore.port,
-  });
-
   // Start JSON RPC server
   log.info('Starting JSON RPC server');
   rpcServer.start({
@@ -100,37 +106,59 @@ async function main() {
     driveAPI,
     userIndex,
     log,
-    tendermintRpcClient: rpcClient,
-    dpp,
   });
   log.info(`JSON RPC server is listening on port ${config.rpcServer.port}`);
 
   // Start GRPC server
   log.info('Starting GRPC server');
 
-  const coreHandlers = coreHandlersFactory(insightAPI);
-  const platformHandlers = platformHandlersFactory(rpcClient, driveAPI, dpp);
+  const wrapInErrorHandler = wrapInErrorHandlerFactory(log);
 
-  const handlers = {
-    ...coreHandlers,
-    ...platformHandlers,
-  };
+  const getLastUserStateTransitionHashHandler = getLastUserStateTransitionHashHandlerFactory(
+    dashCoreRpcClient,
+  );
 
-  const definitions = {
-    ...getCoreDefinition(),
-    ...getPlatformDefinition(),
-  };
+  const wrappedGetLastUserStateTransitionHash = jsonToProtobufHandlerWrapper(
+    jsonToProtobufFactory(
+      LastUserStateTransitionHashRequest,
+      PBJSLastUserStateTransitionHashRequest,
+    ),
+    protobufToJsonFactory(
+      PBJSLastUserStateTransitionHashResponse,
+    ),
+    wrapInErrorHandler(getLastUserStateTransitionHashHandler),
+  );
 
-  const grpcApiServer = createServer(definitions, handlers);
+  const rpcClient = RpcClient.http({
+    host: config.tendermintCore.host,
+    port: config.tendermintCore.port,
+  });
 
-  grpcApiServer.bind(
-    `0.0.0.0:${config.grpcServer.port}`,
+  const updateStateHandler = updateStateHandlerFactory(rpcClient);
+  const wrappedUpdateState = jsonToProtobufHandlerWrapper(
+    jsonToProtobufFactory(
+      StateTransition,
+      PBJSStateTransition,
+    ),
+    protobufToJsonFactory(
+      PBJSStateTransitionResponse,
+    ),
+    wrapInErrorHandler(updateStateHandler),
+  );
+
+  const grpcServer = createServer(getCoreDefinition(), {
+    getLastUserStateTransitionHash: wrappedGetLastUserStateTransitionHash,
+    updateState: wrappedUpdateState,
+  });
+
+  grpcServer.bind(
+    `0.0.0.0:${config.core.grpcServer.port}`,
     grpc.ServerCredentials.createInsecure(),
   );
 
-  grpcApiServer.start();
+  grpcServer.start();
 
-  log.info(`GRPC API RPC server is listening on port ${config.grpcServer.port}`);
+  log.info(`GRPC RPC server is listening on port ${config.core.grpcServer.port}`);
 
   // Display message that everything is ok
   log.info(`Insight uri is ${config.insightUri}`);
