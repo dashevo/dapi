@@ -29,7 +29,6 @@ before_script:
   - npm run check-package
   - npm run lint
   - docker pull dashpay/insight-api:latest # workaround for functional tests
-  - export NODE_OPTIONS="--max_old_space_size=8192"
 
 deploy:
   skip_cleanup: true
