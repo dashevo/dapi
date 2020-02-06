@@ -54,6 +54,11 @@ async function main() {
     port: config.drive.port,
   });
 
+  const rpcClient = RpcClient.http({
+    host: config.tendermintCore.host,
+    port: config.tendermintCore.port,
+  });
+
   // Start JSON RPC server
   log.info('Starting JSON RPC server');
   rpcServer.start({
@@ -62,16 +67,13 @@ async function main() {
     insightAPI,
     dashcoreAPI: dashCoreRpcClient,
     log,
+    tendermintRpcClient: rpcClient,
+    dpp,
   });
   log.info(`JSON RPC server is listening on port ${config.rpcServer.port}`);
 
   // Start GRPC server
   log.info('Starting GRPC server');
-
-  const rpcClient = RpcClient.http({
-    host: config.tendermintCore.host,
-    port: config.tendermintCore.port,
-  });
 
   const coreHandlers = coreHandlersFactory(insightAPI);
   const platformHandlers = platformHandlersFactory(rpcClient, driveAPI, dpp);

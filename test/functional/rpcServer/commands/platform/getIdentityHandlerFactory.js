@@ -2,6 +2,9 @@ const {
   startDapi,
 } = require('@dashevo/dp-services-ctl');
 
+const sinon = require('sinon');
+const jayson = require('jayson/promise');
+
 const {
   PrivateKey,
   PublicKey,
@@ -9,6 +12,7 @@ const {
 } = require('@dashevo/dashcore-lib');
 
 const DashPlatformProtocol = require('@dashevo/dpp');
+const DAPIClient = require('@dashevo/dapi-client');
 
 const IdentityPublicKey = require(
   '@dashevo/dpp/lib/identity/IdentityPublicKey',
@@ -23,7 +27,7 @@ const Identity = require('@dashevo/dpp/lib/identity/Identity');
 const wait = require('../../../../../lib/utils/wait');
 
 describe('getIdentityHandlerFactory', function main() {
-  this.timeout(200000);
+  this.timeout(320000);
 
   let removeDapi;
   let dapiClient;
@@ -31,6 +35,8 @@ describe('getIdentityHandlerFactory', function main() {
   let identityCreateTransition;
   let publicKeys;
   let publicKeyId;
+  let dapiRpc;
+  let forcedClient;
 
   beforeEach(async () => {
     const {
@@ -111,6 +117,21 @@ describe('getIdentityHandlerFactory', function main() {
     identityCreateTransition.sign(identityPublicKey, privateKey);
 
     await dapiClient.applyStateTransition(identityCreateTransition);
+
+    dapiRpc = jayson.client.http({
+      host: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service,
+      port: dapiClient.DAPIPort,
+    });
+
+    forcedClient = new DAPIClient({
+      seeds: [{ service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service }],
+      forceJsonRpc: true,
+      port: dapiClient.DAPIPort,
+    });
+
+    sinon.stub(forcedClient.MNDiscovery, 'getRandomMasternode').returns(
+      { service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service },
+    );
   });
 
   afterEach(async () => {
@@ -118,28 +139,39 @@ describe('getIdentityHandlerFactory', function main() {
   });
 
   it('should fetch created identity', async () => {
-    const serializedIdentity = await dapiClient.getIdentity(
-      identityCreateTransition.getIdentityId(),
-    );
-
-    expect(serializedIdentity).to.be.not.null();
+    const response = await dapiRpc.request('getIdentity', { id: identityCreateTransition.getIdentityId() });
 
     const createdIdentity = dpp.identity.applyIdentityStateTransition(
       identityCreateTransition,
       null,
     );
-
-    const identity = dpp.identity.createFromSerialized(
-      serializedIdentity,
-      { skipValidation: true },
-    );
-
+    const identity = dpp.identity.createFromSerialized(Buffer.from(response.result.identity, 'base64'), { skipValidation: true });
     expect(createdIdentity.toJSON()).to.deep.equal(identity.toJSON());
   });
 
   it('should respond with null if identity not found', async () => {
-    const identity = await dapiClient.getIdentity('unknownId');
+    const response = await dapiRpc.request('getIdentity', { id: 'unknownId' });
 
-    expect(identity).to.be.null();
+    expect(response.result).to.be.undefined();
+  });
+
+  it('should return same result as grpc method', async () => {
+    const identityNotForced = await dapiClient.getIdentity(
+      identityCreateTransition.getIdentityId(),
+    );
+    const identityFromForcedClient = await forcedClient.getIdentity(
+      identityCreateTransition.getIdentityId(),
+    );
+
+    expect(identityNotForced).to.be.deep.equal(identityFromForcedClient);
+
+    const createdIdentity = dpp.identity.applyIdentityStateTransition(
+      identityCreateTransition,
+      null,
+    );
+    const identity = dpp.identity.createFromSerialized(identityFromForcedClient, {
+      skipValidation: true,
+    });
+    expect(createdIdentity.toJSON()).to.deep.equal(identity.toJSON());
   });
 });

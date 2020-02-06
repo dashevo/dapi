@@ -1,3 +1,5 @@
+const sinon = require('sinon');
+
 const {
   startDapi,
 } = require('@dashevo/dp-services-ctl');
@@ -16,9 +18,13 @@ const IdentityPublicKey = require(
   '@dashevo/dpp/lib/identity/IdentityPublicKey',
 );
 
+const DAPIClient = require('@dashevo/dapi-client');
+
 const stateTransitionTypes = require(
   '@dashevo/dpp/lib/stateTransition/stateTransitionTypes',
 );
+
+const jayson = require('jayson/promise');
 
 const IdentityCreateTransition = require('@dashevo/dpp/lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition');
 
@@ -45,6 +51,8 @@ describe('applyStateTransitionHandlerFactory', function main() {
   let identityCreateTransition;
   let identityPublicKey;
   let privateKey;
+  let dapiJsonRpcClient;
+  let forcedClient;
 
   beforeEach(async () => {
     const {
@@ -119,6 +127,21 @@ describe('applyStateTransitionHandlerFactory', function main() {
       .setData(pubKeyBase);
 
     identityCreateTransition.sign(identityPublicKey, privateKey);
+
+    dapiJsonRpcClient = jayson.client.http({
+      host: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service,
+      port: dapiClient.DAPIPort,
+    });
+
+    forcedClient = new DAPIClient({
+      seeds: [{ service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service }],
+      forceJsonRpc: true,
+      port: dapiClient.DAPIPort,
+    });
+
+    sinon.stub(forcedClient.MNDiscovery, 'getRandomMasternode').returns(
+      { service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service },
+    );
   });
 
   afterEach(async () => {
@@ -131,36 +154,61 @@ describe('applyStateTransitionHandlerFactory', function main() {
     stateTransition = new DataContractStateTransition(dataContract);
     stateTransition.sign(identityPublicKey, privateKey);
 
-    let result = await dapiClient.applyStateTransition(identityCreateTransition);
+    let { result } = await dapiJsonRpcClient.request('applyStateTransition', {
+      stateTransition: identityCreateTransition.serialize().toString('base64'),
+    });
 
-    expect(result).to.be.an.instanceOf(ApplyStateTransitionResponse);
+    expect(result).to.be.true();
 
-    result = await dapiClient.applyStateTransition(stateTransition);
+    ({ result } = await dapiJsonRpcClient.request('applyStateTransition', {
+      stateTransition: stateTransition.serialize().toString('base64'),
+    }));
 
     const contractId = stateTransition.getDataContract().getId();
+    // Todo: fetch it from dapi too
     const { result: contract } = await driveClient.request('fetchContract', { contractId });
 
-    expect(result).to.be.an.instanceOf(ApplyStateTransitionResponse);
+    expect(result).to.be.true();
     expect(contract).to.deep.equal(stateTransition.getDataContract().toJSON());
   });
 
-  it('should respond with error if contract is invalid', async () => {
+  it('should respond with an error if contract is invalid', async () => {
     const dataContract = getDataContractFixture(identityCreateTransition.getIdentityId());
     const unsignedStateTransition = new DataContractStateTransition(dataContract);
+
+    const { result } = await dapiJsonRpcClient.request('applyStateTransition', {
+      stateTransition: identityCreateTransition.serialize().toString('base64'),
+    });
+
+    expect(result).to.be.true();
+
+    const response = await dapiJsonRpcClient.request('applyStateTransition', {
+      stateTransition: unsignedStateTransition.serialize().toString('base64'),
+    });
+
+    expect(response.result).to.be.undefined();
+
+    expect(response.error).to.be.deep.equal({ code: -32602, message: 'Invalid argument: Invalid argument: State Transition is invalid' });
+  });
+
+  it('client should return same result as grpc method', async () => {
+    expect(forcedClient.forceJsonRpc).to.be.true();
+    const dataContract = getDataContractFixture(identityCreateTransition.getIdentityId());
+
+    stateTransition = new DataContractStateTransition(dataContract);
+    stateTransition.sign(identityPublicKey, privateKey);
 
     const result = await dapiClient.applyStateTransition(identityCreateTransition);
 
     expect(result).to.be.an.instanceOf(ApplyStateTransitionResponse);
 
-    try {
-      await dapiClient.applyStateTransition(unsignedStateTransition);
+    const resultFromForcedClient = await forcedClient.applyStateTransition(stateTransition);
 
-      expect.fail('should throw an error');
-    } catch (e) {
-      const [error] = JSON.parse(e.metadata.get('errors')[0]);
+    expect(resultFromForcedClient).to.be.an.instanceOf(ApplyStateTransitionResponse);
 
-      expect(error.name).to.equal('JsonSchemaError');
-      expect(error.dataPath).to.equal('.signature');
-    }
+    const contractId = stateTransition.getDataContract().getId();
+    const { result: contract } = await driveClient.request('fetchContract', { contractId });
+
+    expect(contract).to.deep.equal(stateTransition.getDataContract().toJSON());
   });
 });

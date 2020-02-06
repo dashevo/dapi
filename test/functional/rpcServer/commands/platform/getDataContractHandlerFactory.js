@@ -2,11 +2,15 @@ const {
   startDapi,
 } = require('@dashevo/dp-services-ctl');
 
+const jayson = require('jayson/promise');
+const sinon = require('sinon');
+
 const {
   PrivateKey,
   PublicKey,
   Transaction,
 } = require('@dashevo/dashcore-lib');
+const DAPIClient = require('@dashevo/dapi-client');
 
 const DashPlatformProtocol = require('@dashevo/dpp');
 
@@ -20,10 +24,11 @@ const stateTransitionTypes = require(
 
 const Identity = require('@dashevo/dpp/lib/identity/Identity');
 
+const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 const wait = require('../../../../../lib/utils/wait');
 
 describe('getIdentityHandlerFactory', function main() {
-  this.timeout(200000);
+  this.timeout(320000);
 
   let removeDapi;
   let dapiClient;
@@ -31,6 +36,9 @@ describe('getIdentityHandlerFactory', function main() {
   let identityCreateTransition;
   let publicKeys;
   let publicKeyId;
+  let dataContractStateTransition;
+  let dapiRpc;
+  let forcedClient;
 
   beforeEach(async () => {
     const {
@@ -99,7 +107,7 @@ describe('getIdentityHandlerFactory', function main() {
       protocolVersion: 0,
       type: stateTransitionTypes.IDENTITY_CREATE,
       lockedOutPoint: outPoint,
-      identityType: Identity.TYPES.USER,
+      identityType: Identity.TYPES.APPLICATION,
       publicKeys,
     }, { skipValidation: true });
 
@@ -111,35 +119,74 @@ describe('getIdentityHandlerFactory', function main() {
     identityCreateTransition.sign(identityPublicKey, privateKey);
 
     await dapiClient.applyStateTransition(identityCreateTransition);
+
+    const dataContract = getDataContractFixture(identityCreateTransition.getIdentityId());
+    dataContractStateTransition = dpp.dataContract
+      .createStateTransition(dataContract)
+      .sign(identityPublicKey, privateKey);
+
+    await dapiClient.applyStateTransition(dataContractStateTransition);
+
+    dapiRpc = jayson.client.http({
+      host: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service,
+      port: dapiClient.DAPIPort,
+    });
+
+    forcedClient = new DAPIClient({
+      seeds: [{ service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service }],
+      forceJsonRpc: true,
+      port: dapiClient.DAPIPort,
+    });
+
+    sinon.stub(forcedClient.MNDiscovery, 'getRandomMasternode').returns(
+      {
+        service: dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service,
+        getIp() {
+          return dapiClient.MNDiscovery.masternodeListProvider.seeds[0].service.split(':')[0];
+        },
+      },
+    );
   });
 
   afterEach(async () => {
     await removeDapi();
   });
 
-  it('should fetch created identity', async () => {
-    const serializedIdentity = await dapiClient.getIdentity(
+  it('should fetch created data contract', async () => {
+    const response = await dapiRpc.request('getDataContract', { id: identityCreateTransition.getIdentityId() });
+
+    const fetchedContract = dpp.dataContract.createFromSerialized(
+      Buffer.from(response.result.dataContract, 'base64'),
+      { skipValidation: true },
+    );
+    expect(
+      getDataContractFixture(identityCreateTransition.getIdentityId()).toJSON(),
+    ).to.deep.equal(dpp.dataContract.createFromObject(fetchedContract).toJSON());
+  });
+
+  it('should return the same result as grpc client', async () => {
+    const contractFromForcedClient = await forcedClient.getDataContract(
+      identityCreateTransition.getIdentityId(),
+    );
+    const contractFromGrpc = await dapiClient.getDataContract(
       identityCreateTransition.getIdentityId(),
     );
 
-    expect(serializedIdentity).to.be.not.null();
+    expect(contractFromForcedClient).to.be.deep.equal(contractFromGrpc);
 
-    const createdIdentity = dpp.identity.applyIdentityStateTransition(
-      identityCreateTransition,
-      null,
-    );
-
-    const identity = dpp.identity.createFromSerialized(
-      serializedIdentity,
+    const fetchedContract = dpp.dataContract.createFromSerialized(
+      contractFromForcedClient,
       { skipValidation: true },
     );
-
-    expect(createdIdentity.toJSON()).to.deep.equal(identity.toJSON());
+    expect(
+      getDataContractFixture(identityCreateTransition.getIdentityId()).toJSON(),
+    ).to.deep.equal(dpp.dataContract.createFromObject(fetchedContract).toJSON());
   });
 
-  it('should respond with null if identity not found', async () => {
-    const identity = await dapiClient.getIdentity('unknownId');
+  it('should respond with an error if contract not found', async () => {
+    const response = await dapiRpc.request('getDataContract', { id: 'FQJtYcWqM8mMvTMerJNTixMPqbp8qdYm8uESp6DVQNFK' });
 
-    expect(identity).to.be.null();
+    expect(response.result).to.be.undefined();
+    expect(response.error).to.be.deep.equal({ code: -32602, message: 'Contract not found' });
   });
 });
