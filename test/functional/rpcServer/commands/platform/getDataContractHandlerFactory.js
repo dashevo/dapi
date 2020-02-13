@@ -27,7 +27,7 @@ const Identity = require('@dashevo/dpp/lib/identity/Identity');
 const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 const wait = require('../../../../../lib/utils/wait');
 
-describe('getIdentityHandlerFactory', function main() {
+describe('rpcServer.getIdentityHandlerFactory', function main() {
   this.timeout(320000);
 
   let removeDapi;

@@ -35,7 +35,7 @@ const getDataContractFixture = require(
 
 const wait = require('../../../../../lib/utils/wait');
 
-describe('applyStateTransitionHandlerFactory', function main() {
+describe('rpcServer.applyStateTransitionHandlerFactory', function main() {
   this.timeout(200000);
 
   let dpp;
