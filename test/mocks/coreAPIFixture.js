@@ -37,7 +37,21 @@ module.exports = {
     };
   },
   async getRawBlock(blockHash) { return {}; },
-  async getStatus(query) { return {}; },
+  async getStatus() {
+    return {
+      core_version: 150000,
+      protocol_version: 70215,
+      blocks: 1223275,
+      timeoffset: 0,
+      connections: 8,
+      proxy: '',
+      difficulty: 225702522.5532461,
+      testnet: false,
+      relayfee: 0.00001,
+      errors: 'This is a pre-release test build - use at your own risk - do not use for mining or merchant applications',
+      network: 'livenet',
+    };
+  },
   async getTransactionById(txid) { return {}; },
   async getTransactionsByAddress(address) { return []; },
   async getUser(usernameOrUserId) { return {}; },

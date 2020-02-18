@@ -33,8 +33,17 @@ describe('getStatus', () => {
     expect(spy.callCount).to.be.equal(0);
     const status = await getStatus();
     expect(status).to.be.an('object');
+    expect(status.core_version).to.be.an('number');
     expect(status.protocol_version).to.be.an('number');
     expect(status.blocks).to.be.an('number');
+    expect(status.offset).to.be.an('number');
+    expect(status.connections).to.be.an('number');
+    expect(status.proxy).to.be.an('string');
+    expect(status.difficulty).to.be.an('number');
+    expect(status.testnet).to.be.an('boolean');
+    expect(status.relayfee).to.be.an('number');
+    expect(status.errors).to.be.an('string');
+    expect(status.network).to.be.an('string');
     expect(spy.callCount).to.be.equal(1);
   });
 });
