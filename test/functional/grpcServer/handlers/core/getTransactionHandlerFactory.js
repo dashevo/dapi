@@ -61,4 +61,10 @@ describe('getStatusHandlerFactory', function main() {
     const receivedTx = new Transaction(Buffer.from(result));
     expect(receivedTx.toJSON()).to.deep.equal(transaction.toJSON());
   });
+
+  it('sdhould return an empty result if no transaction were found', async () => {
+    const nonExistentId = Buffer.alloc(32).toString('hex');
+    const result = await dapiClient.getTransaction(nonExistentId);
+    expect(result).to.be.null();
+  });
 });
