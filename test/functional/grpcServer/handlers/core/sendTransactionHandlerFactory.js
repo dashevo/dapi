@@ -38,7 +38,7 @@ describe('sendTransactionHandlerFactory', function main() {
     await coreAPI.generate(10);
 
     const { result: unspent } = await coreAPI.listUnspent();
-    const inputs = unspent.filter(input => input.address === toAddress);
+    const inputs = unspent.filter(input => input.address === fromAddress);
 
     const amount = 10000;
 
@@ -61,7 +61,5 @@ describe('sendTransactionHandlerFactory', function main() {
     const result = await dapiClient.sendTransaction(Buffer.from(transaction.serialize(), 'hex'), options);
 
     expect(result).to.be.a('string');
-
-    // @TODO check that transaction exists
   });
 });
