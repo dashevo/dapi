@@ -51,4 +51,11 @@ describe('getBlockHandlerFactory', function main() {
 
     expect(block.toBuffer()).to.deep.equal(blockBinary);
   });
+
+  it('should return empty buffer if block was not found', async () => {
+    const blockBinary = await dapiClient.getBlockByHeight(100000000);
+
+    expect(blockBinary).to.be.an.instanceof(Buffer);
+    expect(blockBinary).to.deep.equal(Buffer.alloc(0));
+  });
 });
