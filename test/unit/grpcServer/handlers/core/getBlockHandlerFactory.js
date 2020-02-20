@@ -2,6 +2,7 @@ const {
   server: {
     error: {
       InvalidArgumentGrpcError,
+      InternalGrpcError,
     },
   },
 } = require('@dashevo/grpc-common');
@@ -97,6 +98,70 @@ describe('getBlockHandlerFactory', () => {
       expect(e.getMessage()).to.equal('Invalid argument: hash or height is not specified');
       expect(insightAPIMock.getRawBlockByHash).to.be.not.called();
       expect(insightAPIMock.getRawBlockByHeight).to.be.not.called();
+    }
+  });
+
+  it('should throw an InvalidArgumentGrpcError if getRawBlockByHeight throws error with statusCode = 400', async () => {
+    const error = new Error();
+    error.statusCode = 400;
+
+    insightAPIMock.getRawBlockByHeight.throws(error);
+
+    height = 42;
+    request.getHeight.returns(height);
+
+    try {
+      await getBlockHandler(call);
+
+      expect.fail('should thrown InvalidArgumentGrpcError error');
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal('Invalid argument: Block height is not found');
+      expect(insightAPIMock.getRawBlockByHash).to.be.not.called();
+      expect(insightAPIMock.getRawBlockByHeight).to.be.calledOnceWith(height);
+    }
+  });
+
+  it('should throw an InvalidArgumentGrpcError if getRawBlockByHash throws error with statusCode = 404', async () => {
+    const error = new Error();
+    error.statusCode = 404;
+
+    insightAPIMock.getRawBlockByHash.throws(error);
+
+    hash = 'hash';
+    request.getHash.returns(hash);
+
+    try {
+      await getBlockHandler(call);
+
+      expect.fail('should thrown InvalidArgumentGrpcError error');
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal('Invalid argument: Block hash is not found');
+      expect(insightAPIMock.getRawBlockByHeight).to.be.not.called();
+      expect(insightAPIMock.getRawBlockByHash).to.be.calledOnceWith(hash);
+    }
+  });
+
+  it('should throw an InternalGrpcError if getRawBlockByHash throws unknown error', async () => {
+    const error = new Error('Unknown error');
+    error.statusCode = 500;
+
+    insightAPIMock.getRawBlockByHash.throws(error);
+
+    hash = 'hash';
+    request.getHash.returns(hash);
+
+    try {
+      await getBlockHandler(call);
+
+      expect.fail('should thrown InvalidArgumentGrpcError error');
+    } catch (e) {
+      expect(e).to.be.instanceOf(InternalGrpcError);
+      expect(e.getMessage()).to.equal('Internal error');
+      expect(e.getError()).to.deep.equal(error);
+      expect(insightAPIMock.getRawBlockByHeight).to.be.not.called();
+      expect(insightAPIMock.getRawBlockByHash).to.be.calledOnceWith(hash);
     }
   });
 });
