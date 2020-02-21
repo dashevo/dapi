@@ -5,7 +5,7 @@ const {
   PrivateKey,
 } = require('@dashevo/dashcore-lib');
 
-describe('getStatusHandlerFactory', function main() {
+describe('getTransactionHandlerFactor', function main() {
   this.timeout(260000);
 
   let removeDapi;
@@ -62,7 +62,7 @@ describe('getStatusHandlerFactory', function main() {
     expect(receivedTx.toJSON()).to.deep.equal(transaction.toJSON());
   });
 
-  it('sdhould return an empty result if no transaction were found', async () => {
+  it('should with an invalid argument error if no transaction were found', async () => {
     const nonExistentId = Buffer.alloc(32).toString('hex');
     try {
       await dapiClient.getTransaction(nonExistentId);
