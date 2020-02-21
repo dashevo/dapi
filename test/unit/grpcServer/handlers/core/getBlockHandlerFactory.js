@@ -104,6 +104,7 @@ describe('getBlockHandlerFactory', () => {
   it('should throw an InvalidArgumentGrpcError if getRawBlockByHeight throws error with statusCode = 400', async () => {
     const error = new Error();
     error.statusCode = 400;
+    error.error = 'error';
 
     insightAPIMock.getRawBlockByHeight.throws(error);
 
@@ -116,7 +117,7 @@ describe('getBlockHandlerFactory', () => {
       expect.fail('should thrown InvalidArgumentGrpcError error');
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid argument: Block height is not found');
+      expect(e.getMessage()).to.equal(`Invalid argument: Invalid block height: ${error.error}`);
       expect(insightAPIMock.getRawBlockByHash).to.be.not.called();
       expect(insightAPIMock.getRawBlockByHeight).to.be.calledOnceWith(height);
     }
@@ -125,6 +126,7 @@ describe('getBlockHandlerFactory', () => {
   it('should throw an InvalidArgumentGrpcError if getRawBlockByHash throws error with statusCode = 404', async () => {
     const error = new Error();
     error.statusCode = 404;
+    error.error = 'error';
 
     insightAPIMock.getRawBlockByHash.throws(error);
 
@@ -137,7 +139,7 @@ describe('getBlockHandlerFactory', () => {
       expect.fail('should thrown InvalidArgumentGrpcError error');
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid argument: Block hash is not found');
+      expect(e.getMessage()).to.equal(`Invalid argument: Invalid block hash: ${error.error}`);
       expect(insightAPIMock.getRawBlockByHeight).to.be.not.called();
       expect(insightAPIMock.getRawBlockByHash).to.be.calledOnceWith(hash);
     }
@@ -157,9 +159,7 @@ describe('getBlockHandlerFactory', () => {
 
       expect.fail('should thrown InvalidArgumentGrpcError error');
     } catch (e) {
-      expect(e).to.be.instanceOf(InternalGrpcError);
-      expect(e.getMessage()).to.equal('Internal error');
-      expect(e.getError()).to.deep.equal(error);
+      expect(e).to.deep.equal(error);
       expect(insightAPIMock.getRawBlockByHeight).to.be.not.called();
       expect(insightAPIMock.getRawBlockByHash).to.be.calledOnceWith(hash);
     }
