@@ -56,13 +56,13 @@ describe('getTransactionHandlerFactor', function main() {
     await removeDapi();
   });
 
-  it('should return a transaction by it\'s ID', async () => {
+  it('should respond with a transaction by it\'s ID', async () => {
     const result = await dapiClient.getTransaction(transactionId);
     const receivedTx = new Transaction(Buffer.from(result));
     expect(receivedTx.toJSON()).to.deep.equal(transaction.toJSON());
   });
 
-  it('should with an invalid argument error if no transaction were found', async () => {
+  it('should respond with an invalid argument error if no transaction were found', async () => {
     const nonExistentId = Buffer.alloc(32).toString('hex');
     try {
       await dapiClient.getTransaction(nonExistentId);
