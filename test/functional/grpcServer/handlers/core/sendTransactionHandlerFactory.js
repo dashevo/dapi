@@ -52,7 +52,7 @@ describe('sendTransactionHandlerFactory', function main() {
   });
 
   afterEach(async () => {
-    await removeDapi();
+    // await removeDapi();
   });
 
   it('should sent transaction and return transaction ID', async () => {
