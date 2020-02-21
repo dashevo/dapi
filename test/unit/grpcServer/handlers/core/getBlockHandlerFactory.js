@@ -2,7 +2,6 @@ const {
   server: {
     error: {
       InvalidArgumentGrpcError,
-      InternalGrpcError,
     },
   },
 } = require('@dashevo/grpc-common');

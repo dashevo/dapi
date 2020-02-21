@@ -52,10 +52,14 @@ describe('getBlockHandlerFactory', function main() {
     expect(block.toBuffer()).to.deep.equal(blockBinary);
   });
 
-  it('should return empty buffer if block was not found', async () => {
-    const blockBinary = await dapiClient.getBlockByHeight(100000000);
+  it('should respond with an invalid argument error if the block was not found', async () => {
+    try {
+      await dapiClient.getBlockByHeight(100000000);
 
-    expect(blockBinary).to.be.an.instanceof(Buffer);
-    expect(blockBinary).to.deep.equal(Buffer.alloc(0));
+      expect.fail('Should throw an invalid argument error');
+    } catch (e) {
+      expect(e.message).to.equal('3 INVALID_ARGUMENT: Invalid argument: Invalid block height');
+      expect(e.code).to.equal(3);
+    }
   });
 });
