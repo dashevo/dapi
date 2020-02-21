@@ -163,7 +163,7 @@ describe('rpcServer', function main() {
       expect(
         getDataContractFixture(identityCreateTransition.getIdentityId()).toJSON(),
       ).to.deep.equal(
-        (await dpp.dataContract.createFromObject(fetchedContract).toJSON()),
+        (await dpp.dataContract.createFromObject(fetchedContract)).toJSON(),
       );
     });
 
@@ -177,14 +177,14 @@ describe('rpcServer', function main() {
 
       expect(contractFromForcedClient).to.be.deep.equal(contractFromGrpc);
 
-      const fetchedContract = await dataContract.createFromSerialized(
+      const fetchedContract = await dpp.dataContract.createFromSerialized(
         contractFromForcedClient,
         { skipValidation: true },
       );
       expect(
         getDataContractFixture(identityCreateTransition.getIdentityId()).toJSON(),
       ).to.deep.equal(
-        (await dpp.dataContract.createFromObject(fetchedContract).toJSON()),
+        (await dpp.dataContract.createFromObject(fetchedContract)).toJSON(),
       );
     });
 
