@@ -59,7 +59,7 @@ describe('getTransactionHandlerFactor', function main() {
   it('should return a transaction by it\'s ID', async () => {
     const result = await dapiClient.getTransaction(transactionId);
     const receivedTx = new Transaction(Buffer.from(result));
-    expect(receivedTx.toJSON()).to.deep.equal(transaction.toJSON());
+    expect(receivedTx.toString('hex')).to.deep.equal(transaction.serialize());
   });
 
   it('should with an invalid argument error if no transaction were found', async () => {
