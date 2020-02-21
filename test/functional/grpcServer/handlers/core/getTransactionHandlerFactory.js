@@ -6,7 +6,7 @@ const {
 } = require('@dashevo/dashcore-lib');
 
 describe('getStatusHandlerFactory', function main() {
-  this.timeout(160000);
+  this.timeout(260000);
 
   let removeDapi;
   let dapiClient;
@@ -64,7 +64,11 @@ describe('getStatusHandlerFactory', function main() {
 
   it('sdhould return an empty result if no transaction were found', async () => {
     const nonExistentId = Buffer.alloc(32).toString('hex');
-    const result = await dapiClient.getTransaction(nonExistentId);
-    expect(result).to.be.null();
+    try {
+      await dapiClient.getTransaction(nonExistentId);
+      expect.fail('Error was not thrown');
+    } catch (e) {
+      expect(e.message).to.equal('3 INVALID_ARGUMENT: Invalid argument: Transaction not found');
+    }
   });
 });
