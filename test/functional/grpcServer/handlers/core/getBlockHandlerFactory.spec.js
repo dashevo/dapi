@@ -4,8 +4,8 @@ const {
 
 const { Block } = require('@dashevo/dashcore-lib');
 
-describe('getBlockHandlerFactory', function main() {
-  this.timeout(200000);
+describe.only('getBlockHandlerFactory', function main() {
+  this.timeout(400000);
 
   let removeDapi;
   let dapiClient;
@@ -22,11 +22,12 @@ describe('getBlockHandlerFactory', function main() {
     removeDapi = remove;
 
     dapiClient = dapiCore.getApi();
-    const coreAPI = dashCore.getApi();
 
-    await coreAPI.generate(500);
+    const address = await dashCore.getApi().getNewAddress();
 
-    ({ result: blockHash } = await coreAPI.getbestblockhash());
+    await dashCore.getApi().generateToAddress(10, address);
+
+    ({ result: blockHash } = await dashCore.getApi().getbestblockhash());
     blockHeight = 100;
   });
 

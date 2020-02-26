@@ -79,9 +79,7 @@ describe('rpcServer', function main() {
       const publicKeyHash = PublicKey.fromBuffer(Buffer.from(pubKeyBase, 'base64'))._getID();
       const publicKeyId = 1;
 
-      await coreAPI.generate(500);
-      await coreAPI.sendToAddress(addressString, 10);
-      await coreAPI.generate(10);
+      await coreAPI.generateToAddress(500, addressString);
 
       const { result: unspent } = await coreAPI.listUnspent();
       const inputs = unspent.filter(input => input.address === addressString);
@@ -96,7 +94,7 @@ describe('rpcServer', function main() {
 
       await coreAPI.sendrawtransaction(transaction.serialize());
 
-      await coreAPI.generate(1);
+      await coreAPI.generateToAddress(1, addressString);
 
       await wait(2000); // wait a couple of seconds for tx to be confirmed
 

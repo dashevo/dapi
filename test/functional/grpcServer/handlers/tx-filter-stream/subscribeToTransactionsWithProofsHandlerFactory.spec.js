@@ -66,9 +66,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
 
     bloomFilter.insert(address.hashBuffer);
 
-    await coreAPI.generate(500);
-    await coreAPI.sendToAddress(addressString, 10);
-    await coreAPI.generate(10);
+    await coreAPI.generateToAddress(500, addressString);
 
     // Store current best block hash to cut off noise txs and merkle blocks
     ({ result: fromBlockHash } = await coreAPI.getBestBlockHash());
@@ -88,7 +86,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
       historicalTransactions.push(transaction);
 
       await coreAPI.sendRawTransaction(transaction.serialize());
-      await coreAPI.generate(1);
+      await coreAPI.generateToAddress(1, addressString);
     }
 
     ({ result: merkleBlockStrings } = await coreAPI.getMerkleBlocks(
@@ -242,7 +240,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     historicalTransactions.push(transaction);
 
     await coreAPI.sendRawTransaction(transaction.serialize());
-    await coreAPI.generate(1);
+    await coreAPI.generateToAddress(1, addressString);
 
     await wait(20000);
 
@@ -344,7 +342,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     historicalTransactions.push(transaction);
 
     await coreAPI.sendRawTransaction(transaction.serialize());
-    await coreAPI.generate(1);
+    await coreAPI.generateToAddress(1, addressString);
 
     await wait(20000);
 
@@ -379,7 +377,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
 
     const { result: hashToInvalidate } = await coreAPI.getBestBlockHash();
     await coreAPI.invalidateBlock(hashToInvalidate);
-    await coreAPI.generate(1);
+    await coreAPI.generateToAddress(1, addressString);
 
     await wait(20000);
 
@@ -417,7 +415,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     const bloomFilterObject = bloomFilter.toObject();
 
     // Generate one other block without matching txs
-    await coreAPI.generate(1);
+    await coreAPI.generateToAddress(1, addressString);
     const { result: bestBlockHash } = await coreAPI.getBestBlockHash();
 
     // Send some transaction so it would located in mempool
@@ -492,7 +490,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     }
 
     // Mine the transaction
-    await coreAPI.generate(1);
+    await coreAPI.generateToAddress(1, addressString);
 
     await wait(20000);
 

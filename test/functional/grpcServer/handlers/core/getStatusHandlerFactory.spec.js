@@ -17,7 +17,9 @@ describe('getStatusHandlerFactory', function main() {
 
     dapiClient = dapiCore.getApi();
 
-    await (dashCore.getApi()).generate(1000);
+    const address = await dashCore.getApi().getNewAddress();
+
+    await dashCore.getApi().generateToAddress(10, address);
   });
 
   afterEach(async () => {
