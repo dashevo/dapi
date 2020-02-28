@@ -81,6 +81,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
         .from(inputs.slice(-1)[0])
         .to(address, 10000)
         .change(address)
+        .fee(668)
         .sign(privateKey);
 
       historicalTransactions.push(transaction);
@@ -232,9 +233,10 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     const inputs = unspent.filter(input => input.address === addressString);
 
     const transaction = new Transaction()
-      .from(inputs)
+      .from(inputs.slice(-1)[0])
       .to(address, 10000)
       .change(address)
+      .fee(668)
       .sign(privateKey);
 
     historicalTransactions.push(transaction);
@@ -334,9 +336,10 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     const inputs = unspent.filter(input => input.address === addressString);
 
     const transaction = new Transaction()
-      .from(inputs)
+      .from(inputs.slice(-1)[0])
       .to(address, 10000)
       .change(address)
+      .fee(668)
       .sign(privateKey);
 
     historicalTransactions.push(transaction);
@@ -424,9 +427,10 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     const inputs = unspent.filter(input => input.address === addressString);
 
     const transaction = new Transaction()
-      .from(inputs)
+      .from(inputs.slice(-1)[0])
       .to(address, 10000)
       .change(address)
+      .fee(668)
       .sign(privateKey);
 
     historicalTransactions.push(transaction);
