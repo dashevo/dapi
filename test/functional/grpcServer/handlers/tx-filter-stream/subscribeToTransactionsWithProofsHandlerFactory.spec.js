@@ -78,7 +78,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
       const inputs = unspent.filter(input => filterUnspentInputs(input));
 
       const transaction = new Transaction()
-        .from(inputs.slice(-1)[0])
+        .from(inputs.filter(inp => inp.amount > 0.000107)[0])
         .to(address, 10000)
         .change(address)
         .fee(668)
@@ -336,7 +336,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     const inputs = unspent.filter(input => input.address === addressString);
 
     const transaction = new Transaction()
-      .from(inputs.slice(-1)[0])
+      .from(inputs.filter(inp => inp.amount > 0.000107)[0])
       .to(address, 10000)
       .change(address)
       .fee(668)
@@ -345,7 +345,9 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     historicalTransactions.push(transaction);
 
     await coreAPI.sendRawTransaction(transaction.serialize());
-    await coreAPI.generateToAddress(1, addressString);
+
+    const { result: randomAddress } = await coreAPI.getNewAddress();
+    await coreAPI.generateToAddress(1, randomAddress);
 
     await wait(20000);
 
@@ -380,7 +382,9 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
 
     const { result: hashToInvalidate } = await coreAPI.getBestBlockHash();
     await coreAPI.invalidateBlock(hashToInvalidate);
-    await coreAPI.generateToAddress(1, addressString);
+
+    const { result: anotherRandomAddress } = await coreAPI.getNewAddress();
+    await coreAPI.generateToAddress(1, anotherRandomAddress);
 
     await wait(20000);
 
@@ -418,7 +422,8 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     const bloomFilterObject = bloomFilter.toObject();
 
     // Generate one other block without matching txs
-    await coreAPI.generateToAddress(1, addressString);
+    const { result: randomAddress } = await coreAPI.getNewAddress();
+    await coreAPI.generateToAddress(1, randomAddress);
     const { result: bestBlockHash } = await coreAPI.getBestBlockHash();
 
     // Send some transaction so it would located in mempool
@@ -427,7 +432,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     const inputs = unspent.filter(input => input.address === addressString);
 
     const transaction = new Transaction()
-      .from(inputs.slice(-1)[0])
+      .from(inputs.filter(inp => inp.amount > 0.000107)[0])
       .to(address, 10000)
       .change(address)
       .fee(668)
@@ -494,7 +499,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
     }
 
     // Mine the transaction
-    await coreAPI.generateToAddress(1, addressString);
+    await coreAPI.generateToAddress(1, randomAddress);
 
     await wait(20000);
 
