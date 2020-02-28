@@ -13,11 +13,13 @@ describe('getStatusHandlerFactory', function main() {
       remove,
     } = await startDapi();
 
+    const coreAPI = dashCore.getApi();
+
     removeDapi = remove;
 
     dapiClient = dapiCore.getApi();
 
-    const address = await dashCore.getApi().getNewAddress();
+    const { result: address } = await coreAPI.getNewAddress();
 
     await dashCore.getApi().generateToAddress(10, address);
   });
