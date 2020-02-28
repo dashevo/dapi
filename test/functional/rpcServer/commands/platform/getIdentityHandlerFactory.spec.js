@@ -76,7 +76,7 @@ describe('rpcServer', function main() {
 
       const transaction = new Transaction();
 
-      transaction.from(inputs)
+      transaction.from(inputs.slice(-1)[0])
         .addBurnOutput(10000, publicKeyHash)
         .change(addressString)
         .fee(668)

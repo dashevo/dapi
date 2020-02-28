@@ -43,6 +43,6 @@ describe('getStatusHandlerFactory', function main() {
     expect(result).to.have.a.property('errors');
     expect(result).to.have.a.property('network');
 
-    expect(result.blocks).to.equal(1000);
+    expect(result.blocks).to.equal(10);
   });
 });

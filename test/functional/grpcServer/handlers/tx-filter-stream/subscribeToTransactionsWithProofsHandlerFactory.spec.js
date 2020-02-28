@@ -78,7 +78,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', function main() {
       const inputs = unspent.filter(input => filterUnspentInputs(input));
 
       const transaction = new Transaction()
-        .from(inputs)
+        .from(inputs.slice(-1)[0])
         .to(address, 10000)
         .change(address)
         .sign(privateKey);

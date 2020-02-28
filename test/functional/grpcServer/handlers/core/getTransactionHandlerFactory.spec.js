@@ -40,10 +40,10 @@ describe('getTransactionHandlerFactor', function main() {
 
     transaction = new Transaction();
 
-    transaction.from(unspent)
+    transaction.from(unspent.slice(-1)[0])
       .to(toAddress, amount)
       .change(fromAddress)
-      .fee(668)
+      .fee(1000)
       .sign(privateKey);
 
     ({ result: transactionId } = await coreAPI.sendRawTransaction(transaction.serialize()));

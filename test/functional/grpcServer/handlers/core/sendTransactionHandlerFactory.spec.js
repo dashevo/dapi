@@ -31,6 +31,7 @@ describe('sendTransactionHandlerFactory', function main() {
     const { result: privateKeyString } = await coreAPI.dumpPrivKey(fromAddress);
     const privateKey = new PrivateKey(privateKeyString);
 
+    ({ result: toAddress } = await coreAPI.getNewAddress());
 
     await coreAPI.generateToAddress(500, fromAddress);
 
@@ -41,7 +42,7 @@ describe('sendTransactionHandlerFactory', function main() {
 
     transaction = new Transaction();
 
-    transaction.from(inputs)
+    transaction.from(inputs.slice(-1)[0])
       .to(toAddress, amount)
       .change(fromAddress)
       .fee(668)
