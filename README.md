@@ -37,15 +37,15 @@ DAPI requires [Insight-API](https://github.com/dashevo/insight-api) and the late
 
 ## Usage
 
-After you've installed all the dependencies, you can start DAPI by running the `npm start` command inside the DAPI repo directory.
+After you've installed all the dependencies, you can start DAPI by running the `npm run api` command inside the DAPI repo directory.
 
 ```sh
-npm start
+npm run api
 ```
 
 ## Configuration
 
-DAPI is configured via environment variables either explicitly passed or present in the `.env` dotfile. For example, to change the DAPI port, execute DAPI with the following arguments: `RPC_SERVER_PORT=3010 npm start`. Consult the sample environment [file](/.env.example). You can see the full list of available options [here](/doc/CONFIGURATION.md).
+DAPI is configured via environment variables either explicitly passed or present in the `.env` dotfile. For example, to change the DAPI port, execute DAPI with the following arguments: `RPC_SERVER_PORT=3010 npm run api`. Consult the sample environment [file](/.env.example). You can see the full list of available options [here](/doc/CONFIGURATION.md).
 
 ## Making basic requests
 
