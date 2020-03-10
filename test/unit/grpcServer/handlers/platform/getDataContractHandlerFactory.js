@@ -100,7 +100,7 @@ describe('getDataContractHandlerFactory', () => {
       expect.fail('should throw InvalidArgumentGrpcError error');
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal(`${message}`);
+      expect(e.getMessage()).to.equal(message);
       expect(e.getMetadata()).to.deep.equal(data);
       expect(driveApiMock.fetchContract).to.be.calledOnceWith(id);
       expect(dppMock.document.createFromObject).to.be.not.called();

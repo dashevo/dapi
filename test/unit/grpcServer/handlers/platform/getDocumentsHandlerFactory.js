@@ -149,7 +149,7 @@ describe('getDocumentsHandlerFactory', () => {
       expect.fail('should throw InvalidArgumentGrpcError error');
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal(`${message}`);
+      expect(e.getMessage()).to.equal(message);
       expect(e.getMetadata()).to.deep.equal(data);
       expect(driveApiMock.fetchDocuments).to.be.calledOnceWith(
         dataContractId,
