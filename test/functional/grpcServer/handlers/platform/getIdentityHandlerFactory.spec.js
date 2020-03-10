@@ -146,6 +146,6 @@ describe('getIdentityHandlerFactory', function main() {
       error = e;
     }
 
-    expect(error).to.have.property('message', 'Error: 5 NOT_FOUND: Identity not found');
+    expect(error).to.have.property('message', '5 NOT_FOUND: Identity not found');
   });
 });
