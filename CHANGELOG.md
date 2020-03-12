@@ -1,6 +1,4 @@
-# [0.10.0](https://github.com/dashevo/dapi/compare/v0.9.0...v0.10.0) (2020-03-09)
-
-### Bug Fixes
+# [0.11.0](https://github.com/dashevo/dapi/compare/v0.9.0...v0.11.0) (2020-03-09)
 
 * Core gRPC service is not initialized ([86dff35](https://github.com/dashevo/dapi/commit/86dff354415669e206e543b3b83704eaf62ceb32))
 * load .env at correct time for tx-filter-stream ([7b091e0](https://github.com/dashevo/dapi/commit/7b091e0cefcd7d6c63829bd6229a0c3e8d4b692f))
@@ -8,6 +6,9 @@
 * handle errors in `getTransaction` endpoints ([e0d36ae](https://github.com/dashevo/dapi/commit/e0d36aebc717f67e90fc44a2256007031ab2f9ba))
 * handle errors in `sendTransaction` endpoint ([cd2e6c8](https://github.com/dashevo/dapi/commit/cd2e6c821b7e6822c4b582c758eeeae26627b173))
 * handle errors in `getBlock` endpoint ([6d474b4](https://github.com/dashevo/dapi/commit/6d474b46edf5b98f2424b6e20836a6296b5a413e))
+* handle rate, time and resource limit ABCI errors ([4c979a3](https://github.com/dashevo/dapi/commit/4c979a3044bc025352962b35292fceedd2d3e7c9))
+* handle Tendermint errors in applyStateTransition ([f8764e9](https://github.com/dashevo/dapi/commit/f8764e901c09445e66319fc5d2ff7cf8bc0dd7da))
+* "not found" instead of "invalid argument" in gRPC endpoints ([126c929](https://github.com/dashevo/dapi/commit/126c92905d63e2b63f9949d3c58d3a469e680201))
 
 ### Features
 
@@ -41,4 +42,4 @@
         * `getDataContract`
         * `getDocuments`
         * `getIdentity`
-* see [DPP breaking changes](https://github.com/dashevo/js-dpp/blob/v0.11.0/CHANGELOG.md#0110-2020-03-09)
+* see [DPP breaking changes](https://github.com/dashevo/js-dpp/releases/tag/v0.11.0)
