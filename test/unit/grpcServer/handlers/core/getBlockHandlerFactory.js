@@ -2,6 +2,7 @@ const {
   server: {
     error: {
       InvalidArgumentGrpcError,
+      NotFoundGrpcError,
     },
   },
 } = require('@dashevo/grpc-common');
@@ -94,7 +95,7 @@ describe('getBlockHandlerFactory', () => {
       expect.fail('should thrown InvalidArgumentGrpcError error');
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid argument: hash or height is not specified');
+      expect(e.getMessage()).to.equal('hash or height is not specified');
       expect(insightAPIMock.getRawBlockByHash).to.be.not.called();
       expect(insightAPIMock.getRawBlockByHeight).to.be.not.called();
     }
@@ -115,7 +116,7 @@ describe('getBlockHandlerFactory', () => {
       expect.fail('should thrown InvalidArgumentGrpcError error');
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid argument: Invalid block height');
+      expect(e.getMessage()).to.equal('Invalid block height');
       expect(insightAPIMock.getRawBlockByHash).to.be.not.called();
       expect(insightAPIMock.getRawBlockByHeight).to.be.calledOnceWith(height);
     }
@@ -135,8 +136,8 @@ describe('getBlockHandlerFactory', () => {
 
       expect.fail('should thrown InvalidArgumentGrpcError error');
     } catch (e) {
-      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid argument: Invalid block hash');
+      expect(e).to.be.instanceOf(NotFoundGrpcError);
+      expect(e.getMessage()).to.equal('Block not found');
       expect(insightAPIMock.getRawBlockByHeight).to.be.not.called();
       expect(insightAPIMock.getRawBlockByHash).to.be.calledOnceWith(hash);
     }

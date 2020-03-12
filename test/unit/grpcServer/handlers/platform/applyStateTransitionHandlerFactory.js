@@ -88,7 +88,7 @@ describe('applyStateTransitionHandlerFactory', () => {
       expect.fail('InvalidArgumentGrpcError was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid argument: State Transition is not specified');
+      expect(e.getMessage()).to.equal('State Transition is not specified');
       expect(rpcClientMock.request).to.not.be.called();
       expect(handleResponseMock).to.not.be.called();
     }
@@ -129,6 +129,21 @@ describe('applyStateTransitionHandlerFactory', () => {
       expect.fail('should throw an error');
     } catch (e) {
       expect(e).to.equal(error);
+    }
+  });
+
+  it('should throw an error if transaction broadcast returns error', async () => {
+    const error = { code: -1, message: "Something didn't work", data: 'Some data' };
+
+    response.error = error;
+
+    try {
+      await applyStateTransitionHandler(call);
+    } catch (e) {
+      expect(e).to.be.an.instanceOf(Error);
+      expect(e.message).to.equal(error.message);
+      expect(e.data).to.equal(error.data);
+      expect(e.code).to.equal(error.code);
     }
   });
 });
