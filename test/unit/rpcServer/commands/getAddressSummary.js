@@ -3,6 +3,7 @@ const chaiAsPromised = require('chai-as-promised');
 const sion = require('sinon');
 const getAddressSummaryFactory = require('../../../../lib/rpcServer/commands/getAddressSummary');
 const coreAPIFixture = require('../../../mocks/coreAPIFixture');
+const RPCError = require('../../../../lib/rpcServer/RPCError');
 
 const { expect } = chai;
 chai.use(chaiAsPromised);
@@ -45,5 +46,42 @@ describe('getAddressSummary', () => {
     expect(spy.callCount).to.be.equal(0);
     await expect(getAddressSummary({ address: 1 })).to.be.rejectedWith('params.address should be array,string');
     expect(spy.callCount).to.be.equal(0);
+  });
+
+  it('should throw RPCError with code -32603', async function it() {
+    const message = 'Some error';
+    const e = new Error(message);
+
+    coreAPIFixture.getAddressSummary = this.sinon.stub().throws(e);
+    const getAddressSummary = getAddressSummaryFactory(coreAPIFixture);
+
+    try {
+      await getAddressSummary({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
+
+      expect.fail('should throw RPCError');
+    } catch (e) {
+      expect(e).to.be.an.instanceOf(RPCError);
+      expect(e.code).to.equal(-32603);
+      expect(e.message).to.equal(message);
+    }
+  });
+
+  it('should throw RPCError with code -32602', async function it() {
+    const message = 'Some error';
+    const e = new Error(message);
+    e.statusCode = 400;
+
+    coreAPIFixture.getAddressSummary = this.sinon.stub().throws(e);
+    const getAddressSummary = getAddressSummaryFactory(coreAPIFixture);
+
+    try {
+      await getAddressSummary({ address: 'XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w' });
+
+      expect.fail('should throw RPCError');
+    } catch (e) {
+      expect(e).to.be.an.instanceOf(RPCError);
+      expect(e.code).to.equal(-32602);
+      expect(e.message).to.equal(message);
+    }
   });
 });

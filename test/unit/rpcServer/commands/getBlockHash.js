@@ -3,6 +3,7 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const getBlockHashFactory = require('../../../../lib/rpcServer/commands/getBlockHash');
 const coreAPIFixture = require('../../../mocks/coreAPIFixture');
+const RPCError = require('../../../../lib/rpcServer/RPCError');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -51,5 +52,42 @@ describe('getBlockHash', () => {
     expect(spy.callCount).to.be.equal(0);
     await expect(getBlockHash([-1])).to.be.rejected;
     expect(spy.callCount).to.be.equal(0);
+  });
+
+  it('should throw RPCError with code -32603', async function it() {
+    const message = 'Some error';
+    const e = new Error(message);
+
+    coreAPIFixture.getBlockHash = this.sinon.stub().throws(e);
+    const getBlockHash = getBlockHashFactory(coreAPIFixture);
+
+    try {
+      await getBlockHash({ height: 100 });
+
+      expect.fail('should throw RPCError');
+    } catch (e) {
+      expect(e).to.be.an.instanceOf(RPCError);
+      expect(e.code).to.equal(-32603);
+      expect(e.message).to.equal(message);
+    }
+  });
+
+  it('should throw RPCError with code -32602', async function it() {
+    const message = 'Some error';
+    const e = new Error(message);
+    e.statusCode = 400;
+
+    coreAPIFixture.getBlockHash = this.sinon.stub().throws(e);
+    const getBlockHash = getBlockHashFactory(coreAPIFixture);
+
+    try {
+      await getBlockHash({ height: 100 });
+
+      expect.fail('should throw RPCError');
+    } catch (e) {
+      expect(e).to.be.an.instanceOf(RPCError);
+      expect(e.code).to.equal(-32602);
+      expect(e.message).to.equal(message);
+    }
   });
 });

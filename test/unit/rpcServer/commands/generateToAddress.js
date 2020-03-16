@@ -3,6 +3,7 @@ const sinon = require('sinon');
 const chaiAsPromised = require('chai-as-promised');
 const generateToAddressFactory = require('../../../../lib/rpcServer/commands/generateToAddress');
 const coreAPIFixture = require('../../../mocks/coreAPIFixture');
+const RPCError = require('../../../../lib/rpcServer/RPCError');
 
 const { expect } = chai;
 chai.use(chaiAsPromised);
@@ -61,5 +62,42 @@ describe('generateToAddress', () => {
 
     await expect(generateToAddress({ blocksNumber: 1, address: 1 })).to.be.rejectedWith('should be string');
     expect(spy.callCount).to.be.equal(0);
+  });
+
+  it('should throw RPCError with code -32603', async function it() {
+    const message = 'Some error';
+    const e = new Error(message);
+
+    coreAPIFixture.generateToAddress = this.sinon.stub().throws(e);
+    const generateToAddress = generateToAddressFactory(coreAPIFixture);
+
+    try {
+      await generateToAddress({ blocksNumber: 10, address: '123456' });
+
+      expect.fail('should throw RPCError');
+    } catch (e) {
+      expect(e).to.be.an.instanceOf(RPCError);
+      expect(e.code).to.equal(-32603);
+      expect(e.message).to.equal(message);
+    }
+  });
+
+  it('should throw RPCError with code -32602', async function it() {
+    const message = 'Some error';
+    const e = new Error(message);
+    e.statusCode = 400;
+
+    coreAPIFixture.generateToAddress = this.sinon.stub().throws(e);
+    const generateToAddress = generateToAddressFactory(coreAPIFixture);
+
+    try {
+      await generateToAddress({ blocksNumber: 10, address: '123456' });
+
+      expect.fail('should throw RPCError');
+    } catch (e) {
+      expect(e).to.be.an.instanceOf(RPCError);
+      expect(e.code).to.equal(-32602);
+      expect(e.message).to.equal(message);
+    }
   });
 });
