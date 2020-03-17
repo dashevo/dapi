@@ -50,9 +50,9 @@ describe('getAddressSummary', () => {
 
   it('should throw RPCError with code -32603', async function it() {
     const message = 'Some error';
-    const e = new Error(message);
+    const error = new Error(message);
 
-    coreAPIFixture.getAddressSummary = this.sinon.stub().throws(e);
+    coreAPIFixture.getAddressSummary = this.sinon.stub().throws(error);
     const getAddressSummary = getAddressSummaryFactory(coreAPIFixture);
 
     try {
@@ -68,10 +68,10 @@ describe('getAddressSummary', () => {
 
   it('should throw RPCError with code -32602', async function it() {
     const message = 'Some error';
-    const e = new Error(message);
-    e.statusCode = 400;
+    const error = new Error(message);
+    error.statusCode = 400;
 
-    coreAPIFixture.getAddressSummary = this.sinon.stub().throws(e);
+    coreAPIFixture.getAddressSummary = this.sinon.stub().throws(error);
     const getAddressSummary = getAddressSummaryFactory(coreAPIFixture);
 
     try {

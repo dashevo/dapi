@@ -76,9 +76,9 @@ describe('getUTXO', () => {
 
   it('should throw RPCError with code -32603', async function it() {
     const message = 'Some error';
-    const e = new Error(message);
+    const error = new Error(message);
 
-    coreAPIFixture.getUTXO = this.sinon.stub().throws(e);
+    coreAPIFixture.getUTXO = this.sinon.stub().throws(error);
     const getUTXO = getUTXOFactory(coreAPIFixture);
 
     const addressArray = ['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w'];
@@ -96,10 +96,10 @@ describe('getUTXO', () => {
 
   it('should throw RPCError with code -32602', async function it() {
     const message = 'Some error';
-    const e = new Error(message);
-    e.statusCode = 400;
+    const error = new Error(message);
+    error.statusCode = 400;
 
-    coreAPIFixture.getUTXO = this.sinon.stub().throws(e);
+    coreAPIFixture.getUTXO = this.sinon.stub().throws(error);
     const getUTXO = getUTXOFactory(coreAPIFixture);
 
     const addressArray = ['XsLdVrfJpzt6Fc8RSUFkqYqtxkLjEv484w'];
