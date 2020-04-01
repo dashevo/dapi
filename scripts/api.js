@@ -24,7 +24,7 @@ const config = require('../lib/config');
 const { validateConfig } = require('../lib/config/validator');
 const log = require('../lib/log');
 const rpcServer = require('../lib/rpcServer/server');
-const DriveAdapter = require('../lib/externalApis/driveAdapter');
+const DriveStateRepository = require('../lib/externalApis/drive/DriveStateRepository');
 const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
 
@@ -49,7 +49,7 @@ async function main() {
   }
 
   log.info('Connecting to Drive');
-  const driveAPI = new DriveAdapter({
+  const driveStateRepository = new DriveStateRepository({
     host: config.drive.host,
     port: config.drive.port,
   });
@@ -66,7 +66,7 @@ async function main() {
     networkType: config.network,
     insightAPI,
     dashcoreAPI: dashCoreRpcClient,
-    driveAPI,
+    driveAPI: driveStateRepository,
     tendermintRpcClient: rpcClient,
     dpp,
     log,
@@ -77,7 +77,7 @@ async function main() {
   log.info('Starting GRPC server');
 
   const coreHandlers = coreHandlersFactory(insightAPI);
-  const platformHandlers = platformHandlersFactory(rpcClient, driveAPI, dpp);
+  const platformHandlers = platformHandlersFactory(rpcClient, driveStateRepository, dpp);
 
   const grpcApiServer = createServer(getCoreDefinition(), coreHandlers);
 
