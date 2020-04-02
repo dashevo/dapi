@@ -50,8 +50,8 @@ async function main() {
 
   log.info('Connecting to Drive');
   const driveStateRepository = new DriveStateRepository({
-    host: config.drive.host,
-    port: config.drive.port,
+    host: config.tendermintCore.host,
+    port: config.tendermintCore.port,
   });
 
   const rpcClient = RpcClient.http({
