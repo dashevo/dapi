@@ -1,5 +1,3 @@
-const bs58 = require('bs58');
-
 const {
   startDapi,
 } = require('@dashevo/dp-services-ctl');
@@ -12,38 +10,28 @@ const {
 
 const DashPlatformProtocol = require('@dashevo/dpp');
 
-const hash = require('@dashevo/dpp/lib/util/hash');
-
-const IdentityCreateTransition = require(
-  '@dashevo/dpp/lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition',
-);
-const { convertSatoshiToCredits } = require(
-  '@dashevo/dpp/lib/identity/creditsConverter',
-);
-
-const IdentityPublicKey = require(
-  '@dashevo/dpp/lib/identity/IdentityPublicKey',
+const getDataContractFixture = require(
+  '@dashevo/dpp/lib/test/fixtures/getDataContractFixture',
 );
 
 const wait = require('../../../../../lib/utils/wait');
 
-describe('getIdentityHandlerFactory', function main() {
+describe('getDataContractHandlerFactory', function main() {
   this.timeout(200000);
 
   let removeDapi;
   let dapiClient;
   let dpp;
   let identityCreateTransition;
-  let publicKeys;
   let publicKeyId;
-  let identity;
+  let dataContract;
 
   before(async () => {
     const {
       dapiCore,
       dashCore,
       remove,
-    } = await startDapi();
+    } = await startDapi({});
 
     removeDapi = remove;
 
@@ -58,10 +46,11 @@ describe('getIdentityHandlerFactory', function main() {
     const { result: privateKeyString } = await coreAPI.dumpPrivKey(addressString);
 
     const privateKey = new PrivateKey(privateKeyString);
-    const pubKeyBase = new PublicKey({
+    const publicKey = new PublicKey({
       ...privateKey.toPublicKey().toObject(),
       compressed: true,
-    }).toBuffer()
+    });
+    const pubKeyBase = publicKey.toBuffer()
       .toString('base64');
 
     // eslint-disable-next-line no-underscore-dangle
@@ -87,60 +76,52 @@ describe('getIdentityHandlerFactory', function main() {
 
     await wait(2000); // wait a couple of seconds for tx to be confirmed
 
-    const outPoint = transaction.getOutPointBuffer(0)
-      .toString('base64');
+    const outPoint = transaction.getOutPointBuffer(0);
 
-    publicKeys = [
-      {
-        id: publicKeyId,
-        type: IdentityPublicKey.TYPES.ECDSA_SECP256K1,
-        data: pubKeyBase,
-        isEnabled: true,
-      },
-    ];
-
-    identity = dpp.identity.create(
-      bs58.encode(
-        hash(Buffer.from(outPoint, 'base64')),
-      ),
-      publicKeys.map(k => new IdentityPublicKey(k)),
+    const identity = dpp.identity.create(
+      outPoint,
+      [publicKey],
     );
 
-    identityCreateTransition = new IdentityCreateTransition({
-      lockedOutPoint: outPoint,
-      publicKeys,
-    });
-
+    identityCreateTransition = dpp.identity.createIdentityCreateTransition(identity);
     identityCreateTransition.signByPrivateKey(privateKey);
 
+    dataContract = getDataContractFixture(identityCreateTransition.getIdentityId());
+
+    const dataContractCreateTransition = dpp.dataContract.createStateTransition(dataContract);
+    dataContractCreateTransition.sign(identity.getPublicKeyById(publicKeyId), privateKey);
+
+    // Create Identity
     await dapiClient.applyStateTransition(identityCreateTransition);
+
+    // Create Data Contract
+    await dapiClient.applyStateTransition(dataContractCreateTransition);
   });
 
   after(async () => {
     await removeDapi();
   });
 
-  it('should fetch created identity', async () => {
-    const serializedIdentity = await dapiClient.getIdentity(
-      identityCreateTransition.getIdentityId(),
+  it('should fetch created data contract', async () => {
+    const serializedDataContract = await dapiClient.getDataContract(
+      dataContract.getId(),
     );
 
-    expect(serializedIdentity).to.be.not.null();
+    expect(serializedDataContract).to.be.not.null();
 
-    const receivedIdentity = dpp.identity.createFromSerialized(
-      serializedIdentity,
+    const receivedDataContract = await dpp.dataContract.createFromSerialized(
+      serializedDataContract,
       { skipValidation: true },
     );
 
-    expect({
-      ...identity.toJSON(),
-      balance: convertSatoshiToCredits(10000),
-    }).to.deep.equal(receivedIdentity.toJSON());
+    expect(dataContract.toJSON()).to.deep.equal(receivedDataContract.toJSON());
   });
 
-  it('should respond with NOT_FOUND error if identity not found', async () => {
-    const serializedIdentity = await dapiClient.getIdentity('unknownId');
+  it('should respond with null if data contract not found', async () => {
+    const serializedDataContract = await dapiClient.getDataContract(
+      'unknownId',
+    );
 
-    expect(serializedIdentity).to.be.null();
+    expect(serializedDataContract).to.be.null();
   });
 });
