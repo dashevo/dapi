@@ -4,17 +4,17 @@ const sinon = require('sinon');
 const chaiAsPromised = require('chai-as-promised');
 const dirtyChai = require('dirty-chai');
 
-const DriveAdapter = require('../../../../lib/externalApis/driveAdapter');
+const DriveStateRepository = require('../../../../lib/externalApis/drive/DriveStateRepository');
 
 chai.use(chaiAsPromised);
 chai.use(dirtyChai);
 
 const { expect } = chai;
 
-describe('DriveAdapter', () => {
+describe('DriveStateRepository', () => {
   describe('constructor', () => {
     it('Should create drive client with given options', () => {
-      const drive = new DriveAdapter({ host: '127.0.0.1', port: 3000 });
+      const drive = new DriveStateRepository({ host: '127.0.0.1', port: 3000 });
 
       expect(drive.client.options.host).to.be.equal('127.0.0.1');
       expect(drive.client.options.port).to.be.equal(3000);
@@ -23,7 +23,7 @@ describe('DriveAdapter', () => {
 
   describe('#addSTPacket', () => {
     it('Should call \'addStPacket\' RPC with the given parameters', async () => {
-      const drive = new DriveAdapter({ host: '127.0.0.1', port: 3000 });
+      const drive = new DriveStateRepository({ host: '127.0.0.1', port: 3000 });
 
       const rawSTPacket = 'stPacket';
       const rawStateTransition = 'stateTransition';
@@ -44,7 +44,7 @@ describe('DriveAdapter', () => {
 
   describe('#fetchContract', () => {
     it('Should call \'fetchContract\' RPC with the given parameters', async () => {
-      const drive = new DriveAdapter({ host: '127.0.0.1', port: 3000 });
+      const drive = new DriveStateRepository({ host: '127.0.0.1', port: 3000 });
 
       const contractId = 'contractId';
       const method = 'fetchContract';
@@ -67,7 +67,7 @@ describe('DriveAdapter', () => {
 
   describe('#fetchDocuments', () => {
     it('Should call \'fetchDocuments\' RPC with the given parameters', async () => {
-      const drive = new DriveAdapter({ host: '127.0.0.1', port: 3000 });
+      const drive = new DriveStateRepository({ host: '127.0.0.1', port: 3000 });
 
       const contractId = 'contractId';
       const type = 'contact';
