@@ -24,7 +24,7 @@ describe('getDocumentsFactory', function main() {
   let dataContract;
   let identityPrivateKey;
 
-  beforeEach(async () => {
+  before(async () => {
     const {
       dapiCore,
       dashCore,
@@ -96,7 +96,7 @@ describe('getDocumentsFactory', function main() {
     await dapiClient.applyStateTransition(dataContractStateTransition);
   });
 
-  afterEach(async () => {
+  after(async () => {
     await removeDapi();
   });
 
