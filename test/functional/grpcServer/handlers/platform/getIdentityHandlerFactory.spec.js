@@ -1,3 +1,5 @@
+const bs58 = require('bs58');
+
 const {
   startDapi,
 } = require('@dashevo/dp-services-ctl');
@@ -10,15 +12,18 @@ const {
 
 const DashPlatformProtocol = require('@dashevo/dpp');
 
+const hash = require('@dashevo/dpp/lib/util/hash');
+
+const IdentityCreateTransition = require(
+  '@dashevo/dpp/lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition',
+);
+const { convertSatoshiToCredits } = require(
+  '@dashevo/dpp/lib/identity/creditsConverter',
+);
+
 const IdentityPublicKey = require(
   '@dashevo/dpp/lib/identity/IdentityPublicKey',
 );
-
-const stateTransitionTypes = require(
-  '@dashevo/dpp/lib/stateTransition/stateTransitionTypes',
-);
-
-const Identity = require('@dashevo/dpp/lib/identity/Identity');
 
 const wait = require('../../../../../lib/utils/wait');
 
@@ -31,6 +36,7 @@ describe('getIdentityHandlerFactory', function main() {
   let identityCreateTransition;
   let publicKeys;
   let publicKeyId;
+  let identity;
 
   beforeEach(async () => {
     const {
@@ -93,20 +99,19 @@ describe('getIdentityHandlerFactory', function main() {
       },
     ];
 
-    identityCreateTransition = await dpp.stateTransition.createFromObject({
-      protocolVersion: 0,
-      type: stateTransitionTypes.IDENTITY_CREATE,
+    identity = dpp.identity.create(
+      bs58.encode(
+        hash(Buffer.from(outPoint, 'base64')),
+      ),
+      publicKeys.map(k => new IdentityPublicKey(k)),
+    );
+
+    identityCreateTransition = new IdentityCreateTransition({
       lockedOutPoint: outPoint,
-      identityType: Identity.TYPES.USER,
       publicKeys,
-    }, { skipValidation: true });
+    });
 
-    const identityPublicKey = new IdentityPublicKey()
-      .setId(publicKeyId)
-      .setType(IdentityPublicKey.TYPES.ECDSA_SECP256K1)
-      .setData(pubKeyBase);
-
-    identityCreateTransition.sign(identityPublicKey, privateKey);
+    identityCreateTransition.signByPrivateKey(privateKey);
 
     await dapiClient.applyStateTransition(identityCreateTransition);
   });
@@ -122,17 +127,15 @@ describe('getIdentityHandlerFactory', function main() {
 
     expect(serializedIdentity).to.be.not.null();
 
-    const createdIdentity = dpp.identity.applyIdentityStateTransition(
-      identityCreateTransition,
-      null,
-    );
-
-    const identity = dpp.identity.createFromSerialized(
+    const receivedIdentity = dpp.identity.createFromSerialized(
       serializedIdentity,
       { skipValidation: true },
     );
 
-    expect(createdIdentity.toJSON()).to.deep.equal(identity.toJSON());
+    expect({
+      ...identity.toJSON(),
+      balance: convertSatoshiToCredits(10000),
+    }).to.deep.equal(receivedIdentity.toJSON());
   });
 
   it('should respond with NOT_FOUND error if identity not found', async () => {
