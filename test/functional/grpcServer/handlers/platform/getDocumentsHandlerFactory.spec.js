@@ -29,15 +29,7 @@ describe('getDocumentsFactory', function main() {
       dapiCore,
       dashCore,
       remove,
-    } = await startDapi({
-      drive: {
-        container: {
-          volumes: [
-            `${process.cwd()}/node_modules/@dashevo/dpp:/node_modules/@dashevo/dpp`,
-          ],
-        },
-      },
-    });
+    } = await startDapi();
 
     removeDapi = remove;
 
