@@ -13,8 +13,6 @@ const {
   getPlatformDefinition,
 } = require('@dashevo/dapi-grpc');
 
-const DashPlatformProtocol = require('@dashevo/dpp');
-
 const { client: RpcClient } = require('jayson/promise');
 
 // Load config from .env
@@ -36,10 +34,6 @@ const platformHandlersFactory = require(
 );
 
 async function main() {
-  const dpp = new DashPlatformProtocol({
-    dataProvider: undefined,
-  });
-
   /* Application start */
   const configValidationResult = validateConfig(config);
   if (!configValidationResult.isValid) {
@@ -74,7 +68,7 @@ async function main() {
   log.info('Starting GRPC server');
 
   const coreHandlers = coreHandlersFactory(insightAPI);
-  const platformHandlers = platformHandlersFactory(rpcClient, driveStateRepository, dpp);
+  const platformHandlers = platformHandlersFactory(rpcClient, driveStateRepository);
 
   const grpcApiServer = createServer(getCoreDefinition(), coreHandlers);
 
