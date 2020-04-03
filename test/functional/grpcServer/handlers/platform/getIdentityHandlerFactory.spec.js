@@ -1,5 +1,3 @@
-const bs58 = require('bs58');
-
 const {
   startDapi,
 } = require('@dashevo/dp-services-ctl');
@@ -12,17 +10,8 @@ const {
 
 const DashPlatformProtocol = require('@dashevo/dpp');
 
-const hash = require('@dashevo/dpp/lib/util/hash');
-
-const IdentityCreateTransition = require(
-  '@dashevo/dpp/lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition',
-);
 const { convertSatoshiToCredits } = require(
   '@dashevo/dpp/lib/identity/creditsConverter',
-);
-
-const IdentityPublicKey = require(
-  '@dashevo/dpp/lib/identity/IdentityPublicKey',
 );
 
 const wait = require('../../../../../lib/utils/wait');
@@ -34,8 +23,6 @@ describe('getIdentityHandlerFactory', function main() {
   let dapiClient;
   let dpp;
   let identityCreateTransition;
-  let publicKeys;
-  let publicKeyId;
   let identity;
 
   before(async () => {
@@ -58,15 +45,16 @@ describe('getIdentityHandlerFactory', function main() {
     const { result: privateKeyString } = await coreAPI.dumpPrivKey(addressString);
 
     const privateKey = new PrivateKey(privateKeyString);
-    const pubKeyBase = new PublicKey({
+    const publicKey = new PublicKey({
       ...privateKey.toPublicKey().toObject(),
       compressed: true,
-    }).toBuffer()
+    });
+    const pubKeyBase = publicKey.toBuffer()
       .toString('base64');
 
     // eslint-disable-next-line no-underscore-dangle
-    const publicKeyHash = PublicKey.fromBuffer(Buffer.from(pubKeyBase, 'base64'))._getID();
-    publicKeyId = 1;
+    const publicKeyHash = PublicKey.fromBuffer(Buffer.from(pubKeyBase, 'base64'))
+      ._getID();
 
     await coreAPI.generateToAddress(500, addressString);
 
@@ -87,30 +75,14 @@ describe('getIdentityHandlerFactory', function main() {
 
     await wait(2000); // wait a couple of seconds for tx to be confirmed
 
-    const outPoint = transaction.getOutPointBuffer(0)
-      .toString('base64');
-
-    publicKeys = [
-      {
-        id: publicKeyId,
-        type: IdentityPublicKey.TYPES.ECDSA_SECP256K1,
-        data: pubKeyBase,
-        isEnabled: true,
-      },
-    ];
+    const outPoint = transaction.getOutPointBuffer(0);
 
     identity = dpp.identity.create(
-      bs58.encode(
-        hash(Buffer.from(outPoint, 'base64')),
-      ),
-      publicKeys.map(k => new IdentityPublicKey(k)),
+      outPoint,
+      [publicKey],
     );
 
-    identityCreateTransition = new IdentityCreateTransition({
-      lockedOutPoint: outPoint,
-      publicKeys,
-    });
-
+    identityCreateTransition = dpp.identity.createIdentityCreateTransition(identity);
     identityCreateTransition.signByPrivateKey(privateKey);
 
     await dapiClient.applyStateTransition(identityCreateTransition);
