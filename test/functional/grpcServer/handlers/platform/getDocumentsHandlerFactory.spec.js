@@ -14,7 +14,7 @@ const getDataContractFixture = require('@dashevo/dpp/lib/test/fixtures/getDataCo
 
 const wait = require('../../../../../lib/utils/wait');
 
-describe('getDocumentsFactory', function main() {
+describe('getDocumentsHandlerFactory', function main() {
   this.timeout(90000);
 
   let removeDapi;
