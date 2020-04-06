@@ -106,7 +106,7 @@ describe('getIdentityHandlerFactory', function main() {
 
     expect({
       ...identity.toJSON(),
-      balance: convertSatoshiToCredits(10000),
+      balance: convertSatoshiToCredits(10000) - identityCreateTransition.calculateFee(),
     }).to.deep.equal(receivedIdentity.toJSON());
   });
 
