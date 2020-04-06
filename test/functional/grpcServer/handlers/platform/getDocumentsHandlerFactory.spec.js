@@ -19,7 +19,6 @@ const {
 const DashPlatformProtocol = require('@dashevo/dpp');
 
 const getDataContractFixture = require('@dashevo/dpp/lib/test/fixtures/getDataContractFixture');
-
 const { convertSatoshiToCredits } = require(
   '@dashevo/dpp/lib/identity/creditsConverter',
 );

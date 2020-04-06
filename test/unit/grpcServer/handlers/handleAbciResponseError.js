@@ -32,7 +32,7 @@ describe('handleAbciResponseError', () => {
     { code: 2, errorClass: InvalidArgumentGrpcError },
     { code: 1, errorClass: InternalGrpcError },
   ].forEach(({ code, errorClass }) => {
-    it(`should throw ${errorClass} if response code is ${code}`, () => {
+    it(`should throw ${errorClass.name} if response code is ${code}`, () => {
       try {
         handleAbciResponseError(
           new AbciResponseError(code, { message, data }),
