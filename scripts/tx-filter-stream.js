@@ -122,8 +122,8 @@ async function main() {
     protobufToJsonFactory(
       PBJSTransactionsWithProofsResponse,
     ),
-    checkVersionWrapper(
-      wrapInErrorHandler(subscribeToTransactionsWithProofsHandler),
+    wrapInErrorHandler(
+      checkVersionWrapper(subscribeToTransactionsWithProofsHandler),
     ),
   );
 
