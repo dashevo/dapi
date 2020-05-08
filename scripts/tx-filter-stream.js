@@ -14,6 +14,9 @@ const {
     error: {
       wrapInErrorHandlerFactory,
     },
+    checks: {
+      checkVersionWrapperFactory,
+    },
   },
 } = require('@dashevo/grpc-common');
 
@@ -45,6 +48,8 @@ const subscribeToTransactionsWithProofsHandlerFactory = require('../lib/grpcServ
 
 const subscribeToNewTransactions = require('../lib/transactionsFilter/subscribeToNewTransactions');
 const getHistoricalTransactionsIteratorFactory = require('../lib/transactionsFilter/getHistoricalTransactionsIteratorFactory');
+
+const { version } = require('../package.json');
 
 async function main() {
   // Validate config
@@ -95,6 +100,7 @@ async function main() {
   log.info('Starting GRPC server');
 
   const wrapInErrorHandler = wrapInErrorHandlerFactory(log);
+  const checkVersionWrapper = checkVersionWrapperFactory(version);
 
   const getHistoricalTransactionsIterator = getHistoricalTransactionsIteratorFactory(
     dashCoreRpcClient,
@@ -116,7 +122,9 @@ async function main() {
     protobufToJsonFactory(
       PBJSTransactionsWithProofsResponse,
     ),
-    wrapInErrorHandler(subscribeToTransactionsWithProofsHandler),
+    checkVersionWrapper(
+      wrapInErrorHandler(subscribeToTransactionsWithProofsHandler),
+    ),
   );
 
   const grpcServer = createServer(
