@@ -33,6 +33,8 @@ const platformHandlersFactory = require(
   '../lib/grpcServer/handlers/platform/platformHandlersFactory',
 );
 
+const { version } = require('../package.json');
+
 async function main() {
   /* Application start */
   const configValidationResult = validateConfig(config);
@@ -67,8 +69,8 @@ async function main() {
   // Start GRPC server
   log.info('Starting GRPC server');
 
-  const coreHandlers = coreHandlersFactory(insightAPI);
-  const platformHandlers = platformHandlersFactory(rpcClient, driveStateRepository);
+  const coreHandlers = coreHandlersFactory(insightAPI, version);
+  const platformHandlers = platformHandlersFactory(rpcClient, driveStateRepository, version);
 
   const grpcApiServer = createServer(getCoreDefinition(), coreHandlers);
 
