@@ -1,3 +1,5 @@
+const bs58 = require('bs58');
+
 const {
   server: {
     error: {
@@ -27,17 +29,19 @@ describe('getIdentityIdByFirstPublicKeyHandlerFactory', () => {
   let id;
 
   beforeEach(function beforeEach() {
-    publicKeyHash = 'publicKeyHash';
+    publicKeyHash = '556c2910d46fda2b327ef9d9bda850cc84d30db0';
     id = '5poV8Vdi27VksX2RAzAgXmjAh14y87JN2zLvyAwmepRK';
 
     call = new GrpcCallMock(this.sinon, {
-      getPublicKeyHash: this.sinon.stub().returns(publicKeyHash),
+      getPublicKeyHash: this.sinon.stub().returns(
+        Buffer.from(publicKeyHash, 'hex'),
+      ),
     });
 
     handleAbciResponseErrorMock = this.sinon.stub();
 
     driveStateRepositoryMock = {
-      fetchIdentityIdByFirstPublicKey: this.sinon.stub().resolves(id),
+      fetchIdentityIdByFirstPublicKey: this.sinon.stub().resolves(bs58.decode(id)),
     };
 
     getIdentityIdByFirstPublicKeyHandler = getIdentityIdByFirstPublicKeyHandlerFactory(

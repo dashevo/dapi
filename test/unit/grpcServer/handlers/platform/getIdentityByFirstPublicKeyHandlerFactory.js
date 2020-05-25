@@ -12,7 +12,9 @@ const {
 
 const getIdentityFixture = require('@dashevo/dpp/lib/test/fixtures/getIdentityFixture');
 
-const getIdentityByFirstPublicKeyHandlerFactory = require('../../../../../lib/grpcServer/handlers/platform/getIdentityByFirstPublicKeyHandlerFactory');
+const getIdentityByFirstPublicKeyHandlerFactory = require(
+  '../../../../../lib/grpcServer/handlers/platform/getIdentityByFirstPublicKeyHandlerFactory',
+);
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
@@ -27,10 +29,12 @@ describe('getIdentityByFirstPublicKeyHandlerFactory', () => {
   let publicKeyHash;
 
   beforeEach(function beforeEach() {
-    publicKeyHash = 'publicKeyHash';
+    publicKeyHash = '556c2910d46fda2b327ef9d9bda850cc84d30db0';
 
     call = new GrpcCallMock(this.sinon, {
-      getPublicKeyHash: this.sinon.stub().returns(publicKeyHash),
+      getPublicKeyHash: this.sinon.stub().returns(
+        Buffer.from(publicKeyHash, 'hex'),
+      ),
     });
 
     identity = getIdentityFixture();
