@@ -10,6 +10,8 @@ const {
 
 const DashPlatformProtocol = require('@dashevo/dpp');
 
+const GrpcErrorCodes = require('@dashevo/grpc-common/lib/server/error/GrpcErrorCodes');
+
 const { convertSatoshiToCredits } = require(
   '@dashevo/dpp/lib/identity/creditsConverter',
 );
@@ -139,5 +141,47 @@ describe('topUpIdentity', function main() {
     - identityTopUpTransition.calculateFee();
 
     expect(balance).to.equal(receivedIdentity.getBalance());
+  });
+
+  it('should fail top up created identity ', async () => {
+    const { result: unspent } = await coreAPI.listUnspent();
+    const inputs = unspent.filter(input => input.address === addressString);
+    const topUpTransaction = new Transaction();
+    const topUpAmount = 3000;
+
+    topUpTransaction.from(inputs.slice(-1)[0])
+      .addBurnOutput(topUpAmount, publicKeyHash)
+      .change(addressString)
+      .fee(668)
+      .sign(privateKey);
+
+    const topUpOutPoint = topUpTransaction.getOutPointBuffer(0);
+
+    identityTopUpTransition = dpp.identity.createIdentityTopUpTransition(
+      identity.getId(),
+      topUpOutPoint,
+    );
+    identityTopUpTransition.signByPrivateKey(privateKey);
+
+    try {
+      await dapiClient.applyStateTransition(identityTopUpTransition);
+
+      expect.fail('Should fail with error');
+    } catch (e) {
+      expect(e.code).to.equal(GrpcErrorCodes.INVALID_ARGUMENT);
+      expect(e.details).to.equal('State Transition is invalid');
+    }
+
+    const serializedIdentity = await dapiClient.getIdentity(
+      identityCreateTransition.getIdentityId(),
+    );
+
+    const receivedIdentity = dpp.identity.createFromSerialized(
+      serializedIdentity,
+      { skipValidation: true },
+    );
+
+    expect(convertSatoshiToCredits(10000) - identityCreateTransition.calculateFee())
+      .to.equal(receivedIdentity.getBalance());
   });
 });
