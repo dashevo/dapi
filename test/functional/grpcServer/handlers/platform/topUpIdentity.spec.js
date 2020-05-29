@@ -46,7 +46,9 @@ describe('topUpIdentity', function main() {
     dpp = new DashPlatformProtocol({
       dataProvider: {},
     });
+  });
 
+  beforeEach(async () => {
     ({ result: addressString } = await coreAPI.getNewAddress());
     const { result: privateKeyString } = await coreAPI.dumpPrivKey(addressString);
 
