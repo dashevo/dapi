@@ -49,8 +49,8 @@
     "zeromq": "^5.2.0"
   },
   "devDependencies": {
-    "@dashevo/dapi-client": "~0.13.0-dev.3",
-    "@dashevo/dp-services-ctl": "~0.13.0-dev.1",
+    "@dashevo/dapi-client": "dashevo/dapi-client#rewrite-from-the-scratch",
+    "@dashevo/dp-services-ctl": "dashevo/js-dp-services-ctl#new-dapi-client",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "dirty-chai": "^2.0.1",
