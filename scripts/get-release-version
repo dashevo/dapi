@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+const semver = require('semver');
+const { version } = require('../package.json');
+
+const parsedVersion = semver.coerce(version);
+
+console.log(`${parsedVersion.major}.${parsedVersion.minor}`);
