@@ -45,7 +45,7 @@ install:
   - cd $TRAVIS_BUILD_DIR
 
 before_script:
-  - export OUTPUT=$(travis_wait 20 mn setup-for-local-development 127.0.0.1 20001 --dapi-image-build-path=$TRAVIS_BUILD_DIR)
+  - travis_wait 20 export OUTPUT=$(mn setup-for-local-development 127.0.0.1 20001 --dapi-image-build-path=$TRAVIS_BUILD_DIR)
   - export PRIVATE_KEY=$(echo "$OUTPUT" | grep -m 1 "Private key:" | awk '{printf $4}')
   - export OPERATOR_BLS_KEY=$(echo "$OUTPUT" | grep -m 2 "Private key:" | tail -n 1 | awk '{printf $4}')
   - export DPNS_CONTRACT_ID=$(echo "$OUTPUT" | grep -m 1 "DPNS contract ID:" | awk '{printf $5}')
