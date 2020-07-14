@@ -43,7 +43,8 @@ install:
   - npm ci && npm link
   # Go back to workdir
   - cd $TRAVIS_BUILD_DIR
-  - ./scripts/print-visual-bells.sh &; export OUTPUT=$(mn setup-for-local-development 127.0.0.1 20001 --dapi-image-build-path=$TRAVIS_BUILD_DIR)
+  - ./scripts/print-visual-bells.sh
+  - export OUTPUT=$(mn setup-for-local-development 127.0.0.1 20001 --dapi-image-build-path=$TRAVIS_BUILD_DIR)
 
 before_script:
   - export PRIVATE_KEY=$(echo "$OUTPUT" | grep -m 1 "Private key:" | awk '{printf $4}')
