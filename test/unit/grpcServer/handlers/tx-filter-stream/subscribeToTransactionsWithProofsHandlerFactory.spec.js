@@ -129,7 +129,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     }
   });
 
-  it('should respond with error if `fromBlockHeight is 0', async () => {
+  it('should respond with error if `fromBlockHeight is 0 and `fromBlockHash` is not set', async () => {
     const bloomFilterMessage = new BloomFilter();
 
     bloomFilterMessage.setVData(new Uint8Array());
@@ -146,6 +146,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
 
     try {
       await subscribeToTransactionsWithProofsHandler(call);
+      expect.fail('Error was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('minimum value for `fromBlockHeight` is 1');
