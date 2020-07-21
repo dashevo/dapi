@@ -129,6 +129,31 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     }
   });
 
+  it('should respond with error if `fromBlockHeight is 0', async () => {
+    const bloomFilterMessage = new BloomFilter();
+
+    bloomFilterMessage.setVData(new Uint8Array());
+    bloomFilterMessage.setNTweak(1000);
+    bloomFilterMessage.setNFlags(100);
+    bloomFilterMessage.setNHashFuncs(10);
+
+    const request = new TransactionsWithProofsRequest();
+
+    request.setFromBlockHeight(0);
+    request.setBloomFilter(bloomFilterMessage);
+
+    call.request = request;
+
+    try {
+      await subscribeToTransactionsWithProofsHandler(call);
+    } catch (e) {
+      expect(e).to.be.an.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal('minimum value for `fromBlockHeight` is 1');
+      expect(call.write).to.not.have.been.called();
+      expect(call.end).to.not.have.been.called();
+    }
+  });
+
   it('should subscribe to new transactions from 0 height if both fromBlockHash and fromBlockHeight are not specified', async function it() {
     const hash = 'someHash';
     const hashHex = Buffer.from('someHash').toString('hex');
