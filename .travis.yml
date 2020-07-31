@@ -44,7 +44,7 @@ install:
   - print-bells
   - source ./bin/start-local-node.sh $TRAVIS_BUILD_DIR/package.json --override-major-version=0 --dapi-branch=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH} --drive-branch=$DRIVE_BRANCH
   - cd $TRAVIS_BUILD_DIR
-//--npm-install=github:dashevo/DashJS#$SDK_BRANCH
+
 script: >
   npm run check-package &&
   npm run lint &&
