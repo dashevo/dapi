@@ -14,19 +14,19 @@ const {
   },
 } = require('@dashevo/dapi-grpc');
 
-const getIdentityIdByFirstPublicKeyHandlerFactory = require(
-  '../../../../../lib/grpcServer/handlers/platform/getIdentityIdByFirstPublicKeyHandlerFactory',
+const getIdentityIdByPublicKeyHashHandlerFactory = require(
+  '../../../../../lib/grpcServer/handlers/platform/getIdentityIdByPublicKeyHashHandlerFactory',
 );
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
 const AbciResponseError = require('../../../../../lib/errors/AbciResponseError');
 
-describe('getIdentityIdByFirstPublicKeyHandlerFactory', () => {
+describe('getIdentityIdByPublicKeyHashHandlerFactory', () => {
   let call;
   let driveStateRepositoryMock;
   let handleAbciResponseErrorMock;
-  let getIdentityIdByFirstPublicKeyHandler;
+  let getIdentityIdByPublicKeyHashHandler;
   let publicKeyHash;
   let id;
 
@@ -46,14 +46,14 @@ describe('getIdentityIdByFirstPublicKeyHandlerFactory', () => {
       fetchIdentityIdByFirstPublicKey: this.sinon.stub().resolves(bs58.decode(id)),
     };
 
-    getIdentityIdByFirstPublicKeyHandler = getIdentityIdByFirstPublicKeyHandlerFactory(
+    getIdentityIdByPublicKeyHashHandler = getIdentityIdByPublicKeyHashHandlerFactory(
       driveStateRepositoryMock,
       handleAbciResponseErrorMock,
     );
   });
 
   it('should return valid result', async () => {
-    const result = await getIdentityIdByFirstPublicKeyHandler(call);
+    const result = await getIdentityIdByPublicKeyHashHandler(call);
 
     expect(result).to.be.an.instanceOf(GetIdentityIdByFirstPublicKeyResponse);
     expect(result.getId()).to.equal(id);
@@ -66,7 +66,7 @@ describe('getIdentityIdByFirstPublicKeyHandlerFactory', () => {
     call.request.getPublicKeyHash.returns(null);
 
     try {
-      await getIdentityIdByFirstPublicKeyHandler(call);
+      await getIdentityIdByPublicKeyHashHandler(call);
 
       expect.fail('should throw an error');
     } catch (e) {
@@ -88,7 +88,7 @@ describe('getIdentityIdByFirstPublicKeyHandlerFactory', () => {
     handleAbciResponseErrorMock.throws(handleError);
 
     try {
-      await getIdentityIdByFirstPublicKeyHandler(call);
+      await getIdentityIdByPublicKeyHashHandler(call);
 
       expect.fail('should throw an error');
     } catch (e) {
@@ -105,7 +105,7 @@ describe('getIdentityIdByFirstPublicKeyHandlerFactory', () => {
     driveStateRepositoryMock.fetchIdentityIdByFirstPublicKey.throws(error);
 
     try {
-      await getIdentityIdByFirstPublicKeyHandler(call);
+      await getIdentityIdByPublicKeyHashHandler(call);
 
       expect.fail('should throw an error');
     } catch (e) {
