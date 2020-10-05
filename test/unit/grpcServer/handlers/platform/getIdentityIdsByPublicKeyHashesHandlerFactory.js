@@ -9,7 +9,6 @@ const {
 const {
   v0: {
     GetIdentityIdsByPublicKeyHashesResponse,
-    PublicKeyHashIdentityIdPair,
   },
 } = require('@dashevo/dapi-grpc');
 
@@ -45,9 +44,9 @@ describe('getIdentityIdsByPublicKeyHashesHandlerFactory', () => {
     handleAbciResponseErrorMock = this.sinon.stub();
 
     driveStateRepositoryMock = {
-      fetchIdentityIdsByPublicKeyHashes: this.sinon.stub().resolves({
-        [publicKeyHash]: identity.serialize(),
-      }),
+      fetchIdentityIdsByPublicKeyHashes: this.sinon.stub().resolves([
+        identity.serialize(),
+      ]),
     };
 
     getIdentityIdsByPublicKeyHashesHandler = getIdentityIdsByPublicKeyHashesHandlerFactory(
@@ -61,12 +60,8 @@ describe('getIdentityIdsByPublicKeyHashesHandlerFactory', () => {
 
     expect(result).to.be.an.instanceOf(GetIdentityIdsByPublicKeyHashesResponse);
 
-    const pair = new PublicKeyHashIdentityIdPair();
-    pair.setPublicKeyHash(publicKeyHash);
-    pair.setIdentityId(Buffer.from(identity.getId(), 'hex'));
-
-    expect(result.getIdentityIdsByPublicKeyHashes()).to.deep.equal(
-      [pair],
+    expect(result.getIdentityIdsList()).to.deep.equal(
+      [identity.getId()],
     );
 
     expect(driveStateRepositoryMock.fetchIdentityIdsByPublicKeyHashes)
