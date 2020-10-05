@@ -1,3 +1,5 @@
+const bs58 = require('bs58');
+
 const {
   server: {
     error: {
@@ -34,7 +36,7 @@ describe('getIdentityIdsByPublicKeyHashesHandlerFactory', () => {
     publicKeyHash = '556c2910d46fda2b327ef9d9bda850cc84d30db0';
 
     call = new GrpcCallMock(this.sinon, {
-      getPublicKeyHashes: this.sinon.stub().returns(
+      getPublicKeyHashesList: this.sinon.stub().returns(
         [publicKeyHash],
       ),
     });
@@ -45,7 +47,7 @@ describe('getIdentityIdsByPublicKeyHashesHandlerFactory', () => {
 
     driveStateRepositoryMock = {
       fetchIdentityIdsByPublicKeyHashes: this.sinon.stub().resolves([
-        identity.serialize(),
+        identity.getId(),
       ]),
     };
 
@@ -61,7 +63,7 @@ describe('getIdentityIdsByPublicKeyHashesHandlerFactory', () => {
     expect(result).to.be.an.instanceOf(GetIdentityIdsByPublicKeyHashesResponse);
 
     expect(result.getIdentityIdsList()).to.deep.equal(
-      [identity.getId()],
+      [bs58.decode(identity.getId())],
     );
 
     expect(driveStateRepositoryMock.fetchIdentityIdsByPublicKeyHashes)
@@ -71,7 +73,7 @@ describe('getIdentityIdsByPublicKeyHashesHandlerFactory', () => {
   });
 
   it('should throw an InvalidArgumentGrpcError if no hashes were submitted', async () => {
-    call.request.getPublicKeyHashes.returns([]);
+    call.request.getPublicKeyHashesList.returns([]);
 
     try {
       await getIdentityIdsByPublicKeyHashesHandler(call);

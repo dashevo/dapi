@@ -34,7 +34,7 @@ describe('getIdentitiesByPublicKeyHashesHandlerFactory', () => {
     publicKeyHash = '556c2910d46fda2b327ef9d9bda850cc84d30db0';
 
     call = new GrpcCallMock(this.sinon, {
-      getPublicKeyHashes: this.sinon.stub().returns(
+      getPublicKeyHashesList: this.sinon.stub().returns(
         [publicKeyHash],
       ),
     });
@@ -71,7 +71,7 @@ describe('getIdentitiesByPublicKeyHashesHandlerFactory', () => {
   });
 
   it('should throw an InvalidArgumentGrpcError if no hashes were submitted', async () => {
-    call.request.getPublicKeyHashes.returns([]);
+    call.request.getPublicKeyHashesList.returns([]);
 
     try {
       await getIdentitiesByPublicKeyHashesHandler(call);
