@@ -47,7 +47,7 @@ describe('getIdentityIdsByPublicKeyHashesHandlerFactory', () => {
 
     driveStateRepositoryMock = {
       fetchIdentityIdsByPublicKeyHashes: this.sinon.stub().resolves([
-        identity.getId(),
+        bs58.decode(identity.getId()),
       ]),
     };
 
