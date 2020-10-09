@@ -47,7 +47,7 @@ describe('getIdentityIdsByPublicKeyHashesHandlerFactory', () => {
 
     driveStateRepositoryMock = {
       fetchIdentityIdsByPublicKeyHashes: this.sinon.stub().resolves([
-        bs58.decode(identity.getId()),
+        identity.getId(),
       ]),
     };
 
@@ -63,7 +63,7 @@ describe('getIdentityIdsByPublicKeyHashesHandlerFactory', () => {
     expect(result).to.be.an.instanceOf(GetIdentityIdsByPublicKeyHashesResponse);
 
     expect(result.getIdentityIdsList()).to.deep.equal(
-      [bs58.decode(identity.getId())],
+      [identity.getId()],
     );
 
     expect(driveStateRepositoryMock.fetchIdentityIdsByPublicKeyHashes)
