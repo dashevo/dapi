@@ -121,7 +121,7 @@ describe('DriveStateRepository', () => {
       const result = await drive.fetchDocuments(contractId, type, options);
 
       expect(drive.client.request).to.have.been.calledOnceWithExactly('abci_query', {
-        path: `/dataContracts`,
+        path: '/dataContracts/documents',
         data: cbor.encode({ ...options, contractId, type }).toString('hex'), // cbor encoded empty object
       });
       expect(result).to.be.deep.equal([]);
