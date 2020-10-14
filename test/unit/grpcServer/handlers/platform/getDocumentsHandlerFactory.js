@@ -41,7 +41,7 @@ describe('getDocumentsHandlerFactory', () => {
   let documentsSerialized;
 
   beforeEach(function beforeEach() {
-    dataContractId = 'contractId';
+    dataContractId = Buffer.from('contractId');
     documentType = 'document';
     where = [['name', '==', 'John']];
     orderBy = [{ order: 'asc' }];

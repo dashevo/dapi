@@ -12,6 +12,7 @@ const {
   },
 } = require('@dashevo/dapi-grpc');
 
+const Identifier = require('@dashevo/dpp/lib/Identifier');
 const getIdentityFixture = require('@dashevo/dpp/lib/test/fixtures/getIdentityFixture');
 
 const getIdentityHandlerFactory = require('../../../../../lib/grpcServer/handlers/platform/getIdentityHandlerFactory');
@@ -30,7 +31,7 @@ describe('getIdentityHandlerFactory', () => {
   let identity;
 
   beforeEach(function beforeEach() {
-    id = '5poV8Vdi27VksX2RAzAgXmjAh14y87JN2zLvyAwmepRK';
+    id = Identifier.from('5poV8Vdi27VksX2RAzAgXmjAh14y87JN2zLvyAwmepRK').toBuffer();
     call = new GrpcCallMock(this.sinon, {
       getId: this.sinon.stub().returns(id),
     });

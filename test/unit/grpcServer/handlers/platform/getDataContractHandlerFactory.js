@@ -32,7 +32,7 @@ describe('getDataContractHandlerFactory', () => {
   let handleAbciResponseErrorMock;
 
   beforeEach(function beforeEach() {
-    id = 1;
+    id = Buffer.alloc(1);
     request = {
       getId: this.sinon.stub().returns(id),
     };
