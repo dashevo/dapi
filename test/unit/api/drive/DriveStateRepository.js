@@ -94,7 +94,7 @@ describe('DriveStateRepository', () => {
 
       expect(drive.client.request).to.have.been.calledOnceWithExactly('abci_query', {
         path: '/dataContracts',
-        data: cbor.encode({ contractId }).toString('hex'), // cbor encoded empty object
+        data: cbor.encode({ id: contractId }).toString('hex'), // cbor encoded empty object
       });
       expect(result).to.be.deep.equal(buffer);
     });
