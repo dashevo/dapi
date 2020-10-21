@@ -10,6 +10,9 @@ const DriveStateRepository = require('../../../../lib/externalApis/drive/DriveSt
 const RPCError = require('../../../../lib/rpcServer/RPCError');
 const AbciResponseError = require('../../../../lib/errors/AbciResponseError');
 
+const generateRandomIdentifier = require('@dashevo/dpp/lib/test/utils/generateRandomIdentifier');
+const getIdentityFixture = require('@dashevo/dpp/lib/test/fixtures/getIdentityFixture');
+
 chai.use(chaiAsPromised);
 chai.use(dirtyChai);
 
@@ -149,6 +152,54 @@ describe('DriveStateRepository', () => {
         data: cbor.encode({ id: identityId }).toString('hex'), // cbor encoded empty object
       });
       expect(result).to.be.deep.equal(buffer);
+    });
+  });
+
+  describe('#fetchIdentitiesByPublicKeyHashes', () => {
+    it('Should call \'fetchIdentitiesByPublicKeyHashes\' RPC with the given parameters', async () => {
+      const drive = new DriveStateRepository({ host: '127.0.0.1', port: 3000 });
+
+      const identity = getIdentityFixture();
+      const publicKeyHashes = [Buffer.alloc(1)];
+
+      sinon.stub(drive.client, 'request')
+        .resolves({
+          result: {
+            response: { code: 0, value: cbor.encode([identity]) },
+          },
+        });
+
+      const result = await drive.fetchIdentitiesByPublicKeyHashes(publicKeyHashes);
+
+      expect(drive.client.request).to.have.been.calledOnceWithExactly('abci_query', {
+        path: '/identities/by-public-key-hash',
+        data: cbor.encode({ publicKeyHashes }).toString('hex'),
+      });
+      expect(result).to.be.deep.equal([identity]);
+    });
+  });
+
+  describe('#fetchIdentityIdsByPublicKeyHashes', () => {
+    it('Should call \'fetchIdentityIdsByPublicKeyHashes\' RPC with the given parameters', async () => {
+      const drive = new DriveStateRepository({ host: '127.0.0.1', port: 3000 });
+
+      const identityId = generateRandomIdentifier();
+      const publicKeyHashes = [Buffer.alloc(1)];
+
+      sinon.stub(drive.client, 'request')
+        .resolves({
+          result: {
+            response: { code: 0, value: cbor.encode([identityId]) },
+          },
+        });
+
+      const result = await drive.fetchIdentityIdsByPublicKeyHashes(publicKeyHashes);
+
+      expect(drive.client.request).to.have.been.calledOnceWithExactly('abci_query', {
+        path: '/identities/by-public-key-hash/id',
+        data: cbor.encode({ publicKeyHashes }).toString('hex'),
+      });
+      expect(result).to.be.deep.equal([identityId]);
     });
   });
 });
