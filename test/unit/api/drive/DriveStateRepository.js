@@ -5,13 +5,13 @@ const cbor = require('cbor');
 const chaiAsPromised = require('chai-as-promised');
 const dirtyChai = require('dirty-chai');
 
+const generateRandomIdentifier = require('@dashevo/dpp/lib/test/utils/generateRandomIdentifier');
+const getIdentityFixture = require('@dashevo/dpp/lib/test/fixtures/getIdentityFixture');
 const DriveStateRepository = require('../../../../lib/externalApis/drive/DriveStateRepository');
 
 const RPCError = require('../../../../lib/rpcServer/RPCError');
 const AbciResponseError = require('../../../../lib/errors/AbciResponseError');
 
-const generateRandomIdentifier = require('@dashevo/dpp/lib/test/utils/generateRandomIdentifier');
-const getIdentityFixture = require('@dashevo/dpp/lib/test/fixtures/getIdentityFixture');
 
 chai.use(chaiAsPromised);
 chai.use(dirtyChai);
