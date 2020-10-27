@@ -3,9 +3,9 @@
 
 ### Features
 
-* `getIdentitiesByPublicKeyHashes` and `getIdentityIdsByPublicKeyHashes` endpoints ([#304](https://github.com/dashevo/dapi/issues/304), [#307](https://github.com/dashevo/dapi/issues/304))
+* `getIdentitiesByPublicKeyHashes` and `getIdentityIdsByPublicKeyHashes` endpoints ([#304](https://github.com/dashevo/dapi/issues/304), [#307](https://github.com/dashevo/dapi/issues/307))
 * debug mode to respond internal error with message and stack ([#302](https://github.com/dashevo/dapi/issues/302))
-* use Drive 0.16 endpoints ([#308](https://github.com/dashevo/dapi/issues/309), [#309](https://github.com/dashevo/dapi/issues/309))
+* use Drive 0.16 endpoints ([#308](https://github.com/dashevo/dapi/issues/308), [#309](https://github.com/dashevo/dapi/issues/309))
 
 ### BREAKING CHANGES
 
