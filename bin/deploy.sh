@@ -44,11 +44,12 @@ if [[ -z "$PRERELEASE" ]]; then
 fi
 
 # Build an image with multiple tags
-docker build --build-arg NODE_ENV=development \
+docker buildx build --build-arg NODE_ENV=development \
   -t "${IMAGE_NAME}:${MAJOR}${TAG_POSTFIX}" \
   -t "${IMAGE_NAME}:${MAJOR}.${MINOR}${TAG_POSTFIX}" \
   -t "${IMAGE_NAME}:${MAJOR}.${MINOR}.${PATCH}${TAG_POSTFIX}" \
   -t "${IMAGE_NAME}:${LAST_TAG}" \
+  --platform linux/amd64,linux/arm64,linux/arm/v7 \
   .
 
 # Login to Docker Hub
