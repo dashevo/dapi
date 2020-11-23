@@ -43,6 +43,7 @@ const BloomFilterEmitterCollection = require('../lib/bloomFilter/emitter/BloomFi
 const testTransactionAgainstFilterCollectionFactory = require('../lib/transactionsFilter/testRawTransactionAgainstFilterCollectionFactory');
 const emitBlockEventToFilterCollectionFactory = require('../lib/transactionsFilter/emitBlockEventToFilterCollectionFactory');
 const testTransactionsAgainstFilter = require('../lib/transactionsFilter/testTransactionAgainstFilter');
+const emitTransactionLockToFilterFactory = require('../lib/transactionsFilter/emitTransactionLockEventToFilterCollectionFactory');
 const subscribeToTransactionsWithProofsHandlerFactory = require('../lib/grpcServer/handlers/tx-filter-stream/subscribeToTransactionsWithProofsHandlerFactory');
 
 const subscribeToNewTransactions = require('../lib/transactionsFilter/subscribeToNewTransactions');
@@ -82,6 +83,9 @@ async function main() {
   const testRawTransactionAgainstFilterCollection = testTransactionAgainstFilterCollectionFactory(
     bloomFilterEmitterCollection,
   );
+  const emitTransactionLockToFilter = emitTransactionLockToFilterFactory(
+    bloomFilterEmitterCollection
+  );
 
   // Send raw transactions via `subscribeToTransactionsWithProofs` stream if matched
   dashCoreZmqClient.on(
@@ -93,6 +97,11 @@ async function main() {
   dashCoreZmqClient.on(
     dashCoreZmqClient.topics.rawblock,
     emitBlockEventToFilterCollection,
+  );
+
+  dashCoreZmqClient.on(
+    dashCoreZmqClient.topics.rawtxlock,
+    emitTransactionLockToFilter
   );
 
   // Start GRPC server
