@@ -5,6 +5,7 @@ const {
   MerkleBlock,
   PrivateKey,
   BloomFilter,
+  InstantLock,
   util: { buffer: BufferUtils },
 } = require('@dashevo/dashcore-lib');
 
@@ -32,6 +33,7 @@ describe('subscribeToNewTransactions', () => {
   let mediator;
   let transactions;
   let blocks;
+  let instantLocks;
 
   beforeEach(() => {
     const address = new PrivateKey().toAddress();
@@ -78,6 +80,30 @@ describe('subscribeToNewTransactions', () => {
     blocks = [];
     blocks.push(blockOne);
     blocks.push(blockTwo);
+
+    const instantLockOne = InstantLock.fromObject({
+      inputs: [
+        {
+          outpointHash: '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
+          outpointIndex: 0,
+        },
+      ],
+      txid: 'becccaf1f99d7e7a8a4cc02d020e73d96858757037fca99758bfd629d235bbba',
+      signature: '8967c46529a967b3822e1ba8a173066296d02593f0f59b3a78a30a7eef9c8a120847729e62e4a32954339286b79fe7590221331cd28d576887a263f45b595d499272f656c3f5176987c976239cac16f972d796ad82931d532102a4f95eec7d80',
+    });
+    const instantLockTwo = InstantLock.fromObject({
+      inputs: [
+        {
+          outpointHash: '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
+          outpointIndex: 0,
+        },
+      ],
+      txid: 'todo',
+      signature: '8967c46529a967b3822e1ba8a173066296d02593f0f59b3a78a30a7eef9c8a120847729e62e4a32954339286b79fe7590221331cd28d576887a263f45b595d499272f656c3f5176987c976239cac16f972d796ad82931d532102a4f95eec7d80',
+    });
+
+    instantLocks.push(instantLockOne);
+    instantLockTwo.push(instantLockTwo);
 
     bloomFilter = BloomFilter.create(1, 0.0001);
     bloomFilter.insert(address.hashBuffer);
@@ -237,5 +263,70 @@ describe('subscribeToNewTransactions', () => {
 
     expect(receivedBlocks).to.have.a.lengthOf(1);
     expect(receivedBlocks[0]).to.deep.equal(expectedMerkleBlock);
+  });
+
+  it('should do something with instant locks', () => {
+    const receivedTransactions = [];
+    const receivedBlocks = [];
+    const receivedInstantLocks = [];
+
+    mediator.on(ProcessMediator.EVENTS.TRANSACTION, (tx) => {
+      receivedTransactions.push(tx);
+    });
+
+    mediator.on(ProcessMediator.EVENTS.MERKLE_BLOCK, (merkleBlock) => {
+      receivedBlocks.push(merkleBlock);
+    });
+
+    mediator.on(ProcessMediator.EVENTS.INSTANT_LOCK, (instantLock) => {
+      receivedInstantLocks.push(instantLock);
+    })
+
+    subscribeToNewTransactions(
+      mediator,
+      bloomFilter,
+      testTransactionsAgainstFilter,
+      bloomFilterEmitterCollection,
+    );
+
+    bloomFilterEmitterCollection.test(transactions[0]);
+    bloomFilterEmitterCollection.test(transactions[1]);
+    bloomFilterEmitterCollection.test(transactions[2]);
+
+    bloomFilterEmitterCollection.emit('instantLock', )
+
+    bloomFilterEmitterCollection.emit('block', blocks[0]);
+
+    bloomFilterEmitterCollection.test(transactions[3]);
+    bloomFilterEmitterCollection.test(transactions[4]);
+
+    bloomFilterEmitterCollection.emit('block', blocks[1]);
+
+    mediator.emit(ProcessMediator.EVENTS.HISTORICAL_BLOCK_SENT, blocks[0].hash);
+
+    mediator.emit(ProcessMediator.EVENTS.HISTORICAL_DATA_SENT);
+    mediator.emit(ProcessMediator.EVENTS.CLIENT_DISCONNECTED);
+
+    expect(receivedTransactions).to.deep.equal([
+      transactions[3],
+    ]);
+
+    const expectedMerkleBlock = MerkleBlock.build(
+      blocks[1].header,
+      [
+        Buffer.from(transactions[3].hash, 'hex'),
+        Buffer.from(transactions[4].hash, 'hex'),
+      ],
+      [true, false],
+    );
+
+    expectedMerkleBlock.hashes = expectedMerkleBlock.hashes
+      .map(hash => reverseHash(hash));
+
+    expect(receivedBlocks).to.have.a.lengthOf(1);
+    expect(receivedBlocks[0]).to.deep.equal(expectedMerkleBlock);
+
+
+    expect.fail("Not implemented");
   });
 });
