@@ -88,7 +88,7 @@ describe('subscribeToNewTransactions', () => {
           outpointIndex: 0,
         },
       ],
-      txid: 'becccaf1f99d7e7a8a4cc02d020e73d96858757037fca99758bfd629d235bbba',
+      txid: transactions[4].hash,
       signature: '8967c46529a967b3822e1ba8a173066296d02593f0f59b3a78a30a7eef9c8a120847729e62e4a32954339286b79fe7590221331cd28d576887a263f45b595d499272f656c3f5176987c976239cac16f972d796ad82931d532102a4f95eec7d80',
     });
     const instantLockTwo = InstantLock.fromObject({
@@ -101,9 +101,21 @@ describe('subscribeToNewTransactions', () => {
       txid: transactions[3].hash,
       signature: '8967c46529a967b3822e1ba8a173066296d02593f0f59b3a78a30a7eef9c8a120847729e62e4a32954339286b79fe7590221331cd28d576887a263f45b595d499272f656c3f5176987c976239cac16f972d796ad82931d532102a4f95eec7d80',
     });
+    const instantLockThree = InstantLock.fromObject({
+      inputs: [
+        {
+          outpointHash: '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
+          outpointIndex: 0,
+        },
+      ],
+      txid: transactions[0].hash,
+      signature: '8967c46529a967b3822e1ba8a173066296d02593f0f59b3a78a30a7eef9c8a120847729e62e4a32954339286b79fe7590221331cd28d576887a263f45b595d499272f656c3f5176987c976239cac16f972d796ad82931d532102a4f95eec7d80',
+    });
 
+    instantLocks = [];
     instantLocks.push(instantLockOne);
-    instantLockTwo.push(instantLockTwo);
+    instantLocks.push(instantLockTwo);
+    instantLocks.push(instantLockThree);
 
     bloomFilter = BloomFilter.create(1, 0.0001);
     bloomFilter.insert(address.hashBuffer);
@@ -265,7 +277,7 @@ describe('subscribeToNewTransactions', () => {
     expect(receivedBlocks[0]).to.deep.equal(expectedMerkleBlock);
   });
 
-  it('should do something with instant locks', () => {
+  it('should send instant locks for new transactions', () => {
     const receivedTransactions = [];
     const receivedBlocks = [];
     const receivedInstantLocks = [];
@@ -293,13 +305,14 @@ describe('subscribeToNewTransactions', () => {
     bloomFilterEmitterCollection.test(transactions[1]);
     bloomFilterEmitterCollection.test(transactions[2]);
 
-    bloomFilterEmitterCollection.emit('instantLock', instantLocks[0]);
-    bloomFilterEmitterCollection.emit('instantLock', instantLocks[1]);
-
     bloomFilterEmitterCollection.emit('block', blocks[0]);
 
     bloomFilterEmitterCollection.test(transactions[3]);
     bloomFilterEmitterCollection.test(transactions[4]);
+
+    bloomFilterEmitterCollection.emit('instantLock', instantLocks[0]);
+    bloomFilterEmitterCollection.emit('instantLock', instantLocks[1]);
+    bloomFilterEmitterCollection.emit('instantLock', instantLocks[2]);
 
     bloomFilterEmitterCollection.emit('block', blocks[1]);
 
@@ -327,10 +340,15 @@ describe('subscribeToNewTransactions', () => {
     expect(receivedBlocks).to.have.a.lengthOf(1);
     expect(receivedBlocks[0]).to.deep.equal(expectedMerkleBlock);
 
-    const expectedInstantLock = InstantLock.fromBuffer(instantLocks[0].toBuffer());
+    // Deep copy instant lock
+    const expectedInstantLock = InstantLock.fromBuffer(instantLocks[1].toBuffer());
 
+    // We emit 2 instant locks - one for matched transaction and one
+    // for someone's else transaction
     expect(receivedInstantLocks).to.have.length(1);
     expect(receivedInstantLocks[0]).to.be.deep.equal(expectedInstantLock);
+
+    expect(receivedInstantLocks[0].txid).to.be.equal(receivedTransactions[0].hash);
 
     // TODO: test that lock gets removed after 10 blocks
   });
