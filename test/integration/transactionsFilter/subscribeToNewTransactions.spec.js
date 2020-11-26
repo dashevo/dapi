@@ -98,7 +98,7 @@ describe('subscribeToNewTransactions', () => {
           outpointIndex: 0,
         },
       ],
-      txid: 'todo',
+      txid: transactions[3].hash,
       signature: '8967c46529a967b3822e1ba8a173066296d02593f0f59b3a78a30a7eef9c8a120847729e62e4a32954339286b79fe7590221331cd28d576887a263f45b595d499272f656c3f5176987c976239cac16f972d796ad82931d532102a4f95eec7d80',
     });
 
@@ -293,7 +293,8 @@ describe('subscribeToNewTransactions', () => {
     bloomFilterEmitterCollection.test(transactions[1]);
     bloomFilterEmitterCollection.test(transactions[2]);
 
-    bloomFilterEmitterCollection.emit('instantLock', )
+    bloomFilterEmitterCollection.emit('instantLock', instantLocks[0]);
+    bloomFilterEmitterCollection.emit('instantLock', instantLocks[1]);
 
     bloomFilterEmitterCollection.emit('block', blocks[0]);
 
@@ -326,7 +327,11 @@ describe('subscribeToNewTransactions', () => {
     expect(receivedBlocks).to.have.a.lengthOf(1);
     expect(receivedBlocks[0]).to.deep.equal(expectedMerkleBlock);
 
+    const expectedInstantLock = InstantLock.fromBuffer(instantLocks[0].toBuffer());
 
-    expect.fail("Not implemented");
+    expect(receivedInstantLocks).to.have.length(1);
+    expect(receivedInstantLocks[0]).to.be.deep.equal(expectedInstantLock);
+
+    // TODO: test that lock gets removed after 10 blocks
   });
 });
