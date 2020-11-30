@@ -14,6 +14,7 @@ const ProcessMediator = require('../../../lib/transactionsFilter/ProcessMediator
 
 const subscribeToNewTransactions = require('../../../lib/transactionsFilter/subscribeToNewTransactions');
 const testTransactionsAgainstFilter = require('../../../lib/transactionsFilter/testTransactionAgainstFilter');
+const emitInstantLockToFilterCollectionFactory = require('../../../lib/transactionsFilter/emitInstantLockToFilterCollectionFactory');
 
 /**
  * Reverse the hash
@@ -34,6 +35,7 @@ describe('subscribeToNewTransactions', () => {
   let transactions;
   let blocks;
   let instantLocks;
+  let emitInstantLockToFilterCollection;
 
   beforeEach(() => {
     const address = new PrivateKey().toAddress();
@@ -122,6 +124,10 @@ describe('subscribeToNewTransactions', () => {
 
     bloomFilterEmitterCollection = new BloomFilterEmitterCollection();
     mediator = new ProcessMediator();
+
+    emitInstantLockToFilterCollection = emitInstantLockToFilterCollectionFactory(
+      bloomFilterEmitterCollection
+    );
   });
 
   it('should add transactions and blocks in cache and send them back when historical data is sent', () => {
@@ -310,9 +316,9 @@ describe('subscribeToNewTransactions', () => {
     bloomFilterEmitterCollection.test(transactions[3]);
     bloomFilterEmitterCollection.test(transactions[4]);
 
-    bloomFilterEmitterCollection.emit('instantLock', instantLocks[0]);
-    bloomFilterEmitterCollection.emit('instantLock', instantLocks[1]);
-    bloomFilterEmitterCollection.emit('instantLock', instantLocks[2]);
+    emitInstantLockToFilterCollection(instantLocks[0].toBuffer());
+    emitInstantLockToFilterCollection(instantLocks[1].toBuffer());
+    emitInstantLockToFilterCollection(instantLocks[2].toBuffer());
 
     bloomFilterEmitterCollection.emit('block', blocks[1]);
 
@@ -392,9 +398,9 @@ describe('subscribeToNewTransactions', () => {
     bloomFilterEmitterCollection.test(transactions[3]);
     bloomFilterEmitterCollection.test(transactions[4]);
 
-    bloomFilterEmitterCollection.emit('instantLock', instantLocks[0]);
-    bloomFilterEmitterCollection.emit('instantLock', instantLocks[1]);
-    bloomFilterEmitterCollection.emit('instantLock', instantLocks[2]);
+    emitInstantLockToFilterCollection(instantLocks[0].toBuffer());
+    emitInstantLockToFilterCollection(instantLocks[1].toBuffer());
+    emitInstantLockToFilterCollection(instantLocks[2].toBuffer());
 
     bloomFilterEmitterCollection.emit('block', blocks[1]);
 

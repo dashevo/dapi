@@ -43,7 +43,7 @@ const BloomFilterEmitterCollection = require('../lib/bloomFilter/emitter/BloomFi
 const testTransactionAgainstFilterCollectionFactory = require('../lib/transactionsFilter/testRawTransactionAgainstFilterCollectionFactory');
 const emitBlockEventToFilterCollectionFactory = require('../lib/transactionsFilter/emitBlockEventToFilterCollectionFactory');
 const testTransactionsAgainstFilter = require('../lib/transactionsFilter/testTransactionAgainstFilter');
-const testInstantLockAgainstFilterCollectionFactory = require('../lib/transactionsFilter/testInstantLockAgainstToFilterCollectionFactory');
+const emitInstantLockToFilterCollectionFactory = require('../lib/transactionsFilter/emitInstantLockToFilterCollectionFactory');
 const subscribeToTransactionsWithProofsHandlerFactory = require('../lib/grpcServer/handlers/tx-filter-stream/subscribeToTransactionsWithProofsHandlerFactory');
 
 const subscribeToNewTransactions = require('../lib/transactionsFilter/subscribeToNewTransactions');
@@ -83,7 +83,7 @@ async function main() {
   const testRawTransactionAgainstFilterCollection = testTransactionAgainstFilterCollectionFactory(
     bloomFilterEmitterCollection,
   );
-  const testTransactionLockAgainstFilterCollection = testInstantLockAgainstFilterCollectionFactory(
+  const emitInstantLockToFilterCollection = emitInstantLockToFilterCollectionFactory(
     bloomFilterEmitterCollection
   );
 
@@ -102,7 +102,7 @@ async function main() {
   // Send transaction instant locks via `subscribeToTransactionsWithProofs` stream
   dashCoreZmqClient.on(
     dashCoreZmqClient.topics.rawtxlock,
-    testTransactionLockAgainstFilterCollection
+    emitInstantLockToFilterCollection
   );
 
   // Start GRPC server
