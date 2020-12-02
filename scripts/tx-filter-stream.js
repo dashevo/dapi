@@ -63,7 +63,7 @@ async function main() {
   // Subscribe to events from Dash Core
   const dashCoreZmqClient = new ZmqClient(config.dashcore.zmq.host, config.dashcore.zmq.port);
 
-  // // Bind logs on ZMQ connection events
+  // Bind logs on ZMQ connection events
   dashCoreZmqClient.on(ZmqClient.events.DISCONNECTED, log.warn);
   dashCoreZmqClient.on(ZmqClient.events.CONNECTION_DELAY, log.warn);
   dashCoreZmqClient.on(ZmqClient.events.MONITOR_ERROR, log.warn);
@@ -101,7 +101,7 @@ async function main() {
 
   // Send transaction instant locks via `subscribeToTransactionsWithProofs` stream
   dashCoreZmqClient.on(
-    dashCoreZmqClient.topics.rawtxlock,
+    dashCoreZmqClient.topics.rawtxlocksig,
     emitInstantLockToFilterCollection
   );
 
@@ -148,7 +148,6 @@ async function main() {
   grpcServer.start();
 
   log.info(`GRPC server is listening on port ${config.txFilterStream.grpcServer.port}`);
-
 
   // Display message that everything is ok
   log.info(`DAPI TxFilterStream process is up and running in ${config.livenet ? 'livenet' : 'testnet'} mode`);
