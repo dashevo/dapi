@@ -150,7 +150,8 @@ describe('TransactionHashesCache', () => {
       expect(transactionHashesCache.transactionHashesMap).to.deep.equal(
         {
           [firstTx.hash]: 0,
-        });
+        },
+      );
 
       transactionHashesCache.addBlock(blocks[0]);
       transactionHashesCache.addTransaction(secondTx);
@@ -159,7 +160,7 @@ describe('TransactionHashesCache', () => {
       expect(transactionHashesCache.blocksProcessed).to.be.equal(2);
       expect(transactionHashesCache.transactionHashesMap).to.deep.equal({
         [firstTx.hash]: 0,
-        [secondTx.hash]: 1
+        [secondTx.hash]: 1,
       });
     });
   });
@@ -269,13 +270,13 @@ describe('TransactionHashesCache', () => {
 
       expect(transactionHashesCache.transactionHashesMap).to.be.deep.equal({
         [firstTx.hash]: 0,
-        [secondTx.hash]: 0
+        [secondTx.hash]: 0,
       });
 
       transactionHashesCache.removeTransactionHashFromInstantSendLockWaitingList(firstTx.hash);
 
       expect(transactionHashesCache.transactionHashesMap).to.be.deep.equal({
-        [secondTx.hash]: 0
+        [secondTx.hash]: 0,
       });
     });
   });

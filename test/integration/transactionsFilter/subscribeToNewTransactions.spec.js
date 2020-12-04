@@ -38,8 +38,6 @@ describe('subscribeToNewTransactions', () => {
   let instantLockZmqMessagesMocks;
   let emitInstantLockToFilterCollection;
 
-  let rawTsLockSigMessage = Buffer.from('02000000043d8e21a4cb4450437a8d8cba9c47c9c0c86779529ff380adb15f04ea5430a101000000006b48304502210084ac71029cdb9ee7350a619e5d161652e37966569dfdf4cabfc547befc86ffb60220178161a805c2ead81806946dea37663ce8e6574762ede7dc639e1fb5cf15d1ef01210202be5b073e61df41af9dc6119722c91a425f074b631036584e22dee0f324088cfeffffff340da676133869c0dfe304aedef72a5ae5d5523cccfc041faf6f89a2f7e8711c000000006b483045022100e7ae6359dc84dfae023de514a481c111c841c6de3c5868bdc36cc0546bb31ba10220044913ffb75681dddc9b111599cf9c8a04b9287c377c0c80ff5ab370584adc16012102ac12a8e35c4639f57fe1716298aaac12792db168e6068d6b1817363565b6b6f2feffffff32238ff0630231a01a917227a7e87b487b89b05a2a16b8e847aec1f89da46f55000000006a473044022022c5b76503c11e3d66bc88e80d97260766943fd3cf5e8d8fd703d4a2af538c62022070f8d0aa9d90d66de800eac18419fe8b51d82703d71fa0f9f1c5b1b2976fb13f012102312718f15e2ad5500a5198347011260518ae04c2cf2c2c54aae9edde8a4db962feffffff23985fd3e3c973ca0a7ef174676badf7adebbff14b8802bad799c792079581e0000000006b4830450221008cea305e64c9cc389d058219262c2feb924becea880fe16cc6d4076df73fe25702200dc27feac425fa20dd98b012337f61d6059b3f764a6555196bed0dd259c5c2ee012103ddcf5e9ca3e9778a69ce5c1e171f27a42dc5aba48fe21a0d378610939965a14dfeffffff02c7400f00000000001976a9146b85d8c17fff19a323c0bb3d697d934c6603094688ac926e8504000000001976a914c3d7e626e2f46c5c23085b6dc76a8b4a7003d95188ac00000000043d8e21a4cb4450437a8d8cba9c47c9c0c86779529ff380adb15f04ea5430a10100000000340da676133869c0dfe304aedef72a5ae5d5523cccfc041faf6f89a2f7e8711c0000000032238ff0630231a01a917227a7e87b487b89b05a2a16b8e847aec1f89da46f550000000023985fd3e3c973ca0a7ef174676badf7adebbff14b8802bad799c792079581e000000000c18ed89454bb43941bb572f3f86555293075bb1bc9418387d668d84294710fd29424783bbea720cb71e5356b57d90442dba6fed751bb407c09442d0090bcf7e96a993eb3810337104cca7f1ebc6ad39a106a9d7d08803675ccd2b5091f00eb40d73dbff98a573150d5d9a6af9060181b4b653ba3beb10b7b4d6645db696e6bbd', 'hex');
-
   beforeEach(() => {
     const address = new PrivateKey().toAddress();
     const anotherAddress = new PrivateKey().toAddress();
@@ -135,7 +133,7 @@ describe('subscribeToNewTransactions', () => {
     mediator = new ProcessMediator();
 
     emitInstantLockToFilterCollection = emitInstantLockToFilterCollectionFactory(
-      bloomFilterEmitterCollection
+      bloomFilterEmitterCollection,
     );
   });
 
@@ -307,7 +305,7 @@ describe('subscribeToNewTransactions', () => {
 
     mediator.on(ProcessMediator.EVENTS.INSTANT_LOCK, (instantLock) => {
       receivedInstantLocks.push(instantLock);
-    })
+    });
 
     subscribeToNewTransactions(
       mediator,
@@ -386,7 +384,7 @@ describe('subscribeToNewTransactions', () => {
 
     mediator.on(ProcessMediator.EVENTS.INSTANT_LOCK, (instantLock) => {
       receivedInstantLocks.push(instantLock);
-    })
+    });
 
     subscribeToNewTransactions(
       mediator,
@@ -400,7 +398,7 @@ describe('subscribeToNewTransactions', () => {
     bloomFilterEmitterCollection.test(transactions[2]);
 
     // emit 10 'block' events to get transaction 0 to be removed from the instant lock cache
-    for (let i=0; i<=10; i++) {
+    for (let i = 0; i <= 10; i++) {
       bloomFilterEmitterCollection.emit('block', blocks[0]);
     }
 

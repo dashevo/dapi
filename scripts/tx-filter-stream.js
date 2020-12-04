@@ -84,7 +84,7 @@ async function main() {
     bloomFilterEmitterCollection,
   );
   const emitInstantLockToFilterCollection = emitInstantLockToFilterCollectionFactory(
-    bloomFilterEmitterCollection
+    bloomFilterEmitterCollection,
   );
 
   // Send raw transactions via `subscribeToTransactionsWithProofs` stream if matched
@@ -99,10 +99,13 @@ async function main() {
     emitBlockEventToFilterCollection,
   );
 
+  // TODO: check if we can receive this event before 'rawtx', and if we can,
+  // we need to test tx in this message first before emitng lock to the bloom
+  // filter collection
   // Send transaction instant locks via `subscribeToTransactionsWithProofs` stream
   dashCoreZmqClient.on(
     dashCoreZmqClient.topics.rawtxlocksig,
-    emitInstantLockToFilterCollection
+    emitInstantLockToFilterCollection,
   );
 
   // Start GRPC server
