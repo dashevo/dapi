@@ -13,7 +13,11 @@ const {
   getPlatformDefinition,
 } = require('@dashevo/dapi-grpc');
 
+const DashPlatformProtocol = require('@dashevo/dpp');
+
 const { client: RpcClient } = require('jayson/promise');
+
+const WsClient = require('../lib/externalApis/tenderdash/WsClient');
 
 // Load config from .env
 dotenv.config();
@@ -55,6 +59,27 @@ async function main() {
     port: config.tendermintCore.port,
   });
 
+  const tenderDashWsClient = new WsClient({
+    host: config.tendermintCore.host,
+    port: config.tendermintCore.port,
+  });
+
+  log.info(`Connecting to tenderdash WebSocket on ${config.tendermintCore.host}:${config.tendermintCore.port}`);
+
+  tenderDashWsClient.on('error', (e) => {
+    log.error('WebSocket error', e);
+
+    process.exit(1);
+  });
+
+  await tenderDashWsClient.connect();
+
+  const wsQuery = 'tm.event = \'Tx\'';
+
+  tenderDashWsClient.subscribe(wsQuery);
+
+  log.info('Connection to WebSocket established.');
+
   // Start JSON RPC server
   log.info('Starting JSON RPC server');
   rpcServer.start({
@@ -65,6 +90,8 @@ async function main() {
   });
   log.info(`JSON RPC server is listening on port ${config.rpcServer.port}`);
 
+  const dpp = new DashPlatformProtocol();
+
   // Start GRPC server
   log.info('Starting GRPC server');
 
@@ -74,7 +101,9 @@ async function main() {
   );
   const platformHandlers = platformHandlersFactory(
     rpcClient,
+    tenderDashWsClient,
     driveStateRepository,
+    dpp,
     isProductionEnvironment,
   );
 

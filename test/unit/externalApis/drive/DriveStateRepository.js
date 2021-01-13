@@ -230,4 +230,39 @@ describe('DriveStateRepository', () => {
       });
     });
   });
+
+  describe('#fetchProofs', () => {
+    it('should call \'fetchProofs\' RPC with the given parameters', async () => {
+      const drive = new DriveStateRepository({ host: '127.0.0.1', port: 3000 });
+
+      const documentIds = undefined;
+      const identityIds = [Buffer.from('id')];
+      const dataContractIds = [Buffer.from('anotherId')];
+
+      const proof = Buffer.from('proof');
+      const buffer = cbor.encode({ data: proof });
+
+      sinon.stub(drive.client, 'request')
+        .resolves({
+          result: {
+            response: { code: 0, value: buffer },
+          },
+        });
+
+      const result = await drive.fetchProofs({ documentIds, identityIds, dataContractIds });
+
+      expect(drive.client.request).to.have.been.calledOnceWithExactly('abci_query', {
+        path: '/proofs',
+        data: cbor.encode({
+          documentIds,
+          identityIds,
+          dataContractIds,
+        }).toString('hex'),
+      });
+
+      expect(result).to.be.deep.equal({
+        data: proof,
+      });
+    });
+  });
 });
