@@ -9,6 +9,7 @@ const {
 const {
   v0: {
     WaitForStateTransitionResultResponse,
+    WaitForStateTransitionResultRequest,
     StateTransitionBroadcastError,
     Proof,
   },
@@ -33,6 +34,7 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
   let proofFixture;
   let wsMessagesFixture;
   let stateTransitionFixture;
+  let request;
 
   beforeEach(function beforeEach() {
     hash = Buffer.from('56458F2D8A8617EA322931B72C103CDD93820004E534295183A6EF215B93C76E', 'hex');
@@ -198,6 +200,38 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('state transition hash is not specified');
+    }
+  });
+
+  it('should throw an InvalidArgumentGrpcError if stateTransitionHash wasn\'t set', async () => {
+    request = new WaitForStateTransitionResultRequest();
+
+    call.request = WaitForStateTransitionResultRequest.deserializeBinary(request.serializeBinary());
+
+    try {
+      await waitForStateTransitionResultHandler(call);
+
+      expect.fail('should throw an error');
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal('state transition hash is not specified');
+    }
+  });
+
+  it('should throw after the timeout', async () => {
+    request = new WaitForStateTransitionResultRequest();
+    const stHash = Buffer.from('abff', 'hex');
+    request.setStateTransitionHash(stHash);
+
+    call.request = WaitForStateTransitionResultRequest.deserializeBinary(request.serializeBinary());
+
+    try {
+      await waitForStateTransitionResultHandler(call);
+
+      expect.fail('should throw an error');
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal('kek timeout');
     }
   });
 });

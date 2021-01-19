@@ -74,9 +74,7 @@ async function main() {
 
   await tenderDashWsClient.connect();
 
-  const wsQuery = 'tm.event = \'Tx\'';
-
-  tenderDashWsClient.subscribe(wsQuery);
+  tenderDashWsClient.subscribeToTransactions();
 
   log.info('Connection to WebSocket established.');
 
