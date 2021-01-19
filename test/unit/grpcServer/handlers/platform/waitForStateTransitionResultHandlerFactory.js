@@ -23,7 +23,7 @@ const cbor = require('cbor');
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 const waitForStateTransitionResultHandlerFactory = require('../../../../../lib/grpcServer/handlers/platform/waitForStateTransitionResultHandlerFactory');
 
-describe('WaitForStateTransitionResultResponse', () => {
+describe('waitForStateTransitionResultHandlerFactory', () => {
   let call;
   let waitForStateTransitionResultHandler;
   let driveStateRepositoryMock;
