@@ -198,19 +198,6 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
     });
   });
 
-  it('should throw an InvalidArgumentGrpcError if state transition hash is not specified', async () => {
-    call.request.getStateTransitionHash.returns(null);
-
-    try {
-      await waitForStateTransitionResultHandler(call);
-
-      expect.fail('should throw an error');
-    } catch (e) {
-      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('state transition hash is not specified');
-    }
-  });
-
   it('should throw an InvalidArgumentGrpcError if stateTransitionHash wasn\'t set', async () => {
     request = new WaitForStateTransitionResultRequest();
 
