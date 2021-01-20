@@ -129,7 +129,7 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
     );
   });
 
-  it('should wait for state transition result', (done) => {
+  it('should wait for state transition empty result', (done) => {
     waitForStateTransitionResultHandler(call).then((result) => {
       expect(result).to.be.an.instanceOf(WaitForStateTransitionResultResponse);
       expect(result.getProof()).to.be.undefined();
@@ -143,7 +143,7 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
     });
   });
 
-  it('should wait for state transition and return proof', (done) => {
+  it('should wait for state transition and return result with proof', (done) => {
     call.request.getProve.returns(true);
 
     waitForStateTransitionResultHandler(call).then((result) => {
@@ -170,7 +170,7 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
     });
   });
 
-  it('should wait for state transition and return error', (done) => {
+  it('should wait for state transition and return result with error', (done) => {
     waitForStateTransitionResultHandler(call).then((result) => {
       expect(result).to.be.an.instanceOf(WaitForStateTransitionResultResponse);
       expect(result.getProof()).to.be.undefined();
@@ -213,7 +213,7 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
     }
   });
 
-  it('should throw after the timeout', async () => {
+  it('should throw DeadlineExceededGrpcError after the timeout', async () => {
     request = new WaitForStateTransitionResultRequest();
     const stHash = Buffer.from('abff', 'hex');
     request.setStateTransitionHash(stHash);

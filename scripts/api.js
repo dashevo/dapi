@@ -65,10 +65,10 @@ async function main() {
     port: config.tendermintCore.port,
   });
 
-  log.info(`Connecting to tenderdash WebSocket on ${config.tendermintCore.host}:${config.tendermintCore.port}`);
+  log.info(`Connecting to Tenderdash on ${config.tendermintCore.host}:${config.tendermintCore.port}`);
 
   tenderDashWsClient.on('error', (e) => {
-    log.error('WebSocket error', e);
+    log.error('Tenderdash connection error', e);
 
     process.exit(1);
   });
@@ -78,7 +78,7 @@ async function main() {
   const transactionsClient = new TransactionsClient(tenderDashWsClient);
   transactionsClient.start();
 
-  log.info('Connection to WebSocket established.');
+  log.info('Connection to Tenderdash established.');
 
   // Start JSON RPC server
   log.info('Starting JSON RPC server');
