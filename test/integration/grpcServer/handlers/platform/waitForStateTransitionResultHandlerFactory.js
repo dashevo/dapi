@@ -170,7 +170,7 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
     });
   });
 
-  it('should wait for state transition and return error', (done) => {
+  it('should wait for state transition and return result with error', (done) => {
     waitForStateTransitionResultHandler(call).then((result) => {
       expect(result).to.be.an.instanceOf(WaitForStateTransitionResultResponse);
       expect(result.getProof()).to.be.undefined();
