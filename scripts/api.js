@@ -68,7 +68,7 @@ async function main() {
   log.info(`Connecting to tenderdash WebSocket on ${config.tendermintCore.host}:${config.tendermintCore.port}`);
 
   tenderDashWsClient.on('error', (e) => {
-    log.error('WebSocket error', e);
+    log.error('Tenderdash connection error', e);
 
     process.exit(1);
   });
