@@ -17,7 +17,7 @@ describe('TransactionClient', () => {
 
     txDataMock = {
       events: {
-        'tx.hash': '123',
+        'tx.hash': ['123'],
       },
     };
 
@@ -26,7 +26,7 @@ describe('TransactionClient', () => {
     sinon.spy(transactionsClient, 'emit');
   });
 
-  describe('constructor', () => {
+  describe('#start', () => {
     it('should subscribe to transaction events from WS client', () => {
       expect(wsClientMock.subscribe).to.be.calledOnce();
       expect(wsClientMock.subscribe).to.be.calledWithExactly(TransactionsClient.TX_QUERY);
