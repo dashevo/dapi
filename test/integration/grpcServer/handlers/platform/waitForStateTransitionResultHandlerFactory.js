@@ -226,7 +226,7 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
     }
   });
 
-  it('should throw after the timeout', async () => {
+  it('should throw DeadlineExceededGrpcError after the timeout', async () => {
     request = new WaitForStateTransitionResultRequest();
     const stHash = Buffer.from('abff', 'hex');
     request.setStateTransitionHash(stHash);
