@@ -76,6 +76,7 @@ async function main() {
   await tenderDashWsClient.connect();
 
   const transactionsClient = new TransactionsClient(tenderDashWsClient);
+  transactionsClient.start();
 
   log.info('Connection to WebSocket established.');
 

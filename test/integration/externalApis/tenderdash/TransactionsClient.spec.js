@@ -13,6 +13,7 @@ describe('TransactionClient', () => {
     wsClientMock = new EventEmitter();
     wsClientMock.subscribe = sinon.stub();
     transactionsClient = new TransactionsClient(wsClientMock);
+    transactionsClient.start();
 
     txDataMock = {
       events: {
