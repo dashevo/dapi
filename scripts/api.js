@@ -78,7 +78,7 @@ async function main() {
   const transactionsClient = new TransactionsClient(tenderDashWsClient);
   transactionsClient.start();
 
-  log.info('Connection to WebSocket established.');
+  log.info('Connection to Tenderdash established.');
 
   // Start JSON RPC server
   log.info('Starting JSON RPC server');
