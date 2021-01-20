@@ -29,6 +29,7 @@ const rpcServer = require('../lib/rpcServer/server');
 const DriveStateRepository = require('../lib/externalApis/drive/DriveStateRepository');
 const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
+const TransactionsClient = require('../lib/externalApis/tenderdash/TransactionsClient');
 
 const coreHandlersFactory = require(
   '../lib/grpcServer/handlers/core/coreHandlersFactory',
@@ -74,7 +75,7 @@ async function main() {
 
   await tenderDashWsClient.connect();
 
-  tenderDashWsClient.subscribeToTransactions();
+  const transactionsClient = new TransactionsClient(tenderDashWsClient);
 
   log.info('Connection to WebSocket established.');
 
@@ -99,7 +100,7 @@ async function main() {
   );
   const platformHandlers = platformHandlersFactory(
     rpcClient,
-    tenderDashWsClient,
+    transactionsClient,
     driveStateRepository,
     dpp,
     isProductionEnvironment,
