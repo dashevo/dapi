@@ -143,7 +143,7 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
     });
   });
 
-  it('should wait for state transition and return proof', (done) => {
+  it('should wait for state transition and return result with proof', (done) => {
     call.request.getProve.returns(true);
 
     waitForStateTransitionResultHandler(call).then((result) => {
