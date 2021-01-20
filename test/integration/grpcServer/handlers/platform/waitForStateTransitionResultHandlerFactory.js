@@ -2,6 +2,7 @@ const {
   server: {
     error: {
       InvalidArgumentGrpcError,
+      DeadlineExceededGrpcError,
     },
   },
 } = require('@dashevo/grpc-common');
@@ -20,6 +21,7 @@ const getIdentityCreateTransitionFixture = require('@dashevo/dpp/lib/test/fixtur
 const { EventEmitter } = require('events');
 
 const cbor = require('cbor');
+const TransactionClient = require('../../../../../lib/externalApis/tenderdash/TransactionsClient');
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 const waitForStateTransitionResultHandlerFactory = require('../../../../../lib/grpcServer/handlers/platform/waitForStateTransitionResultHandlerFactory');
@@ -29,6 +31,7 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
   let waitForStateTransitionResultHandler;
   let driveStateRepositoryMock;
   let tenderDashWsClientMock;
+  let transactionClient;
   let dppMock;
   let hash;
   let proofFixture;
@@ -104,6 +107,7 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
     });
 
     tenderDashWsClientMock = new EventEmitter();
+    tenderDashWsClientMock.subscribe = this.sinon.stub();
 
     stateTransitionFixture = getIdentityCreateTransitionFixture();
 
@@ -114,10 +118,14 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
       fetchProofs: this.sinon.stub().resolves({ identitiesProof: proofFixture }),
     };
 
+    transactionClient = new TransactionClient(tenderDashWsClientMock);
+    transactionClient.start();
+
     waitForStateTransitionResultHandler = waitForStateTransitionResultHandlerFactory(
       driveStateRepositoryMock,
-      tenderDashWsClientMock,
+      transactionClient,
       dppMock,
+      1000,
     );
   });
 
@@ -230,8 +238,11 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
 
       expect.fail('should throw an error');
     } catch (e) {
-      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('kek timeout');
+      expect(e).to.be.instanceOf(DeadlineExceededGrpcError);
+      expect(e.getMessage()).to.equal('Waiting period for state transition ABFF exceeded');
+      expect(e.getRawMetadata()).to.be.deep.equal({
+        stateTransitionHash: 'ABFF',
+      });
     }
   });
 });
