@@ -129,44 +129,56 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
     );
   });
 
-  it('should wait for state transition empty result', (done) => {
-    waitForStateTransitionResultHandler(call).then((result) => {
-      expect(result).to.be.an.instanceOf(WaitForStateTransitionResultResponse);
-      expect(result.getProof()).to.be.undefined();
-      expect(result.getError()).to.be.undefined();
+  it('should wait for state transition empty result', async () => {
+    const promise = waitForStateTransitionResultHandler(call);
 
-      done();
-    });
-
-    process.nextTick(() => {
+    setTimeout(() => {
       tenderDashWsClientMock.emit('tm.event = \'Tx\'', wsMessagesFixture.success);
-    });
+    }, 10);
+    setTimeout(() => {
+      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, wsMessagesFixture.success);
+    }, 10);
+    setTimeout(() => {
+      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, wsMessagesFixture.success);
+    }, 10);
+
+    const result = await promise;
+
+    expect(result).to.be.an.instanceOf(WaitForStateTransitionResultResponse);
+    expect(result.getProof()).to.be.undefined();
+    expect(result.getError()).to.be.undefined();
   });
 
-  it('should wait for state transition and return result with proof', (done) => {
+  it('should wait for state transition and return result with proof', async () => {
     call.request.getProve.returns(true);
 
-    waitForStateTransitionResultHandler(call).then((result) => {
-      expect(result).to.be.an.instanceOf(WaitForStateTransitionResultResponse);
-      expect(result.getError()).to.be.undefined();
-      const proof = result.getProof();
+    const promise = waitForStateTransitionResultHandler(call);
 
-      expect(proof).to.be.an.instanceOf(Proof);
-      const rootTreeProof = proof.getRootTreeProof();
-      const storeTreeProof = proof.getStoreTreeProof();
-
-      expect(rootTreeProof).to.deep.equal(proofFixture.rootTreeProof);
-      expect(storeTreeProof).to.deep.equal(proofFixture.storeTreeProof);
-
-      expect(driveStateRepositoryMock.fetchProofs).to.be.calledOnceWithExactly({
-        identityIds: stateTransitionFixture.getModifiedDataIds(),
-      });
-
-      done();
-    });
-
-    process.nextTick(() => {
+    setTimeout(() => {
       tenderDashWsClientMock.emit('tm.event = \'Tx\'', wsMessagesFixture.success);
+    }, 10);
+    setTimeout(() => {
+      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, wsMessagesFixture.success);
+    }, 10);
+    setTimeout(() => {
+      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, wsMessagesFixture.success);
+    }, 10);
+
+    const result = await promise;
+
+    expect(result).to.be.an.instanceOf(WaitForStateTransitionResultResponse);
+    expect(result.getError()).to.be.undefined();
+    const proof = result.getProof();
+
+    expect(proof).to.be.an.instanceOf(Proof);
+    const rootTreeProof = proof.getRootTreeProof();
+    const storeTreeProof = proof.getStoreTreeProof();
+
+    expect(rootTreeProof).to.deep.equal(proofFixture.rootTreeProof);
+    expect(storeTreeProof).to.deep.equal(proofFixture.storeTreeProof);
+
+    expect(driveStateRepositoryMock.fetchProofs).to.be.calledOnceWithExactly({
+      identityIds: stateTransitionFixture.getModifiedDataIds(),
     });
   });
 

@@ -33,7 +33,7 @@ describe('TransactionClient', () => {
         TransactionsClient.TX_QUERY,
       );
       expect(wsClientMock.subscribe.secondCall).to.be.calledWithExactly(
-        TransactionsClient.BLOCK_QUERY,
+        TransactionsClient.NEW_BLOCK_QUERY,
       );
     });
   });
