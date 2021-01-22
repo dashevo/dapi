@@ -26,10 +26,11 @@ const config = require('../lib/config');
 const { validateConfig } = require('../lib/config/validator');
 const log = require('../lib/log');
 const rpcServer = require('../lib/rpcServer/server');
-const DriveStateRepository = require('../lib/externalApis/drive/DriveStateRepository');
+const DriveClient = require('../lib/externalApis/drive/DriveClient');
 const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
 const TransactionsClient = require('../lib/externalApis/tenderdash/TransactionsClient');
+const DriveStateRepository = require('../lib/dpp/DriveStateRepository');
 
 const coreHandlersFactory = require(
   '../lib/grpcServer/handlers/core/coreHandlersFactory',
@@ -50,7 +51,7 @@ async function main() {
   const isProductionEnvironment = process.env.NODE_ENV === 'production';
 
   log.info('Connecting to Drive');
-  const driveStateRepository = new DriveStateRepository({
+  const driveClient = new DriveClient({
     host: config.tendermintCore.host,
     port: config.tendermintCore.port,
   });
@@ -64,6 +65,8 @@ async function main() {
     host: config.tendermintCore.host,
     port: config.tendermintCore.port,
   });
+
+  const driveStateRepository = new DriveStateRepository(driveClient);
 
   log.info(`Connecting to Tenderdash on ${config.tendermintCore.host}:${config.tendermintCore.port}`);
 
@@ -90,7 +93,9 @@ async function main() {
   });
   log.info(`JSON RPC server is listening on port ${config.rpcServer.port}`);
 
-  const dpp = new DashPlatformProtocol();
+  const dpp = new DashPlatformProtocol({
+    stateRepository: driveStateRepository,
+  });
 
   // Start GRPC server
   log.info('Starting GRPC server');
@@ -102,7 +107,7 @@ async function main() {
   const platformHandlers = platformHandlersFactory(
     rpcClient,
     transactionsClient,
-    driveStateRepository,
+    driveClient,
     dpp,
     isProductionEnvironment,
   );
