@@ -28,8 +28,13 @@ describe('TransactionClient', () => {
 
   describe('#start', () => {
     it('should subscribe to transaction events from WS client', () => {
-      expect(wsClientMock.subscribe).to.be.calledOnce();
-      expect(wsClientMock.subscribe).to.be.calledWithExactly(TransactionsClient.TX_QUERY);
+      expect(wsClientMock.subscribe).to.be.calledTwice();
+      expect(wsClientMock.subscribe.firstCall).to.be.calledWithExactly(
+        TransactionsClient.TX_QUERY,
+      );
+      expect(wsClientMock.subscribe.secondCall).to.be.calledWithExactly(
+        TransactionsClient.BLOCK_QUERY,
+      );
     });
   });
 
@@ -118,6 +123,31 @@ describe('TransactionClient', () => {
       expect(transactionsClient.listenerCount(eventName)).to.be.equal(0);
       // Check that no transaction data was emitted
       expect(transactionsClient.emit).to.not.be.called();
+    });
+  });
+
+  describe('#waitForBlocks', () => {
+    it('should wait for n blocks and remove listeners afterwards', async () => {
+      const newBlockEvent = TransactionsClient.events.NEW_BLOCK;
+      const blockPromise = transactionsClient.waitForBlocks(2);
+
+      expect(transactionsClient.listenerCount(newBlockEvent)).to.be.equal(1);
+
+      setTimeout(() => {
+        wsClientMock.emit(TransactionsClient.NEW_BLOCK_QUERY, Object.assign({}, txDataMock));
+      }, 10);
+      setTimeout(() => {
+        wsClientMock.emit(TransactionsClient.NEW_BLOCK_QUERY, Object.assign({}, txDataMock));
+      }, 10);
+
+      await blockPromise;
+
+      // Check that event listener was properly attached
+      expect(transactionsClient.on).to.be.calledTwice();
+      // Check that transaction data was emitted
+      expect(transactionsClient.emit).to.be.calledTwice();
+      // Check that the event listener was properly removed
+      expect(transactionsClient.listenerCount(newBlockEvent)).to.be.equal(0);
     });
   });
 });
