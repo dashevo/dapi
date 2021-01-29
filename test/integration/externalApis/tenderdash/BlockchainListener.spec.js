@@ -2,7 +2,7 @@ const EventEmitter = require('events');
 const BlockchainListener = require('../../../../lib/externalApis/tenderdash/BlockchainListener');
 const TransactionWaitPeriodExceededError = require('../../../../lib/errors/TransactionWaitPeriodExceededError');
 
-describe('TransactionClient', () => {
+describe('BlockchainListener', () => {
   let sinon;
   let wsClientMock;
   let blockchainListener;
