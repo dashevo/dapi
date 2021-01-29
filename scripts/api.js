@@ -66,7 +66,8 @@ async function main() {
     port: config.tendermintCore.port,
   });
 
-  const driveStateRepository = new DriveStateRepository(driveClient);
+  const dppForParsingContracts = new DashPlatformProtocol();
+  const driveStateRepository = new DriveStateRepository(driveClient, dppForParsingContracts);
 
   log.info(`Connecting to Tenderdash on ${config.tendermintCore.host}:${config.tendermintCore.port}`);
 
