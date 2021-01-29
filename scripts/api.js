@@ -29,7 +29,7 @@ const rpcServer = require('../lib/rpcServer/server');
 const DriveClient = require('../lib/externalApis/drive/DriveClient');
 const insightAPI = require('../lib/externalApis/insight');
 const dashCoreRpcClient = require('../lib/externalApis/dashcore/rpc');
-const TransactionsClient = require('../lib/externalApis/tenderdash/TransactionsClient');
+const BlockchainListener = require('../lib/externalApis/tenderdash/BlockchainListener');
 const DriveStateRepository = require('../lib/dpp/DriveStateRepository');
 
 const coreHandlersFactory = require(
@@ -78,8 +78,8 @@ async function main() {
 
   await tenderDashWsClient.connect();
 
-  const transactionsClient = new TransactionsClient(tenderDashWsClient);
-  transactionsClient.start();
+  const blockchainListener = new BlockchainListener(tenderDashWsClient);
+  blockchainListener.start();
 
   log.info('Connection to Tenderdash established.');
 
@@ -106,7 +106,7 @@ async function main() {
   );
   const platformHandlers = platformHandlersFactory(
     rpcClient,
-    transactionsClient,
+    blockchainListener,
     driveClient,
     dpp,
     isProductionEnvironment,
