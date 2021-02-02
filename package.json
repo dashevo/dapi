@@ -30,7 +30,7 @@
     "all": true
   },
   "dependencies": {
-    "@dashevo/dapi-grpc": "~0.18.0-dev.2",
+    "@dashevo/dapi-grpc": "~0.18.0-dev.3",
     "@dashevo/dashcore-lib": "~0.19.19",
     "@dashevo/dashd-rpc": "^2.0.2",
     "@dashevo/dpp": "~0.18.0-dev.1",
