@@ -38,6 +38,8 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
   let wsMessagesFixture;
   let stateTransitionFixture;
   let request;
+  let emptyBlockFixture;
+  let blockWithTxFixture;
 
   beforeEach(function beforeEach() {
     hash = Buffer.from('56458F2D8A8617EA322931B72C103CDD93820004E534295183A6EF215B93C76E', 'hex');
@@ -95,6 +97,22 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
         },
       },
     };
+    emptyBlockFixture = {
+      data: { value: { block: { data: { txs: [] } } } },
+    };
+    blockWithTxFixture = {
+      data: {
+        value: {
+          block: {
+            data: {
+              txs: [
+                wsMessagesFixture.success.data.value.TxResult.tx,
+              ],
+            },
+          },
+        },
+      },
+    };
 
     proofFixture = {
       rootTreeProof: Buffer.alloc(1, 1),
@@ -136,10 +154,10 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
       tenderDashWsClientMock.emit('tm.event = \'Tx\'', wsMessagesFixture.success);
     }, 10);
     setTimeout(() => {
-      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, wsMessagesFixture.success);
+      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, blockWithTxFixture);
     }, 10);
     setTimeout(() => {
-      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, wsMessagesFixture.success);
+      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, emptyBlockFixture);
     }, 10);
 
     const result = await promise;
@@ -158,10 +176,10 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
       tenderDashWsClientMock.emit('tm.event = \'Tx\'', wsMessagesFixture.success);
     }, 10);
     setTimeout(() => {
-      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, wsMessagesFixture.success);
+      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, blockWithTxFixture);
     }, 10);
     setTimeout(() => {
-      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, wsMessagesFixture.success);
+      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, emptyBlockFixture);
     }, 10);
 
     const result = await promise;
@@ -207,6 +225,8 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
 
     process.nextTick(() => {
       tenderDashWsClientMock.emit('tm.event = \'Tx\'', wsMessagesFixture.error);
+      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, blockWithTxFixture);
+      tenderDashWsClientMock.emit(TransactionClient.NEW_BLOCK_QUERY, emptyBlockFixture);
     });
   });
 
