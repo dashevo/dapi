@@ -143,7 +143,7 @@ describe('BlockchainListener', () => {
       await blockPromise;
 
       // Check that event listener was properly attached
-      expect(blockchainListener.on).to.be.calledTwice();
+      expect(blockchainListener.on).to.be.calledOnce();
       // Check that transaction data was emitted
       expect(blockchainListener.emit).to.be.calledTwice();
       // Check that the event listener was properly removed
