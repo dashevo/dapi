@@ -21,7 +21,7 @@ const getIdentityCreateTransitionFixture = require('@dashevo/dpp/lib/test/fixtur
 const { EventEmitter } = require('events');
 
 const cbor = require('cbor');
-const TransactionClient = require('../../../../../lib/externalApis/tenderdash/BlockchainListener');
+const TransactionClient = require('../../../../../lib/externalApis/tenderdash/blockchainListener/BlockchainListener');
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 const waitForStateTransitionResultHandlerFactory = require('../../../../../lib/grpcServer/handlers/platform/waitForStateTransitionResultHandlerFactory');
