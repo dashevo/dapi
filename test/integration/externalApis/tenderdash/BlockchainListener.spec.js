@@ -11,6 +11,7 @@ describe('BlockchainListener', () => {
   let transactionHash;
   let txBase64Mock;
   let txBufferMock;
+  let emptyBlockMessage;
 
   beforeEach(function beforeEach() {
     ({ sinon } = this);
@@ -42,6 +43,18 @@ describe('BlockchainListener', () => {
           block: {
             data: {
               txs: [txBase64Mock],
+            },
+          },
+        },
+      },
+    };
+
+    emptyBlockMessage = {
+      data: {
+        value: {
+          block: {
+            data: {
+              txs: [],
             },
           },
         },
@@ -95,13 +108,12 @@ describe('BlockchainListener', () => {
     });
 
     it('should not emit any transaction hashes if block contents are empty', (done) => {
-      const topic = BlockchainListener.getTransactionAddedToTheBlockEventName(transactionHash);
-      blockchainListener.on(topic, (message) => {
-        expect(message).to.be.deep.equal(txBufferMock);
-        done();
-      });
+      wsClientMock.emit(BlockchainListener.NEW_BLOCK_QUERY, emptyBlockMessage);
 
-      wsClientMock.emit(BlockchainListener.NEW_BLOCK_QUERY, blockMessageMock);
+      setTimeout(() => {
+        expect(blockchainListener.on).to.not.be.called();
+        done();
+      }, 100);
     });
   });
 });
