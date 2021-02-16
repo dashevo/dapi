@@ -17,7 +17,7 @@ describe('waitForTransactionCommitment', () => {
     hashString = 'abc';
 
     txInBlockTopic = BlockchainListener
-      .getTransactionAddedToTheBlockEventName(hashString.toLowerCase());;
+      .getTransactionAddedToTheBlockEventName(hashString.toLowerCase());
   });
 
   it('should resolve promise after block with transaction and one more', async () => {

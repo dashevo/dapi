@@ -134,12 +134,14 @@ async function main() {
 
 main().catch((e) => {
   log.error(e.stack);
-  process.exit();
+
+  process.exit(1);
 });
 
 process.on('unhandledRejection', (e) => {
-  console.error(e);
-  process.exit();
+  log.error(e);
+
+  process.exit(1);
 });
 
 // break on ^C
