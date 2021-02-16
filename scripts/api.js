@@ -137,6 +137,11 @@ main().catch((e) => {
   process.exit();
 });
 
+process.on('unhandledRejection', (e) => {
+  console.error(e);
+  process.exit();
+});
+
 // break on ^C
 process.on('SIGINT', () => {
   process.exit();
