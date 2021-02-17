@@ -94,7 +94,6 @@ describe('BlockchainListener', () => {
         done();
       });
 
-
       wsClientMock.emit(BlockchainListener.TX_QUERY, txQueryMessageMock);
     });
 
