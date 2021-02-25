@@ -1,11 +1,11 @@
 const EventEmitter = require('events');
 
-const waitForTransactionResult = require('../../../../../../lib/externalApis/tenderdash/blockchainListener/waitForTransactionToBeProvable/waitForTransactionResult');
+const waitForTransactionResult = require('../../../../../lib/externalApis/tenderdash/waitForTransactionToBeProvable/waitForTransactionResult');
 
-const BlockchainListener = require('../../../../../../lib/externalApis/tenderdash/blockchainListener/BlockchainListener');
+const BlockchainListener = require('../../../../../lib/externalApis/tenderdash/BlockchainListener');
 
-const TransactionOkResult = require('../../../../../../lib/externalApis/tenderdash/blockchainListener/waitForTransactionToBeProvable/transactionResult/TransactionOkResult');
-const TransactionErrorResult = require('../../../../../../lib/externalApis/tenderdash/blockchainListener/waitForTransactionToBeProvable/transactionResult/TransactionErrorResult');
+const TransactionOkResult = require('../../../../../lib/externalApis/tenderdash/waitForTransactionToBeProvable/transactionResult/TransactionOkResult');
+const TransactionErrorResult = require('../../../../../lib/externalApis/tenderdash/waitForTransactionToBeProvable/transactionResult/TransactionErrorResult');
 
 describe('waitForTransactionResult', () => {
   let blockchainListenerMock;

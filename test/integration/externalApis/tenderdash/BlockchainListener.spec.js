@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 const crypto = require('crypto');
 
-const BlockchainListener = require('../../../../lib/externalApis/tenderdash/blockchainListener/BlockchainListener');
+const BlockchainListener = require('../../../../lib/externalApis/tenderdash/BlockchainListener');
 
 describe('BlockchainListener', () => {
   let sinon;

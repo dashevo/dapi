@@ -1,8 +1,8 @@
-const waitForTransactionToBeProvableFactory = require('../../../../../../lib/externalApis/tenderdash/blockchainListener/waitForTransactionToBeProvable/waitForTransactionToBeProvableFactory');
+const waitForTransactionToBeProvableFactory = require('../../../../../lib/externalApis/tenderdash/waitForTransactionToBeProvable/waitForTransactionToBeProvableFactory');
 
-const TransactionOkResult = require('../../../../../../lib/externalApis/tenderdash/blockchainListener/waitForTransactionToBeProvable/transactionResult/TransactionOkResult');
-const TransactionErrorResult = require('../../../../../../lib/externalApis/tenderdash/blockchainListener/waitForTransactionToBeProvable/transactionResult/TransactionErrorResult');
-const TransactionWaitPeriodExceededError = require('../../../../../../lib/errors/TransactionWaitPeriodExceededError');
+const TransactionOkResult = require('../../../../../lib/externalApis/tenderdash/waitForTransactionToBeProvable/transactionResult/TransactionOkResult');
+const TransactionErrorResult = require('../../../../../lib/externalApis/tenderdash/waitForTransactionToBeProvable/transactionResult/TransactionErrorResult');
+const TransactionWaitPeriodExceededError = require('../../../../../lib/errors/TransactionWaitPeriodExceededError');
 
 describe('waitForTransactionToBeProvableFactory', () => {
   let waitForTransactionToBeProvable;

@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 
 const waitForHeightFactory = require('../../../../lib/externalApis/tenderdash/waitForHeightFactory');
-const BlockchainListener = require('../../../../lib/externalApis/tenderdash/blockchainListener/BlockchainListener');
+const BlockchainListener = require('../../../../lib/externalApis/tenderdash/BlockchainListener');
 
 describe('waitForHeightFactory', () => {
   let blockchainListenerMock;
