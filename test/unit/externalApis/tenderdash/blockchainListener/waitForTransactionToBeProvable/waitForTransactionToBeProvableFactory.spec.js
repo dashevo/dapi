@@ -10,6 +10,7 @@ describe('waitForTransactionToBeProvableFactory', () => {
   let waitForTransactionResultResponse;
   let waitForTransactionCommitmentMock;
   let waitForTransactionCommitmentResponse;
+  let getExistingTransactionResultMock;
   let blockchainListenerMock;
   let hashString;
   let timeout;
@@ -18,6 +19,8 @@ describe('waitForTransactionToBeProvableFactory', () => {
     blockchainListenerMock = { };
     hashString = 'abc';
     timeout = 60000;
+
+    getExistingTransactionResultMock = this.sinon.stub();
 
     waitForTransactionResultResponse = {
       promise: null,
@@ -40,10 +43,46 @@ describe('waitForTransactionToBeProvableFactory', () => {
     waitForTransactionToBeProvable = waitForTransactionToBeProvableFactory(
       waitForTransactionResultMock,
       waitForTransactionCommitmentMock,
+      getExistingTransactionResultMock,
     );
   });
 
-  it('should return TransactionOkResult and wait for proofs', async () => {
+  it('should return existing TransactionOkResult and wait for proofs', async () => {
+    const expectedResult = new TransactionOkResult({}, Buffer.alloc(0));
+
+    getExistingTransactionResultMock.resolves(expectedResult);
+
+    waitForTransactionResultResponse.promise = new Promise(() => {});
+
+    waitForTransactionCommitmentResponse.promise = Promise.resolve();
+
+    const actualResult = await waitForTransactionToBeProvable(
+      blockchainListenerMock,
+      hashString,
+      timeout,
+    );
+
+    expect(actualResult).to.equal(expectedResult);
+
+    expect(getExistingTransactionResultMock).to.be.calledOnceWithExactly(
+      hashString,
+    );
+
+    expect(waitForTransactionResultMock).to.be.calledOnceWithExactly(
+      blockchainListenerMock,
+      hashString,
+    );
+
+    expect(waitForTransactionCommitmentMock).to.be.calledOnceWithExactly(
+      blockchainListenerMock,
+      hashString,
+    );
+
+    expect(waitForTransactionResultResponse.detach).to.be.called();
+    expect(waitForTransactionCommitmentResponse.detach).to.not.be.called();
+  });
+
+  it('should return upcoming TransactionOkResult and wait for proofs', async () => {
     const expectedResult = new TransactionOkResult({}, Buffer.alloc(0));
 
     waitForTransactionResultResponse.promise = Promise.resolve(expectedResult);
@@ -57,6 +96,10 @@ describe('waitForTransactionToBeProvableFactory', () => {
     );
 
     expect(actualResult).to.equal(expectedResult);
+
+    expect(getExistingTransactionResultMock).to.be.calledOnceWithExactly(
+      hashString,
+    );
 
     expect(waitForTransactionResultMock).to.be.calledOnceWithExactly(
       blockchainListenerMock,
@@ -86,6 +129,10 @@ describe('waitForTransactionToBeProvableFactory', () => {
     );
 
     expect(actualResult).to.equal(expectedResult);
+
+    expect(getExistingTransactionResultMock).to.be.calledOnceWithExactly(
+      hashString,
+    );
 
     expect(waitForTransactionResultMock).to.be.calledOnceWithExactly(
       blockchainListenerMock,
@@ -120,6 +167,10 @@ describe('waitForTransactionToBeProvableFactory', () => {
       expect(e).to.be.instanceOf(TransactionWaitPeriodExceededError);
 
       expect(e.getTransactionHash()).to.equal(hashString);
+
+      expect(getExistingTransactionResultMock).to.be.calledOnceWithExactly(
+        hashString,
+      );
 
       expect(waitForTransactionResultMock).to.be.calledOnceWithExactly(
         blockchainListenerMock,
