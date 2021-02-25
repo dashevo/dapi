@@ -12,6 +12,7 @@ describe('waitForTransactionResult', () => {
   let hashString;
   let topic;
   let tx;
+  let height;
 
   beforeEach(function beforeEach() {
     blockchainListenerMock = new EventEmitter();
@@ -23,48 +24,48 @@ describe('waitForTransactionResult', () => {
     topic = BlockchainListener.getTransactionEventName(hashString);
 
     tx = 'aGVsbG8h';
+
+    height = 100;
   });
 
-  it('should resolve promise with TransactionOkResult when transaction result is emitted', async () => {
+  it('should resolve TransactionOkResult when transaction result is emitted', async () => {
     const { promise } = waitForTransactionResult(blockchainListenerMock, hashString);
 
     const result = {
       code: 0,
     };
 
-    const data = { data: { value: { TxResult: { result, tx } } } };
+    const data = { data: { value: { TxResult: { result, tx, height } } } };
 
     blockchainListenerMock.emit(topic, data);
 
     const transactionResult = await promise;
 
     expect(transactionResult).to.be.instanceOf(TransactionOkResult);
-    expect(transactionResult.getDeliverResult()).to.equal(result);
+    expect(transactionResult.getResult()).to.equal(result);
+    expect(transactionResult.getHeight()).to.equal(100);
     expect(transactionResult.getTransaction()).to.deep.equal(Buffer.from(tx, 'base64'));
 
     expect(blockchainListenerMock.off).to.be.calledOnceWith(topic);
   });
 
-  it('should reject promise with TransactionErrorResult when transaction result is emitted', async () => {
+  it('should resolve TransactionErrorResult when transaction result is emitted', async () => {
     const { promise } = waitForTransactionResult(blockchainListenerMock, hashString);
 
     const result = {
       code: 1,
     };
 
-    const data = { data: { value: { TxResult: { result, tx } } } };
+    const data = { data: { value: { TxResult: { result, tx, height } } } };
 
     blockchainListenerMock.emit(topic, data);
 
-    try {
-      await promise;
+    const transactionResult = await promise;
 
-      expect.fail('should throw TransactionErrorResult');
-    } catch (transactionResult) {
-      expect(transactionResult).to.be.instanceOf(TransactionErrorResult);
-      expect(transactionResult.getDeliverResult()).to.equal(result);
-      expect(transactionResult.getTransaction()).to.deep.equal(Buffer.from(tx, 'base64'));
-    }
+    expect(transactionResult).to.be.instanceOf(TransactionErrorResult);
+    expect(transactionResult.getResult()).to.equal(result);
+    expect(transactionResult.getHeight()).to.equal(100);
+    expect(transactionResult.getTransaction()).to.deep.equal(Buffer.from(tx, 'base64'));
 
     expect(blockchainListenerMock.off).to.be.calledOnceWith(topic);
   });
