@@ -11,7 +11,7 @@ const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 describe('getStatusHandlerFactory', () => {
   let call;
   let getStatusHandler;
-  let insightAPIMock;
+  let coreRPCClientMock;
   let info;
 
   beforeEach(function beforeEach() {
@@ -32,11 +32,11 @@ describe('getStatusHandlerFactory', () => {
 
     call = new GrpcCallMock(this.sinon);
 
-    insightAPIMock = {
+    coreRPCClientMock = {
       getStatus: this.sinon.stub().resolves({ info }),
     };
 
-    getStatusHandler = getStatusHandlerFactory(insightAPIMock);
+    getStatusHandler = getStatusHandlerFactory(coreRPCClientMock);
   });
 
   it('should return valid result', async () => {
@@ -56,6 +56,6 @@ describe('getStatusHandlerFactory', () => {
     expect(result.getErrors()).to.equal(info.errors);
     expect(result.getNetwork()).to.equal(info.network);
 
-    expect(insightAPIMock.getStatus).to.be.calledOnceWith('getInfo');
+    expect(coreRPCClientMock.getStatus).to.be.calledOnceWith('getInfo');
   });
 });
