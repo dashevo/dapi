@@ -24,7 +24,7 @@ describe('getBlockHandlerFactory', () => {
   let hash;
   let height;
   let getBlockHandler;
-  let insightAPIMock;
+  let coreRPCClientMock;
   let request;
   let block;
 
@@ -42,12 +42,12 @@ describe('getBlockHandlerFactory', () => {
 
     call = new GrpcCallMock(this.sinon, request);
 
-    insightAPIMock = {
-      getRawBlockByHash: this.sinon.stub().resolves(serializedBlock),
-      getRawBlockByHeight: this.sinon.stub().resolves(serializedBlock),
+    coreRPCClientMock = {
+      getRawBlock: this.sinon.stub().resolves(serializedBlock),
+      getBlockHash: this.sinon.stub().resolves(hash),
     };
 
-    getBlockHandler = getBlockHandlerFactory(insightAPIMock);
+    getBlockHandler = getBlockHandlerFactory(coreRPCClientMock);
   });
 
   it('should return valid result is hash is specified', async () => {
@@ -58,8 +58,8 @@ describe('getBlockHandlerFactory', () => {
 
     expect(result).to.be.an.instanceOf(GetBlockResponse);
 
-    expect(insightAPIMock.getRawBlockByHash).to.be.calledOnceWith(hash);
-    expect(insightAPIMock.getRawBlockByHeight).to.be.not.called();
+    expect(coreRPCClientMock.getRawBlock).to.be.calledOnceWith(hash);
+    expect(coreRPCClientMock.getBlockHash).to.be.not.called();
 
     const blockBinary = result.getBlock();
 
@@ -78,8 +78,8 @@ describe('getBlockHandlerFactory', () => {
 
     expect(result).to.be.an.instanceOf(GetBlockResponse);
 
-    expect(insightAPIMock.getRawBlockByHash).to.be.not.called();
-    expect(insightAPIMock.getRawBlockByHeight).to.be.calledOnceWith(height);
+    expect(coreRPCClientMock.getRawBlock).to.be.not.called();
+    expect(coreRPCClientMock.getBlockHash).to.be.calledOnceWith(height);
 
     const blockBinary = result.getBlock();
 
@@ -98,8 +98,8 @@ describe('getBlockHandlerFactory', () => {
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('hash or height is not specified');
-      expect(insightAPIMock.getRawBlockByHash).to.be.not.called();
-      expect(insightAPIMock.getRawBlockByHeight).to.be.not.called();
+      expect(coreRPCClientMock.getRawBlock).to.be.not.called();
+      expect(coreRPCClientMock.getBlockHash).to.be.not.called();
     }
   });
 
@@ -107,7 +107,7 @@ describe('getBlockHandlerFactory', () => {
     const error = new Error();
     error.statusCode = 400;
 
-    insightAPIMock.getRawBlockByHeight.throws(error);
+    coreRPCClientMock.getRawBlockByHeight.throws(error);
 
     height = 42;
     request.getHeight.returns(height);
@@ -119,8 +119,8 @@ describe('getBlockHandlerFactory', () => {
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Invalid block height');
-      expect(insightAPIMock.getRawBlockByHash).to.be.not.called();
-      expect(insightAPIMock.getRawBlockByHeight).to.be.calledOnceWith(height);
+      expect(coreRPCClientMock.getRawBlock).to.be.not.called();
+      expect(coreRPCClientMock.getBlockHash).to.be.calledOnceWith(height);
     }
   });
 
@@ -128,7 +128,7 @@ describe('getBlockHandlerFactory', () => {
     const error = new Error();
     error.statusCode = 404;
 
-    insightAPIMock.getRawBlockByHash.throws(error);
+    coreRPCClientMock.getRawBlock.throws(error);
 
     hash = 'hash';
     request.getHash.returns(hash);
@@ -140,8 +140,8 @@ describe('getBlockHandlerFactory', () => {
     } catch (e) {
       expect(e).to.be.instanceOf(NotFoundGrpcError);
       expect(e.getMessage()).to.equal('Block not found');
-      expect(insightAPIMock.getRawBlockByHeight).to.be.not.called();
-      expect(insightAPIMock.getRawBlockByHash).to.be.calledOnceWith(hash);
+      expect(coreRPCClientMock.getBlockHash).to.be.not.called();
+      expect(coreRPCClientMock.getRawBlock).to.be.calledOnceWith(hash);
     }
   });
 
@@ -149,7 +149,7 @@ describe('getBlockHandlerFactory', () => {
     const error = new Error('Unknown error');
     error.statusCode = 500;
 
-    insightAPIMock.getRawBlockByHash.throws(error);
+    coreRPCClientMock.getRawBlock.throws(error);
 
     hash = 'hash';
     request.getHash.returns(hash);
@@ -160,8 +160,8 @@ describe('getBlockHandlerFactory', () => {
       expect.fail('should thrown InvalidArgumentGrpcError error');
     } catch (e) {
       expect(e).to.deep.equal(error);
-      expect(insightAPIMock.getRawBlockByHeight).to.be.not.called();
-      expect(insightAPIMock.getRawBlockByHash).to.be.calledOnceWith(hash);
+      expect(coreRPCClientMock.getBlockHash).to.be.not.called();
+      expect(coreRPCClientMock.getRawBlock).to.be.calledOnceWith(hash);
     }
   });
 });
