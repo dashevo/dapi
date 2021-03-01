@@ -16,18 +16,17 @@ describe('getStatusHandlerFactory', () => {
 
   beforeEach(function beforeEach() {
     info = {
-      version: 140001,
-      insightversion: '2.3.3',
-      protocolversion: 70215,
+      bestBlockHash: '0000020029bcac549a6e7b7e488d9ca8af518d4c0aae8073cd364c70ca29be6e',
       blocks: 1185683,
+      chain: 'livenet',
+      difficulty: 184564887.5403167,
+      version: 140001,
+      protocolVersion: 70215,
+      subVersion: 70215,
       timeoffset: 0,
       connections: 8,
-      proxy: '',
-      difficulty: 184564887.5403167,
-      testnet: false,
       relayfee: 0.00001,
-      errors: '',
-      network: 'livenet',
+      warnings: '',
     };
 
     call = new GrpcCallMock(this.sinon);
@@ -45,16 +44,16 @@ describe('getStatusHandlerFactory', () => {
     expect(result).to.be.an.instanceOf(GetStatusResponse);
 
     expect(result.getCoreVersion()).to.equal(info.version);
-    expect(result.getProtocolVersion()).to.equal(info.protocolversion);
+    expect(result.getProtocolVersion()).to.equal(info.protocolVersion);
+    expect(result.getSubVersion()).to.equal(info.subVersion);
     expect(result.getBlocks()).to.equal(info.blocks);
+    expect(result.getBestBlockHash()).to.equal(info.bestBlockHash);
     expect(result.getTimeOffset()).to.equal(info.timeoffset);
     expect(result.getConnections()).to.equal(info.connections);
-    expect(result.getProxy()).to.equal(info.proxy);
     expect(result.getDifficulty()).to.equal(info.difficulty);
-    expect(result.getTestnet()).to.equal(info.testnet);
     expect(result.getRelayFee()).to.equal(info.relayfee);
-    expect(result.getErrors()).to.equal(info.errors);
-    expect(result.getNetwork()).to.equal(info.network);
+    expect(result.getWarnings()).to.equal(info.warnings);
+    expect(result.getChain()).to.equal(info.chain);
 
     expect(coreRPCClientMock.getStatus).to.be.calledOnceWith('getInfo');
   });
