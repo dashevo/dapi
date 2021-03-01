@@ -103,7 +103,7 @@ async function main() {
 
   const coreHandlers = coreHandlersFactory(
     insightAPI,
-    rpcServer,
+    dashCoreRpcClient,
     isProductionEnvironment,
   );
   const platformHandlers = platformHandlersFactory(
