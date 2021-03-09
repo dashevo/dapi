@@ -103,30 +103,9 @@ describe('getBlockHandlerFactory', () => {
     }
   });
 
-  it('should throw an InvalidArgumentGrpcError if getRawBlock throws error with statusCode = 400', async () => {
-    const error = new Error();
-    error.statusCode = 400;
-
-    coreRPCClientMock.getRawBlock.throws(error);
-
-    height = 42;
-    request.getHeight.returns(height);
-
-    try {
-      await getBlockHandler(call);
-
-      expect.fail('should thrown InvalidArgumentGrpcError error');
-    } catch (e) {
-      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
-      expect(e.getMessage()).to.equal('Invalid block height');
-      expect(coreRPCClientMock.getRawBlock).to.be.called();
-      expect(coreRPCClientMock.getBlockHash).to.be.calledOnceWith(height);
-    }
-  });
-
   it('should throw an InvalidArgumentGrpcError if getRawBlockByHash throws error with statusCode = 404', async () => {
     const error = new Error();
-    error.statusCode = 404;
+    error.code = -5;
 
     coreRPCClientMock.getRawBlock.throws(error);
 
@@ -147,7 +126,6 @@ describe('getBlockHandlerFactory', () => {
 
   it('should throw an InternalGrpcError if getRawBlockByHash throws unknown error', async () => {
     const error = new Error('Unknown error');
-    error.statusCode = 500;
 
     coreRPCClientMock.getRawBlock.throws(error);
 
