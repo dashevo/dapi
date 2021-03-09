@@ -136,7 +136,7 @@ describe('getBlockHandlerFactory', () => {
 
       expect.fail('should thrown InvalidArgumentGrpcError error');
     } catch (e) {
-      expect(e).to.be.instanceOf(NotFoundGrpcError);
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal('Block height out of range');
       expect(coreRPCClientMock.getBlockHash).to.be.calledOnceWith(height);
     }
