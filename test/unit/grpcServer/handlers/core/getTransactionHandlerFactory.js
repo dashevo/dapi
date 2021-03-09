@@ -77,7 +77,7 @@ describe('getTransactionHandlerFactory', () => {
 
   it('should throw NotFoundGrpcError if transaction is not found', async () => {
     const error = new Error();
-    error.statusCode = 404;
+    error.code = -5;
     coreRPCClientMock.getRawTransaction.throws(error);
 
     try {
