@@ -102,8 +102,47 @@ describe('getBlockHandlerFactory', () => {
       expect(coreRPCClientMock.getBlockHash).to.be.not.called();
     }
   });
+  it('should throw an InvalidArgumentGrpcError if getRawBlock throws error with code -1', async () => {
+    const error = new Error('JSON value is not an integer as expected');
+    error.code = -1;
 
-  it('should throw an InvalidArgumentGrpcError if getRawBlockByHash throws error with statusCode = 404', async () => {
+    coreRPCClientMock.getBlockHash.throws(error);
+
+    height = 'abc';
+    request.getHeight.returns(height);
+
+    try {
+      await getBlockHandler(call);
+
+      expect.fail('should thrown InvalidArgumentGrpcError error');
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal('JSON value is not an integer as expected');
+      expect(coreRPCClientMock.getBlockHash).to.be.calledOnceWith(height);
+    }
+  });
+
+  it('should throw an InvalidArgumentGrpcError if getRawBlock throws error with code -8', async () => {
+    const error = new Error('Block height out of range');
+    error.code = -8;
+
+    coreRPCClientMock.getBlockHash.throws(error);
+
+    height = 111111111;
+    request.getHeight.returns(height);
+
+    try {
+      await getBlockHandler(call);
+
+      expect.fail('should thrown InvalidArgumentGrpcError error');
+    } catch (e) {
+      expect(e).to.be.instanceOf(NotFoundGrpcError);
+      expect(e.getMessage()).to.equal('Block height out of range');
+      expect(coreRPCClientMock.getBlockHash).to.be.calledOnceWith(height);
+    }
+  });
+
+  it('should throw an InvalidArgumentGrpcError if getRawBlock throws error with code -5', async () => {
     const error = new Error();
     error.code = -5;
 
