@@ -30,7 +30,7 @@
     "all": true
   },
   "dependencies": {
-    "@dashevo/dapi-grpc": "github:dashevo/dapi-grpc#remove-unnecessary-status",
+    "@dashevo/dapi-grpc": "git+https://github.com/dashevo/dapi-grpc.git#remove-unnecessary-status",
     "@dashevo/dashcore-lib": "~0.19.21",
     "@dashevo/dashd-rpc": "^2.0.2",
     "@dashevo/dpp": "~0.18.0-dev.2",
