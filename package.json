@@ -1,6 +1,6 @@
 {
   "name": "@dashevo/dapi",
-  "version": "0.18.0-dev.6",
+  "version": "0.18.0",
   "description": "A decentralized API for the Dash network",
   "scripts": {
     "api": "node scripts/api.js",
@@ -30,7 +30,7 @@
     "all": true
   },
   "dependencies": {
-    "@dashevo/dapi-grpc": "~0.18.0-dev.3",
+    "@dashevo/dapi-grpc": "git+https://github.com/dashevo/dapi-grpc.git#remove-unnecessary-status",
     "@dashevo/dashcore-lib": "~0.19.21",
     "@dashevo/dashd-rpc": "^2.0.2",
     "@dashevo/dpp": "~0.18.0-dev.2",
