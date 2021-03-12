@@ -119,6 +119,7 @@ describe('getStatusHandlerFactory', () => {
     expect(chain.getSyncProgress()).to.be.equal(blockchainInfo.verificationprogress);
 
     const masternode = result.getMasternode();
+    expect(masternode.getStatus()).to.be.equal(masternodeStatus.status);
     expect(masternode.getProTxHash()).to.be.equal(masternodeStatus.proTxHash);
     expect(masternode.getPosePenalty()).to.be.equal(masternodeStatus.dmnState.PoSePenalty);
     expect(masternode.getIsSynced()).to.be.equal(mnSyncInfo.IsSynced);
