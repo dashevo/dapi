@@ -1,0 +1,84 @@
+name: tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - v[0-9]+.[0-9]+-dev
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+  pull_request:
+    branches:
+      - master
+      - v[0-9]+.[0-9]+-dev
+
+jobs:
+  test:
+    name: Run DAPI tests
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v2
+      with:
+        path: '~/.npm'
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - run: npm ci
+    - run: cp .env.example .env
+    - run: npm run build --if-present
+    - run: npm run check-package # TODO: does this exist as an action already?
+    - run: npm run lint
+    - run: npm run test:coverage
+
+  test_suite:
+    name: Run platform test suite
+    needs: test
+    runs-on: ubuntu-20.04
+    if: ${{ !contains(github.event.head_commit.message, 'skip-platform-test-suite') }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+
+    - uses: docker/setup-buildx-action@v1
+      id: buildx
+      with:
+        install: true
+
+    - uses: satackey/action-docker-layer-caching@v0.0.11
+      continue-on-error: true
+      with:
+        concurrency: 8
+
+    - uses: strophy/gh-action-runtime-vars@0.1.1
+      if: ${{ contains(github.event.pull_request.body, '/set-var')}}
+
+    - uses: dashevo/gh-action-start-local-network@v0.1.5
+      id: local_node
+      with:
+        dashmate-branch: ${{ env.dashmate-branch }}
+        drive-image-build-branch: ${{ env.drive-image-build-branch }}
+        install-sdk-version: ${{ env.install-sdk-version }}
+
+    - uses: dashevo/gh-action-run-platform-test-suite@v0.1.0
+      id: test_suite
+      with:
+        sdk-install: ${{ env.install-sdk-version }}
+        faucet-private-key: ${{ env.faucet-private-key }}
+        dpns-contract-id: ${{ env.dpns-contract-id }}
+        dpns-top-level-identity-id: ${{ env.dpns-top-level-identity-id }}
+        dpns-top-level-identity-private-key: ${{ env.dpns-top-level-identity-private-key }}
+        version: ${{ env.platform-test-suite-version }} || ${{ env.current-version }}
+
+    - name: Show Docker logs
+      if: ${{ failure() }}
+      uses: jwalton/gh-docker-logs@v1
