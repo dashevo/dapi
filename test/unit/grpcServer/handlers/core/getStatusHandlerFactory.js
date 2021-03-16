@@ -128,7 +128,7 @@ describe('getStatusHandlerFactory', () => {
     const network = result.getNetwork();
     expect(network.getPeersCount()).to.be.equal(networkInfo.connections);
 
-    const fee = result.getNetwork().getFee();
+    const fee = network.getFee();
     expect(fee.getRelay()).to.be.equal(networkInfo.relayfee);
     expect(fee.getIncremental()).to.be.equal(networkInfo.incrementalfee);
 
