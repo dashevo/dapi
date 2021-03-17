@@ -77,7 +77,7 @@ jobs:
         dpns-contract-id: ${{ env.dpns-contract-id }}
         dpns-top-level-identity-id: ${{ env.dpns-top-level-identity-id }}
         dpns-top-level-identity-private-key: ${{ env.dpns-top-level-identity-private-key }}
-        version: ${{ env.platform-test-suite-version }} || ${{ env.current-version }}
+        version: ${{ env.current-version }}
 
     - name: Show Docker logs
       if: ${{ failure() }}
