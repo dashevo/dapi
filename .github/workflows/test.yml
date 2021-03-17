@@ -59,7 +59,7 @@ jobs:
       with:
         concurrency: 8
 
-    - uses: strophy/gh-action-runtime-vars@0.1.2
+    - uses: strophy/gh-action-runtime-vars@v0.1.2
       if: ${{ contains(github.event.pull_request.body, '/set-var')}}
     - run: cat $GITHUB_ENV
     - uses: dashevo/gh-action-start-local-network@v0.1.5
