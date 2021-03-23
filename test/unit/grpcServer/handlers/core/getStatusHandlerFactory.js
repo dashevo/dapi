@@ -12,6 +12,7 @@ describe('getStatusHandlerFactory', () => {
   let call;
   let getStatusHandler;
   let coreRPCClientMock;
+  let now;
 
   let blockchainInfo;
   let networkInfo;
@@ -88,6 +89,9 @@ describe('getStatusHandlerFactory', () => {
       getMasternode: this.sinon.stub().resolves(masternodeStatus),
     };
 
+    now = new Date();
+    this.sinon.useFakeTimers(now.getTime());
+
     getStatusHandler = getStatusHandlerFactory(coreRPCClientMock);
   });
 
@@ -96,6 +100,9 @@ describe('getStatusHandlerFactory', () => {
 
     expect(result).to.be.an.instanceOf(GetStatusResponse);
 
+    // Validate protobuf object values
+    result.serializeBinary();
+
     const version = result.getVersion();
     expect(version.getProtocol()).to.equal(networkInfo.protocolversion);
     expect(version.getSoftware()).to.equal(networkInfo.version);
@@ -103,8 +110,7 @@ describe('getStatusHandlerFactory', () => {
 
     const time = result.getTime();
     expect(time.getNow()).to.be.an('number');
-    expect(time.getNow()).to.be.above(1615550415321);
-    expect(time.getNow()).to.be.below(2015550415321);
+    expect(time.getNow()).to.equal(Math.floor(now.getTime() / 1000));
     expect(time.getOffset()).to.be.equal(networkInfo.timeoffset);
     expect(time.getMedian()).to.be.equal(blockchainInfo.mediantime);
 
@@ -119,7 +125,7 @@ describe('getStatusHandlerFactory', () => {
     expect(chain.getSyncProgress()).to.be.equal(blockchainInfo.verificationprogress);
 
     const masternode = result.getMasternode();
-    expect(masternode.getStatus()).to.be.equal(masternodeStatus.status);
+    expect(masternode.getStatus()).to.be.equal(GetStatusResponse.Masternode.Status.READY);
     expect(masternode.getProTxHash()).to.be.equal(masternodeStatus.proTxHash);
     expect(masternode.getPosePenalty()).to.be.equal(masternodeStatus.dmnState.PoSePenalty);
     expect(masternode.getIsSynced()).to.be.equal(mnSyncInfo.IsSynced);
@@ -132,7 +138,7 @@ describe('getStatusHandlerFactory', () => {
     expect(fee.getRelay()).to.be.equal(networkInfo.relayfee);
     expect(fee.getIncremental()).to.be.equal(networkInfo.incrementalfee);
 
-    expect(result.getStatus()).to.be.equal('READY');
+    expect(result.getStatus()).to.be.equal(GetStatusResponse.Status.READY);
     expect(coreRPCClientMock.getBlockchainInfo).to.be.calledOnce();
     expect(coreRPCClientMock.getNetworkInfo).to.be.calledOnce();
     expect(coreRPCClientMock.getMnSync).to.be.calledOnceWith('status');
