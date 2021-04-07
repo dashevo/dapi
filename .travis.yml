@@ -32,6 +32,8 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - if [[ -n $SDK_BRANCH ]]; then export SDK_INSTALL=github:dashevo/DashJS#$SDK_BRANCH; fi
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - echo "Docker version:"
+  - docker -v
 
 install:
   - npm ci
