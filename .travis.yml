@@ -2,7 +2,6 @@ sudo: required
 dist: focal
 language: node_js
 
-
 node_js:
   - '12'
 
