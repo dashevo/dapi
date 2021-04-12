@@ -138,22 +138,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set -dev suffix
+      - name: Set suffix
+        uses: actions/github-script@v3
         id: suffix
-        run: |
-          if [[ ${{ contains(github.event.release.tag_name, '-dev') }} = true ]]
-          then
-            echo '::set-output name=result::-dev'
-          else
-            echo '::set-output name=result::'
-          fi
-
-      # - name: Set suffix
-      #   uses: actions/github-script@v3
-      #   id: suffix
-      #   with:
-      #     script: |
-      #       return (context.payload.release.tag_name.includes('-dev') ? '-dev' : '');
+        with:
+          result-encoding: string
+          script: |
+            return (context.payload.release.tag_name.includes('-dev') ? '-dev' : '');
 
       - name: Docker meta
         id: docker_meta
