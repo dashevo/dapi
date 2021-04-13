@@ -84,8 +84,8 @@ jobs:
         with:
           actions-cache-url: ${{ steps.platform-branches.outputs.cache-url }}
           actions-cache-token: ${{ steps.platform-branches.outputs.cache-token }}
-          drive-branch: ${{ steps.platform-branches.outputs.current-branch }}
-          dapi-branch: ${{ steps.runtime-vars.outputs.dapi-branch }}
+          drive-branch: ${{ steps.runtime-vars.outputs.drive-branch }}
+          dapi-branch: ${{ steps.platform-branches.outputs.current-branch }}
           dashmate-branch: ${{ steps.platform-branches.outputs.dashmate-branch }}
           install-sdk-version: ${{ steps.runtime-vars.outputs.install-sdk-version }}
 
