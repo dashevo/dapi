@@ -73,8 +73,6 @@ jobs:
         uses: dashevo/gh-action-runtime-vars@master
         id: runtime-vars
         if: ${{ contains(github.event.pull_request.body, '/set-var')}}
-        with:
-          pull-request-body: ${{ github.event.pull_request.body }}
 
       - name: Set compatible branches for Platform components
         uses: dashevo/gh-action-platform-branches@master
