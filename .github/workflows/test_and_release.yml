@@ -42,8 +42,8 @@ jobs:
       - name: Create dotenv file
         run: cp .env.example .env
 
-      - name: Run tests
-        run: npm run test:coverage
+#       - name: Run tests
+#         run: npm run test:coverage
 
   test_suite:
     name: Run Platform Test Suite
@@ -65,11 +65,28 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Cache Docker layers
-        uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
+      # - name: Cache Docker layers
+      #   uses: satackey/action-docker-layer-caching@v0.0.11
+      #   continue-on-error: true
+      #   with:
+      #     concurrency: 8
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker BuildX
+        uses: docker/setup-buildx-action@v1
         with:
-          concurrency: 8
+          install: true
+          driver-opts: image=moby/buildkit:latest
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
       - name: Load workflow dotenv file
         uses: c-py/action-dotenv-to-setenv@v3
@@ -103,6 +120,11 @@ jobs:
           dpns-top-level-identity-private-key: ${{ env.dpns-top-level-identity-private-key }}
           platform-test-suite-branch: ${{ steps.platform-branches.outputs.testsuite-branch }}
 
+      - name: Temporary fix for Docker cache action
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
       - name: Show Docker logs
         if: ${{ failure() }}
         uses: jwalton/gh-docker-logs@v1
@@ -111,7 +133,7 @@ jobs:
     name: Release Docker Image
     runs-on: ubuntu-20.04
     needs: test_suite
-    if: ${{ github.event_name == 'release' }}
+    #if: ${{ github.event_name == 'release' }}
     steps:
       - uses: actions/checkout@v2
 
@@ -124,6 +146,7 @@ jobs:
         uses: docker/setup-qemu-action@v1
 
       - name: Set up Docker BuildX
+        id: buildx
         uses: docker/setup-buildx-action@v1
         with:
           install: true
@@ -154,7 +177,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v2
         with:
-          images: dashpay/dapi
+          images: strophy/dapi
           tags: |
             type=match,pattern=v(\d+),group=1
             type=match,pattern=v(\d+.\d+),group=1
@@ -173,6 +196,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
+          builder: ${{ steps.buildx.outputs.name }}
           file: ./Dockerfile
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
