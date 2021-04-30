@@ -101,7 +101,7 @@ describe('getStatusHandlerFactory', () => {
     expect(result).to.be.an.instanceOf(GetStatusResponse);
 
     // Validate protobuf object values
-    const serialized = result.serializeBinary();
+    result.serializeBinary();
 
     const version = result.getVersion();
     expect(version.getProtocol()).to.equal(networkInfo.protocolversion);
