@@ -101,7 +101,7 @@ describe('getStatusHandlerFactory', () => {
     expect(result).to.be.an.instanceOf(GetStatusResponse);
 
     // Validate protobuf object values
-    result.serializeBinary();
+    const serialized = result.serializeBinary();
 
     const version = result.getVersion();
     expect(version.getProtocol()).to.equal(networkInfo.protocolversion);
@@ -118,15 +118,15 @@ describe('getStatusHandlerFactory', () => {
     expect(chain.getName()).to.be.equal(blockchainInfo.chain);
     expect(chain.getBlocksCount()).to.be.equal(blockchainInfo.blocks);
     expect(chain.getHeadersCount()).to.be.equal(blockchainInfo.headers);
-    expect(chain.getBestBlockHash()).to.be.equal(blockchainInfo.bestblockhash);
+    expect(chain.getBestBlockHash().toString('hex')).to.be.equal(blockchainInfo.bestblockhash);
     expect(chain.getDifficulty()).to.be.equal(blockchainInfo.difficulty);
-    expect(chain.getChainWork()).to.be.equal(blockchainInfo.chainwork);
+    expect(chain.getChainWork().toString('hex')).to.be.equal(blockchainInfo.chainwork);
     expect(chain.getIsSynced()).to.be.equal(mnSyncInfo.IsBlockchainSynced);
     expect(chain.getSyncProgress()).to.be.equal(blockchainInfo.verificationprogress);
 
     const masternode = result.getMasternode();
     expect(masternode.getStatus()).to.be.equal(GetStatusResponse.Masternode.Status.READY);
-    expect(masternode.getProTxHash()).to.be.equal(masternodeStatus.proTxHash);
+    expect(masternode.getProTxHash().toString('hex')).to.be.equal(masternodeStatus.proTxHash);
     expect(masternode.getPosePenalty()).to.be.equal(masternodeStatus.dmnState.PoSePenalty);
     expect(masternode.getIsSynced()).to.be.equal(mnSyncInfo.IsSynced);
     expect(masternode.getSyncProgress()).to.be.equal(1);
