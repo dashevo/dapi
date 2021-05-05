@@ -5,7 +5,7 @@ RUN apk update && \
     apk --no-cache upgrade && \
     apk add --no-cache git \
                        openssh-client \
-                       python \
+                       python3 \
                        alpine-sdk \
                        zeromq-dev
 
