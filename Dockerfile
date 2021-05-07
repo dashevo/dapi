@@ -26,6 +26,9 @@ COPY package.json package-lock.json /
 
 RUN --mount=type=cache,target=/root/.npm npm ci --production
 
+#FROM node:12-alpine3.12 as cache-export
+#RUN --mount=type=cache,target=/root/.npm tar cvf /npm-cache.tar /root/.npm
+
 FROM node:12-alpine3.12
 
 ARG NODE_ENV=production
