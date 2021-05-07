@@ -149,11 +149,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Check package version matches tag
-        uses: geritol/match-tag-to-package-version@0.1.0
-        env:
-          TAG_PREFIX: refs/tags/v
-
+      # - name: Check package version matches tag
+      #   uses: geritol/match-tag-to-package-version@0.1.0
+      #   env:
+      #     TAG_PREFIX: refs/tags/v
+# 
       # - name: Set up QEMU
       #   uses: docker/setup-qemu-action@v1
 
