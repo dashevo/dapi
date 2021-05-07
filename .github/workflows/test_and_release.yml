@@ -112,30 +112,30 @@ jobs:
           override-dashmate-branch: ${{ env.DASHMATE_BRANCH }}
           override-testsuite-branch: ${{ env.TEST_SUITE_BRANCH }}
 
-      - name: Start Dash local network
-        uses: dashevo/gh-action-start-local-network@buildkit-cache
-        with:
-          actions-cache-url: ${{ steps.platform-branches.outputs.cache-url }}
-          actions-cache-token: ${{ steps.platform-branches.outputs.cache-token }}
-          drive-branch: ${{ env.DRIVE_BRANCH }}
-          dapi-branch: ${{ steps.platform-branches.outputs.current-branch }}
-          dashmate-branch: ${{ steps.platform-branches.outputs.dashmate-branch }}
-          sdk-branch: ${{ env.SDK_BRANCH }}
-
-      - name: Run Platform Test Suite
-        uses: dashevo/gh-action-run-platform-test-suite@master
-        with:
-          sdk-branch: ${{ env.SDK_BRANCH }}
-          faucet-private-key: ${{ env.faucet-private-key }}
-          dpns-contract-id: ${{ env.dpns-contract-id }}
-          dpns-top-level-identity-id: ${{ env.dpns-top-level-identity-id }}
-          dpns-top-level-identity-private-key: ${{ env.dpns-top-level-identity-private-key }}
-          platform-test-suite-branch: ${{ steps.platform-branches.outputs.testsuite-branch }}
-
-      - name: Temporary fix for Docker cache action
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      #- name: Start Dash local network
+      #  uses: dashevo/gh-action-start-local-network@buildkit-cache
+      #  with:
+      #    actions-cache-url: ${{ steps.platform-branches.outputs.cache-url }}
+      #    actions-cache-token: ${{ steps.platform-branches.outputs.cache-token }}
+      #    drive-branch: ${{ env.DRIVE_BRANCH }}
+      #    dapi-branch: ${{ steps.platform-branches.outputs.current-branch }}
+      #    dashmate-branch: ${{ steps.platform-branches.outputs.dashmate-branch }}
+      #    sdk-branch: ${{ env.SDK_BRANCH }}
+#
+      #- name: Run Platform Test Suite
+      #  uses: dashevo/gh-action-run-platform-test-suite@master
+      #  with:
+      #    sdk-branch: ${{ env.SDK_BRANCH }}
+      #    faucet-private-key: ${{ env.faucet-private-key }}
+      #    dpns-contract-id: ${{ env.dpns-contract-id }}
+      #    dpns-top-level-identity-id: ${{ env.dpns-top-level-identity-id }}
+      #    dpns-top-level-identity-private-key: ${{ env.dpns-top-level-identity-private-key }}
+      #    platform-test-suite-branch: ${{ steps.platform-branches.outputs.testsuite-branch }}
+#
+      #- name: Temporary fix for Docker cache action
+      #  run: |
+      #    rm -rf /tmp/.buildx-cache
+      #    mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: Show Docker logs
         if: ${{ failure() }}
