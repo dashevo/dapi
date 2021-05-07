@@ -218,7 +218,7 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           file: ./Dockerfile
           push: true
-          tags: ci-test 
+          tags: ghcr.io/${{ github.repository_owner }}/dapi:ci-test 
           #tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/dapi
