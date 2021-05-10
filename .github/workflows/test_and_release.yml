@@ -88,17 +88,17 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-buildx-
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v1
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.repository_owner }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
       
-      # - name: Pull image layer cache
-      #   continue-on-error: true
-      #   run: |
-      #     docker pull ghcr.io/${{ github.repository_owner }}/dapi
+      - name: Pull image layer cache
+        continue-on-error: true
+        run: |
+          docker pull strophy/dapi:ci-test
 
       - name: Load workflow dotenv file
         uses: c-py/action-dotenv-to-setenv@v3
@@ -112,26 +112,26 @@ jobs:
           override-dashmate-branch: ${{ env.DASHMATE_BRANCH }}
           override-testsuite-branch: ${{ env.TEST_SUITE_BRANCH }}
 
-      #- name: Start Dash local network
-      #  uses: dashevo/gh-action-start-local-network@buildkit-cache
-      #  with:
-      #    actions-cache-url: ${{ steps.platform-branches.outputs.cache-url }}
-      #    actions-cache-token: ${{ steps.platform-branches.outputs.cache-token }}
-      #    drive-branch: ${{ env.DRIVE_BRANCH }}
-      #    dapi-branch: ${{ steps.platform-branches.outputs.current-branch }}
-      #    dashmate-branch: ${{ steps.platform-branches.outputs.dashmate-branch }}
-      #    sdk-branch: ${{ env.SDK_BRANCH }}
-#
-      #- name: Run Platform Test Suite
-      #  uses: dashevo/gh-action-run-platform-test-suite@master
-      #  with:
-      #    sdk-branch: ${{ env.SDK_BRANCH }}
-      #    faucet-private-key: ${{ env.faucet-private-key }}
-      #    dpns-contract-id: ${{ env.dpns-contract-id }}
-      #    dpns-top-level-identity-id: ${{ env.dpns-top-level-identity-id }}
-      #    dpns-top-level-identity-private-key: ${{ env.dpns-top-level-identity-private-key }}
-      #    platform-test-suite-branch: ${{ steps.platform-branches.outputs.testsuite-branch }}
-#
+      - name: Start Dash local network
+        uses: dashevo/gh-action-start-local-network@buildkit-cache
+        with:
+          actions-cache-url: ${{ steps.platform-branches.outputs.cache-url }}
+          actions-cache-token: ${{ steps.platform-branches.outputs.cache-token }}
+          drive-branch: ${{ env.DRIVE_BRANCH }}
+          dapi-branch: ${{ steps.platform-branches.outputs.current-branch }}
+          dashmate-branch: ${{ steps.platform-branches.outputs.dashmate-branch }}
+          sdk-branch: ${{ env.SDK_BRANCH }}
+
+      - name: Run Platform Test Suite
+        uses: dashevo/gh-action-run-platform-test-suite@master
+        with:
+          sdk-branch: ${{ env.SDK_BRANCH }}
+          faucet-private-key: ${{ env.faucet-private-key }}
+          dpns-contract-id: ${{ env.dpns-contract-id }}
+          dpns-top-level-identity-id: ${{ env.dpns-top-level-identity-id }}
+          dpns-top-level-identity-private-key: ${{ env.dpns-top-level-identity-private-key }}
+          platform-test-suite-branch: ${{ steps.platform-branches.outputs.testsuite-branch }}
+
       #- name: Temporary fix for Docker cache action
       #  run: |
       #    rm -rf /tmp/.buildx-cache
@@ -153,9 +153,9 @@ jobs:
       #   uses: geritol/match-tag-to-package-version@0.1.0
       #   env:
       #     TAG_PREFIX: refs/tags/v
-# 
-      # - name: Set up QEMU
-      #   uses: docker/setup-qemu-action@v1
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
 
       - name: Set up Docker BuildX
         id: buildx
@@ -172,12 +172,12 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-buildx-
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v1
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.repository_owner }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -225,7 +225,7 @@ jobs:
           cache-to: type=registry,ref=strophy/dapi:ci-test,mode=max
           #cache-from: type=local,src=/tmp/.buildx-cache # <---
           #cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new # <---
-          #platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
 
       # - name: Temporary fix for Docker cache action
       #   run: |
