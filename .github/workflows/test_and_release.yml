@@ -29,10 +29,10 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
+      
       - name: Check NPM package lock version is updated
-        run: npm run check-package # TODO: does this exist as an action already?
-
+        uses: dashevo/gh-action-check-package-lock@master
+      
       - name: Install NPM dependencies
         run: npm ci
 
