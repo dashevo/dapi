@@ -24,7 +24,8 @@ ENV npm_config_zmq_external=true
 
 COPY package.json package-lock.json /
 
-RUN --mount=type=cache,target=/root/.npm npm ci --production
+#RUN --mount=type=cache,target=/root/.npm npm ci --production
+RUN npm ci --production
 
 #FROM node:12-alpine3.12 as cache-export
 #RUN --mount=type=cache,target=/root/.npm tar cvf /npm-cache.tar /root/.npm
