@@ -8,13 +8,15 @@ const DashPlatformProtocol = require('@dashevo/dpp');
 
 const generateRandomIdentifier = require('@dashevo/dpp/lib/test/utils/generateRandomIdentifier');
 const getDataContractFixture = require('@dashevo/dpp/lib/test/fixtures/getDataContractFixture');
-const DriveStateRepository = require('../../../lib/dpp/DriveStateRepository');
 
 const {
   v0: {
     GetDataContractResponse,
   },
 } = require('@dashevo/dapi-grpc');
+
+const DriveStateRepository = require('../../../lib/dpp/DriveStateRepository');
+
 
 chai.use(chaiAsPromised);
 chai.use(dirtyChai);
