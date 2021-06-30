@@ -108,7 +108,7 @@ jobs:
           ls -lha buildkit-cache
 
       - name: Load buildkit state from cache
-        uses: strophy/gh-action-cache-buildkit-state@master
+        uses: dashevo/gh-action-cache-buildkit-state@v1
         with:
           builder: buildx_buildkit_${{ steps.buildx.outputs.name }}0
           cache-path: $(pwd)/buildkit-cache
@@ -185,7 +185,7 @@ jobs:
           ls -lha buildkit-cache
 
       - name: Load buildkit state from cache
-        uses: strophy/gh-action-cache-buildkit-state@master
+        uses: dashevo/gh-action-cache-buildkit-state@v1
         with:
           builder: buildx_buildkit_${{ steps.buildx.outputs.name }}0
           cache-path: $(pwd)/buildkit-cache
@@ -208,7 +208,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v2
         with:
-          images: strophy/dapi
+          images: dashpay/dapi
           tags: |
             type=match,pattern=v(\d+),group=1
             type=match,pattern=v(\d+.\d+),group=1
@@ -228,8 +228,6 @@ jobs:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-          cache-from: type=registry,ref=strophy/dapi:ci-test
-          cache-to: type=registry,ref=strophy/dapi:ci-test,mode=max
           platforms: linux/amd64,linux/arm64,linux/arm/v7
 
       - name: Show Docker image digest
