@@ -49,8 +49,8 @@ jobs:
       - name: Create dotenv file
         run: cp .env.example .env
 
-#       - name: Run tests
-#         run: npm run test:coverage
+      - name: Run tests
+        run: npm run test:coverage
 
   test_suite:
     name: Run Platform Test Suite
@@ -137,15 +137,15 @@ jobs:
           dashmate-branch: ${{ steps.platform-branches.outputs.dashmate-branch }}
           sdk-branch: ${{ env.SDK_BRANCH }}
 
-      # - name: Run Platform Test Suite
-      #   uses: dashevo/gh-action-run-platform-test-suite@master
-      #   with:
-      #     sdk-branch: ${{ env.SDK_BRANCH }}
-      #     faucet-private-key: ${{ steps.start-local-network.outputs.faucet-private-key }}
-      #     dpns-contract-id: ${{ steps.start-local-network.outputs.dpns-contract-id }}
-      #     dpns-top-level-identity-id: ${{ steps.start-local-network.outputs.dpns-top-level-identity-id }}
-      #     dpns-top-level-identity-private-key: ${{ steps.start-local-network.outputs.dpns-top-level-identity-private-key }}
-      #     platform-test-suite-branch: ${{ steps.platform-branches.outputs.testsuite-branch }}
+      - name: Run Platform Test Suite
+        uses: dashevo/gh-action-run-platform-test-suite@master
+        with:
+          sdk-branch: ${{ env.SDK_BRANCH }}
+          faucet-private-key: ${{ steps.start-local-network.outputs.faucet-private-key }}
+          dpns-contract-id: ${{ steps.start-local-network.outputs.dpns-contract-id }}
+          dpns-top-level-identity-id: ${{ steps.start-local-network.outputs.dpns-top-level-identity-id }}
+          dpns-top-level-identity-private-key: ${{ steps.start-local-network.outputs.dpns-top-level-identity-private-key }}
+          platform-test-suite-branch: ${{ steps.platform-branches.outputs.testsuite-branch }}
 
       - name: Show Docker logs
         if: ${{ failure() }}
