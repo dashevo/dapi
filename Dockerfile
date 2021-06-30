@@ -13,22 +13,12 @@ RUN apk update && \
 RUN npm install -g node-gyp-cache@0.2.1 && \
     npm config set node_gyp node-gyp-cache
 
-# Copy node gyp cache
-#COPY docker/cache/.cache /root/.cache
-
-# Copy NPM cache
-#COPY docker/cache/.npm /root/.npm
-
 # Install npm modules
 ENV npm_config_zmq_external=true
 
 COPY package.json package-lock.json /
 
-#RUN --mount=type=cache,target=/root/.npm npm ci --production
-RUN npm ci --production
-
-#FROM node:12-alpine3.12 as cache-export
-#RUN --mount=type=cache,target=/root/.npm tar cvf /npm-cache.tar /root/.npm
+RUN --mount=type=cache,target=/root/.npm --mount=type=cache,target=/root/.cache npm ci --production
 
 FROM node:12-alpine3.12
 
