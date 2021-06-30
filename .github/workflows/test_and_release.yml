@@ -16,6 +16,11 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 10
     steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+
       - uses: actions/checkout@v2
 
       - uses: actions/setup-node@v2
@@ -122,7 +127,7 @@ jobs:
           override-testsuite-branch: ${{ env.TEST_SUITE_BRANCH }}
 
       - name: Start Dash local network
-        uses: dashevo/gh-action-start-local-network@buildkit-cache
+        uses: dashevo/gh-action-start-local-network@buildkit-caching-support
         id: start-local-network
         with:
           drive-branch: ${{ env.DRIVE_BRANCH }}
@@ -148,7 +153,7 @@ jobs:
     name: Release Docker Image
     runs-on: ubuntu-20.04
     needs: test_suite
-    #if: ${{ github.event_name == 'release' }}
+    if: ${{ github.event_name == 'release' }}
     steps:
       - uses: actions/checkout@v2
 
