@@ -18,7 +18,6 @@ const { Transaction } = require('@dashevo/dashcore-lib');
 const getTransactionHandlerFactory = require('../../../../../lib/grpcServer/handlers/core/getTransactionHandlerFactory');
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
-const { expect } = require('chai');
 
 describe('getTransactionHandlerFactory', () => {
   let call;
