@@ -302,7 +302,7 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
     expect(getMemPoolTransactionsMock).to.have.been.calledOnce();
   });
 
-  it('should respond with error if if fromBlockHeight is bigger than block count', async () => {
+  it('should respond with error if fromBlockHeight is bigger than block count', async () => {
     call.request.setFromBlockHash('someBlockHash');
     call.request.setCount(0);
 
@@ -318,6 +318,28 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
       expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
       expect(e.getMessage()).to.equal(
         'fromBlockHeight is bigger than block count',
+      );
+
+      expect(call.write).to.not.have.been.called();
+      expect(call.end).to.not.have.been.called();
+    }
+  });
+
+  it('should respond with error if fromBlockHash is not found', async () => {
+    call.request.setFromBlockHash('someBlockHash');
+    call.request.setCount(0);
+
+    const error = new Error();
+    error.code = -5;
+
+    coreAPIMock.getBlock.throws(error);
+
+    try {
+      await subscribeToTransactionsWithProofsHandler(call);
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal(
+        'fromBlockHash is not found',
       );
 
       expect(call.write).to.not.have.been.called();
