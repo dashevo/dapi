@@ -314,6 +314,8 @@ describe('subscribeToNewTransactions', () => {
       bloomFilterEmitterCollection,
     );
 
+    // Read historical data
+
     bloomFilterEmitterCollection.test(transactions[0]);
     bloomFilterEmitterCollection.test(transactions[1]);
     bloomFilterEmitterCollection.test(transactions[2]);
