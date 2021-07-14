@@ -346,4 +346,27 @@ describe('subscribeToTransactionsWithProofsHandlerFactory', () => {
       expect(call.end).to.not.have.been.called();
     }
   });
+
+  it('should respond with error if fromBlockHash is not part of the best block chain', async () => {
+    const blockHash = 'someBlockHash';
+    call.request.setFromBlockHash(blockHash);
+    call.request.setCount(0);
+
+    const error = new Error();
+    error.code = -5;
+
+    coreAPIMock.getBlock.resolves({ height: 1, confirmations: -1 });
+
+    try {
+      await subscribeToTransactionsWithProofsHandler(call);
+    } catch (e) {
+      expect(e).to.be.instanceOf(InvalidArgumentGrpcError);
+      expect(e.getMessage()).to.equal(
+        `block ${Buffer.from(blockHash).toString('hex')} is not part of the best block chain`,
+      );
+
+      expect(call.write).to.not.have.been.called();
+      expect(call.end).to.not.have.been.called();
+    }
+  });
 });
