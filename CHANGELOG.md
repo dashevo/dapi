@@ -10,9 +10,8 @@
 ### Bug Fixes
 
 * `prove` options was set as a string ([#387](https://github.com/dashevo/dapi/issues/387))
-* `EAI_AGAIN` error code was not handled in a client ([#381](https://github.com/dashevo/dapi/issues/381))
-* `subscribeToNewTransactions` doesn't emit instant lock in some cases  ([#384](https://github.com/dashevo/dapi/issues/384))
-* `subscribeToTransactionsWithProofsHandler` misses transactions from mempool ([#375](https://github.com/dashevo/dapi/issues/375))
+* `EAI_AGAIN` error code was not handled ([#381](https://github.com/dashevo/dapi/issues/381))
+* `subscribeToNewTransactionsWithProofs` doesn't emit transactions and instant lock in some cases ([#384](https://github.com/dashevo/dapi/issues/384), [#375](https://github.com/dashevo/dapi/issues/375))
 
 
 ### BREAKING CHANGES
