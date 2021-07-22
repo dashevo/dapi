@@ -1,3 +1,25 @@
+# [0.20.0](https://github.com/dashevo/dapi/compare/v0.19.0...v0.20.0) (2021-07-22)
+
+
+### Features
+
+* feat!: add more information to proofs ([#373](https://github.com/dashevo/dapi/issues/373))
+
+
+### Bug Fixes
+
+* `prove` options was set as a string ([#387](https://github.com/dashevo/dapi/issues/387))
+* `EAI_AGAIN` error code was not handled in a client ([#381](https://github.com/dashevo/dapi/issues/381))
+* `subscribeToNewTransactions` doesn't emit instant lock in some cases  ([#384](https://github.com/dashevo/dapi/issues/384))
+* `subscribeToTransactionsWithProofsHandler` misses transactions from mempool ([#375](https://github.com/dashevo/dapi/issues/375))
+
+
+### BREAKING CHANGES
+
+* data will be `null` in case proof is requested from platform endpoints
+
+
+
 # [0.19.0](https://github.com/dashevo/dapi/compare/v0.18.1...v0.19.0) (2021-05-05)
 
 
