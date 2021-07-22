@@ -3,7 +3,8 @@
 
 ### Features
 
-* feat!: add more information to proofs ([#373](https://github.com/dashevo/dapi/issues/373))
+* add more information to proofs ([#373](https://github.com/dashevo/dapi/issues/373))
+* strict data contract schema validation ([#372](https://github.com/dashevo/dapi/issues/372))
 
 
 ### Bug Fixes
@@ -17,6 +18,7 @@
 ### BREAKING CHANGES
 
 * data will be `null` in case proof is requested from platform endpoints
+* not compatible with contracts created using `dpp` older than v0.20
 
 
 
