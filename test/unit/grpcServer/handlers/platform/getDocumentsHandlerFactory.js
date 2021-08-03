@@ -13,7 +13,7 @@ const {
     GetDocumentsResponse,
     Proof,
   },
-} = require('@dashevo/dapi-grpc');
+} = require('strophy-dapi-grpc');
 
 /* eslint-disable import/no-extraneous-dependencies */
 const generateRandomIdentifier = require('@dashevo/dpp/lib/test/utils/generateRandomIdentifier');

@@ -26,7 +26,7 @@ const {
     },
   },
   getCoreDefinition,
-} = require('@dashevo/dapi-grpc');
+} = require('strophy-dapi-grpc');
 
 // Load config from .env
 dotenv.config();

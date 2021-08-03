@@ -11,7 +11,7 @@ const {
   v0: {
     GetTransactionResponse,
   },
-} = require('@dashevo/dapi-grpc');
+} = require('strophy-dapi-grpc');
 
 const { Transaction } = require('@dashevo/dashcore-lib');
 

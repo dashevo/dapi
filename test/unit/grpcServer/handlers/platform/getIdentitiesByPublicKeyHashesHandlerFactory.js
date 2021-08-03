@@ -11,7 +11,7 @@ const {
     GetIdentitiesByPublicKeyHashesResponse,
     Proof,
   },
-} = require('@dashevo/dapi-grpc');
+} = require('strophy-dapi-grpc');
 
 const getIdentityFixture = require('@dashevo/dpp/lib/test/fixtures/getIdentityFixture');
 

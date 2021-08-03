@@ -14,7 +14,7 @@ const {
     StateTransitionBroadcastError,
     Proof,
   },
-} = require('@dashevo/dapi-grpc');
+} = require('strophy-dapi-grpc');
 const createDPPMock = require('@dashevo/dpp/lib/test/mocks/createDPPMock');
 const getIdentityCreateTransitionFixture = require('@dashevo/dpp/lib/test/fixtures/getIdentityCreateTransitionFixture');
 
