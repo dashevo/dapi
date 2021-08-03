@@ -1,6 +1,6 @@
 // Entry point for DAPI.
 const dotenv = require('dotenv');
-const grpc = require('grpc');
+const grpc = require('@grpc/grpc-js');
 
 const {
   server: {
