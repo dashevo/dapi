@@ -27,7 +27,7 @@
     "all": true
   },
   "dependencies": {
-    "@dashevo/dapi-grpc": "~0.21.0-dev.1",
+    "@dashevo/dapi-grpc": "github:dashevo/dapi-grpc#getConsensusParams-method",
     "@dashevo/dashcore-lib": "~0.19.25",
     "@dashevo/dashd-rpc": "^2.0.2",
     "@dashevo/dpp": "~0.20.0",
