@@ -150,12 +150,13 @@ async function main() {
     },
   );
 
-  grpcServer.bind(
+  grpcServer.bindAsync(
     `0.0.0.0:${config.txFilterStream.grpcServer.port}`,
     grpc.ServerCredentials.createInsecure(),
+    () => {
+      grpcServer.start();
+    },
   );
-
-  grpcServer.start();
 
   log.info(`GRPC server is listening on port ${config.txFilterStream.grpcServer.port}`);
 
