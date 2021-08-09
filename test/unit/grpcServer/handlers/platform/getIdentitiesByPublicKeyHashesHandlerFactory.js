@@ -12,7 +12,7 @@ const {
     Proof,
     StoreTreeProofs,
   },
-} = require('strophy-dapi-grpc');
+} = require('@dashevo/dapi-grpc');
 
 const getIdentityFixture = require('@dashevo/dpp/lib/test/fixtures/getIdentityFixture');
 

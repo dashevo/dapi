@@ -11,7 +11,7 @@ const {
   v0: {
     BroadcastStateTransitionResponse,
   },
-} = require('strophy-dapi-grpc');
+} = require('@dashevo/dapi-grpc');
 
 const DashPlatformProtocol = require('@dashevo/dpp');
 const getDataContractFixture = require('@dashevo/dpp/lib/test/fixtures/getDataContractFixture');

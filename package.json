@@ -61,7 +61,6 @@
     "semver": "^7.3.2",
     "sinon": "^7.5.0",
     "sinon-chai": "^3.4.0",
-    "strophy-dapi-client": "^0.21.0-dev.2",
     "swagger-jsdoc": "^3.5.0"
   },
   "repository": {

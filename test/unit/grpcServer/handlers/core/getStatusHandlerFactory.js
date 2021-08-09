@@ -2,7 +2,7 @@ const {
   v0: {
     GetStatusResponse,
   },
-} = require('strophy-dapi-grpc');
+} = require('@dashevo/dapi-grpc');
 
 const getStatusHandlerFactory = require('../../../../../lib/grpcServer/handlers/core/getStatusHandlerFactory');
 

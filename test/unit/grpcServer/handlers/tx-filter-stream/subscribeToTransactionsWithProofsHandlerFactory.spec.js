@@ -23,7 +23,7 @@ const {
     RawTransactions,
     BloomFilter,
   },
-} = require('strophy-dapi-grpc');
+} = require('@dashevo/dapi-grpc');
 
 const { BloomFilter: CoreBloomFilter } = require('@dashevo/dashcore-lib');
 

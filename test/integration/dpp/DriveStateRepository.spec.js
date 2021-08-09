@@ -13,7 +13,7 @@ const {
   v0: {
     GetDataContractResponse,
   },
-} = require('strophy-dapi-grpc');
+} = require('@dashevo/dapi-grpc');
 
 const DriveStateRepository = require('../../../lib/dpp/DriveStateRepository');
 

@@ -12,7 +12,7 @@ const {
     Proof,
     StoreTreeProofs,
   },
-} = require('strophy-dapi-grpc');
+} = require('@dashevo/dapi-grpc');
 
 /* eslint-disable import/no-extraneous-dependencies */
 const generateRandomIdentifier = require('@dashevo/dpp/lib/test/utils/generateRandomIdentifier');

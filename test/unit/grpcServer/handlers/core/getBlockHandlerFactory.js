@@ -11,7 +11,7 @@ const {
   v0: {
     GetBlockResponse,
   },
-} = require('strophy-dapi-grpc');
+} = require('@dashevo/dapi-grpc');
 
 const { Block } = require('@dashevo/dashcore-lib');
 
