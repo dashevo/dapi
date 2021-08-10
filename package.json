@@ -27,12 +27,12 @@
     "all": true
   },
   "dependencies": {
-    "@dashevo/dapi-client": "github:dashevo/js-dapi-client#update-grpc",
-    "@dashevo/dapi-grpc": "github:dashevo/dapi-grpc#update-grpc",
+    "@dashevo/dapi-client": "~0.21.0-dev.3",
+    "@dashevo/dapi-grpc": "~0.21.0-dev.7",
     "@dashevo/dashcore-lib": "~0.19.25",
     "@dashevo/dashd-rpc": "^2.0.2",
     "@dashevo/dpp": "~0.20.0",
-    "@dashevo/grpc-common": "github:dashevo/js-grpc-common#update-grpc",
+    "@dashevo/grpc-common": "~0.3.6",
     "@grpc/grpc-js": "^1.3.6",
     "ajv": "^8.6.0",
     "bs58": "^4.0.1",
