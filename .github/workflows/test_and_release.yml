@@ -79,7 +79,7 @@ jobs:
       # Temporary fix until Docker Compose V2 is GA
       - name: Set up Docker Compose V2
         run: |
-          curl https://github.com/docker/compose-cli/releases/download/v2.0.0-beta.4/docker-compose-linux-amd64 --location --create-dirs -o $HOME/.docker/cli-plugins/docker-compose
+          curl https://github.com/docker/compose-cli/releases/download/v2.0.0-beta.6/docker-compose-linux-amd64 --location --create-dirs -o $HOME/.docker/cli-plugins/docker-compose
           chmod +x $HOME/.docker/cli-plugins/docker-compose
           docker version
           docker info
@@ -187,8 +187,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_CACHE_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_CACHE_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set suffix to Docker tags
         uses: actions/github-script@v3
