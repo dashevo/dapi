@@ -141,10 +141,6 @@ jobs:
           dpns-top-level-identity-private-key: ${{ steps.start-local-network.outputs.dpns-top-level-identity-private-key }}
           platform-test-suite-branch: ${{ steps.platform-branches.outputs.testsuite-branch }}
 
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
-
       - name: Show Docker logs
         if: ${{ failure() }}
         uses: jwalton/gh-docker-logs@v1
