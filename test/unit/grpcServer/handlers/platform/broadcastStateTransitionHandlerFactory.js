@@ -16,6 +16,9 @@ const {
 const DashPlatformProtocol = require('@dashevo/dpp');
 const getDataContractFixture = require('@dashevo/dpp/lib/test/fixtures/getDataContractFixture');
 
+const GrpcErrorCodes = require('@dashevo/grpc-common/lib/server/error/GrpcErrorCodes');
+const NotFoundGrpcError = require('@dashevo/grpc-common/lib/server/error/NotFoundGrpcError');
+const cbor = require('cbor');
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
 const broadcastStateTransitionHandlerFactory = require(
@@ -30,6 +33,7 @@ describe('broadcastStateTransitionHandlerFactory', () => {
   let stateTransitionFixture;
   let log;
   let code;
+  let createGrpcErrorFromDriveResponseMock;
 
   beforeEach(async function beforeEach() {
     const dpp = new DashPlatformProtocol();
@@ -70,8 +74,11 @@ describe('broadcastStateTransitionHandlerFactory', () => {
       request: this.sinon.stub().resolves(response),
     };
 
+    createGrpcErrorFromDriveResponseMock = this.sinon.stub();
+
     broadcastStateTransitionHandler = broadcastStateTransitionHandlerFactory(
       rpcClientMock,
+      createGrpcErrorFromDriveResponseMock,
     );
   });
 
@@ -109,6 +116,8 @@ describe('broadcastStateTransitionHandlerFactory', () => {
 
     try {
       await broadcastStateTransitionHandler(call);
+
+      expect.fail('should throw an error');
     } catch (e) {
       expect(e.message).to.equal(error.message);
       expect(e.data).to.equal(error.data);
@@ -125,9 +134,36 @@ describe('broadcastStateTransitionHandlerFactory', () => {
 
     try {
       await broadcastStateTransitionHandler(call);
+
+      expect.fail('should throw AlreadyExistsGrpcError');
     } catch (e) {
       expect(e).to.be.an.instanceOf(AlreadyExistsGrpcError);
       expect(e.getMessage()).to.equal('State transition already in chain');
+    }
+  });
+
+  it('should throw GrpcError if error code is not 0', async () => {
+    const message = 'not found';
+    const metadata = {
+      data: 'some data',
+    };
+
+    createGrpcErrorFromDriveResponseMock.returns(
+      new NotFoundGrpcError(message, metadata),
+    );
+
+    response.result.code = GrpcErrorCodes.NOT_FOUND;
+    response.result.info = cbor.encode({ message, metadata }).toString('base64');
+
+    try {
+      await broadcastStateTransitionHandler(call);
+
+      expect.fail('should throw AlreadyExistsGrpcError');
+    } catch (e) {
+      expect(e).to.be.an.instanceOf(NotFoundGrpcError);
+      expect(e.getMessage()).to.equal(message);
+      expect(e.getRawMetadata()).to.deep.equal(metadata);
+      expect(e.getCode()).to.equal(response.result.code);
     }
   });
 });
