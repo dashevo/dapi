@@ -6,7 +6,7 @@ const createGrpcErrorFromDriveResponse = require(
   '../../../../lib/grpcServer/handlers/createGrpcErrorFromDriveResponse',
 );
 
-describe('handleAbciResponseError', () => {
+describe('createGrpcErrorFromDriveResponse', () => {
   let message;
   let metadata;
 
