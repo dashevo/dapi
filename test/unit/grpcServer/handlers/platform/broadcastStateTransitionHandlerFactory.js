@@ -143,7 +143,7 @@ describe('broadcastStateTransitionHandlerFactory', () => {
     }
   });
 
-  it('should throw GrpcError if error code is not 0', async () => {
+  it('should throw call createGrpcErrorFromDriveResponse if error code is not 0', async () => {
     const message = 'not found';
     const metadata = {
       data: 'some data',
