@@ -2,6 +2,7 @@ const GrpcErrorCodes = require('@dashevo/grpc-common/lib/server/error/GrpcErrorC
 const GrpcError = require('@dashevo/grpc-common/lib/server/error/GrpcError');
 const cbor = require('cbor');
 const AbstractConsensusError = require('@dashevo/dpp/lib/errors/consensus/AbstractConsensusError');
+const InternalGrpcError = require('@dashevo/grpc-common/lib/server/error/InternalGrpcError');
 const createGrpcErrorFromDriveResponse = require(
   '../../../../lib/grpcServer/handlers/createGrpcErrorFromDriveResponse',
 );
@@ -70,6 +71,16 @@ describe('createGrpcErrorFromDriveResponse', () => {
       expect(e).to.be.an.instanceOf(GrpcError);
       expect(e.getMessage()).to.equal('Unknown error code: 5000');
       expect(e.getCode()).to.equal(5000);
+    }
+  });
+
+
+  it('should return InternalGrpcError if codes is undefined', async () => {
+    try {
+      createGrpcErrorFromDriveResponse();
+    } catch (e) {
+      expect(e).to.be.an.instanceOf(InternalGrpcError);
+      expect(e.getMessage()).to.equal('Drive’s error code is empty');
     }
   });
 });

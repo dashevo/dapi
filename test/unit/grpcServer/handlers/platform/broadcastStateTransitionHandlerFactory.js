@@ -19,7 +19,6 @@ const getDataContractFixture = require('@dashevo/dpp/lib/test/fixtures/getDataCo
 const GrpcErrorCodes = require('@dashevo/grpc-common/lib/server/error/GrpcErrorCodes');
 const NotFoundGrpcError = require('@dashevo/grpc-common/lib/server/error/NotFoundGrpcError');
 const cbor = require('cbor');
-const InternalGrpcError = require('@dashevo/grpc-common/lib/server/error/InternalGrpcError');
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
 
 const broadcastStateTransitionHandlerFactory = require(
@@ -170,31 +169,6 @@ describe('broadcastStateTransitionHandlerFactory', () => {
         response.result.code,
         response.result.info,
       );
-    }
-  });
-
-  it('should throw InternalGrpcError result codes is undefined', async () => {
-    const message = 'not found';
-    const metadata = {
-      data: 'some data',
-    };
-
-    createGrpcErrorFromDriveResponseMock.returns(
-      new NotFoundGrpcError(message, metadata),
-    );
-
-    response.result.code = undefined;
-    response.result.info = cbor.encode({ message, metadata }).toString('base64');
-
-    try {
-      await broadcastStateTransitionHandler(call);
-
-      expect.fail('should throw InternalGrpcError');
-    } catch (e) {
-      expect(e).to.be.an.instanceOf(InternalGrpcError);
-      expect(e.getMessage()).to.equal('Internal error');
-      expect(e.getError().info).to.deep.equal(response.result.info);
-      expect(createGrpcErrorFromDriveResponseMock).to.not.be.called();
     }
   });
 });
