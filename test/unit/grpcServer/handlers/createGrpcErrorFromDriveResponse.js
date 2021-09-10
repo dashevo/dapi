@@ -1,8 +1,10 @@
 const GrpcErrorCodes = require('@dashevo/grpc-common/lib/server/error/GrpcErrorCodes');
 const GrpcError = require('@dashevo/grpc-common/lib/server/error/GrpcError');
 const cbor = require('cbor');
-const AbstractConsensusError = require('@dashevo/dpp/lib/errors/consensus/AbstractConsensusError');
 const InternalGrpcError = require('@dashevo/grpc-common/lib/server/error/InternalGrpcError');
+const InvalidArgumentGrpcError = require('@dashevo/grpc-common/lib/server/error/InvalidArgumentGrpcError');
+const ResourceExhaustedGrpcError = require('@dashevo/grpc-common/lib/server/error/ResourceExhaustedGrpcError');
+const generateRandomIdentifier = require('@dashevo/dpp/lib/test/utils/generateRandomIdentifier');
 const createGrpcErrorFromDriveResponse = require(
   '../../../../lib/grpcServer/handlers/createGrpcErrorFromDriveResponse',
 );
@@ -27,7 +29,7 @@ describe('createGrpcErrorFromDriveResponse', () => {
   Object.entries(GrpcErrorCodes)
     .forEach(([codeClass, code]) => {
       it(`should throw ${codeClass} if response code is ${code}`, function it() {
-        if (code === GrpcErrorCodes.INTERNAL) {
+        if (code === GrpcErrorCodes.INTERNAL || code === GrpcErrorCodes.VERSION_MISMATCH) {
           // we have this test separate
           this.skip();
         }
@@ -52,25 +54,44 @@ describe('createGrpcErrorFromDriveResponse', () => {
 
     expect(error).to.be.an.instanceOf(GrpcError);
     expect(error.getMessage()).to.equal(message);
-    expect(error.getCode()).to.equal(17);
-    expect(error.getRawMetadata()).to.deep.equal(info.metadata);
-  });
-
-  it('should throw GrpcError if error code = 99', () => {
-    const error = createGrpcErrorFromDriveResponse(99, encodedInfo);
-
-    expect(error).to.be.an.instanceOf(GrpcError);
-    expect(error.getMessage()).to.equal(message);
-    expect(error.getCode()).to.equal(99);
+    expect(error.getCode()).to.equal(GrpcErrorCodes.UNKNOWN);
     expect(error.getRawMetadata()).to.deep.equal(info.metadata);
   });
 
   it('should throw ConsensusError if error code = 1000', () => {
-    const error = createGrpcErrorFromDriveResponse(1000, cbor.encode([42, 'a']).toString('base64'));
+    const error = createGrpcErrorFromDriveResponse(1000);
 
-    expect(error).to.be.an.instanceOf(AbstractConsensusError);
-    expect(error.getConstructorArguments()).to.deep.equal([42, 'a']);
-    expect(error.getCode()).to.equal(1000);
+    expect(error).to.be.an.instanceOf(InvalidArgumentGrpcError);
+    expect(error.getRawMetadata()).to.deep.equal({ code: 1000 });
+  });
+
+  it('should throw ConsensusError if error code = 2000', () => {
+    const id = generateRandomIdentifier();
+
+    const error = createGrpcErrorFromDriveResponse(
+      2000,
+      cbor.encode([id]).toString('base64'),
+    );
+
+    expect(error).to.be.an.instanceOf(GrpcError);
+    expect(error.getCode()).to.equal(GrpcErrorCodes.UNAUTHENTICATED);
+    expect(error.getRawMetadata()).to.deep.equal({ code: 2000 });
+  });
+
+  it('should throw ConsensusError if error code = 3000', () => {
+    const error = createGrpcErrorFromDriveResponse(3000, cbor.encode([20, 10]).toString('base64'));
+
+    expect(error).to.be.an.instanceOf(ResourceExhaustedGrpcError);
+    expect(error.getRawMetadata()).to.deep.equal({ code: 3000 });
+  });
+
+  it('should throw ConsensusError if error code = 4000', () => {
+    const dataContractId = generateRandomIdentifier();
+
+    const error = createGrpcErrorFromDriveResponse(4000, cbor.encode([dataContractId]).toString('base64'));
+
+    expect(error).to.be.an.instanceOf(InvalidArgumentGrpcError);
+    expect(error.getRawMetadata()).to.deep.equal({ code: 4000 });
   });
 
   it('should throw Unknown error code >= 5000', () => {
