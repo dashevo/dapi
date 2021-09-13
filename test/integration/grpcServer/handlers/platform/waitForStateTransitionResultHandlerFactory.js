@@ -22,6 +22,7 @@ const getIdentityCreateTransitionFixture = require('@dashevo/dpp/lib/test/fixtur
 const { EventEmitter } = require('events');
 
 const cbor = require('cbor');
+const NotFoundGrpcError = require('@dashevo/grpc-common/lib/server/error/NotFoundGrpcError');
 const BlockchainListener = require('../../../../../lib/externalApis/tenderdash/BlockchainListener');
 
 const GrpcCallMock = require('../../../../../lib/test/mock/GrpcCallMock');
@@ -31,7 +32,6 @@ const waitForTransactionResult = require('../../../../../lib/externalApis/tender
 
 const waitForStateTransitionResultHandlerFactory = require('../../../../../lib/grpcServer/handlers/platform/waitForStateTransitionResultHandlerFactory');
 const waitForHeightFactory = require('../../../../../lib/externalApis/tenderdash/waitForHeightFactory');
-const NotFoundGrpcError = require('@dashevo/grpc-common/lib/server/error/NotFoundGrpcError');
 
 describe('waitForStateTransitionResultHandlerFactory', () => {
   let call;
@@ -263,7 +263,7 @@ describe('waitForStateTransitionResultHandlerFactory', () => {
       );
 
       expect(errorCode).to.equal(wsMessagesFixture.error.data.value.TxResult.result.code);
-      expect(errorData).to.deep.equal(errorInfo.metadata);
+      expect(errorData).to.deep.equal(cbor.encode(errorInfo.metadata));
       expect(errorMessage).to.equal(errorInfo.message);
 
       done();
