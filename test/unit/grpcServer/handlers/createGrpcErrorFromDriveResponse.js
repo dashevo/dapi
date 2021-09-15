@@ -3,7 +3,7 @@ const GrpcError = require('@dashevo/grpc-common/lib/server/error/GrpcError');
 const cbor = require('cbor');
 const InternalGrpcError = require('@dashevo/grpc-common/lib/server/error/InternalGrpcError');
 const InvalidArgumentGrpcError = require('@dashevo/grpc-common/lib/server/error/InvalidArgumentGrpcError');
-const ResourceExhaustedGrpcError = require('@dashevo/grpc-common/lib/server/error/ResourceExhaustedGrpcError');
+const FailedPreconditionGrpcError = require('@dashevo/grpc-common/lib/server/error/FailedPreconditionGrpcError');
 const generateRandomIdentifier = require('@dashevo/dpp/lib/test/utils/generateRandomIdentifier');
 const createGrpcErrorFromDriveResponse = require(
   '../../../../lib/grpcServer/handlers/createGrpcErrorFromDriveResponse',
@@ -27,13 +27,12 @@ describe('createGrpcErrorFromDriveResponse', () => {
   });
 
   Object.entries(GrpcErrorCodes)
+    // We have special tests below for these error codes
+    .filter(([, code]) => (
+      ![GrpcErrorCodes.VERSION_MISMATCH, GrpcErrorCodes.INTERNAL].includes(code)
+    ))
     .forEach(([codeClass, code]) => {
-      it(`should throw ${codeClass} if response code is ${code}`, function it() {
-        if (code === GrpcErrorCodes.INTERNAL || code === GrpcErrorCodes.VERSION_MISMATCH) {
-          // we have this test separate
-          this.skip();
-        }
-
+      it(`should throw ${codeClass} if response code is ${code}`, () => {
         const error = createGrpcErrorFromDriveResponse(code, encodedInfo);
 
         let messageToCheck = message;
@@ -81,7 +80,7 @@ describe('createGrpcErrorFromDriveResponse', () => {
   it('should throw ConsensusError if error code = 3000', () => {
     const error = createGrpcErrorFromDriveResponse(3000, cbor.encode([20, 10]).toString('base64'));
 
-    expect(error).to.be.an.instanceOf(ResourceExhaustedGrpcError);
+    expect(error).to.be.an.instanceOf(FailedPreconditionGrpcError);
     expect(error.getRawMetadata()).to.deep.equal({ code: 3000 });
   });
 
