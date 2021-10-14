@@ -3,23 +3,14 @@
 
 ### Features
 
-* implement getConsensusParams method ([#393](https://github.com/dashevo/dapi/issues/393))
-* respond with already exists grpc error ([#394](https://github.com/dashevo/dapi/issues/394))
-* use semantic error codes ([#397](https://github.com/dashevo/dapi/issues/397))
+* `getConsensusParams` endpoint ([#393](https://github.com/dashevo/dapi/issues/393))
 * support multiple store tree proofs in responses ([#398](https://github.com/dashevo/dapi/issues/398))
-* respond with Drive's error data in metadata ([#406](https://github.com/dashevo/dapi/issues/406))
-* handle new drive error codes ([#405](https://github.com/dashevo/dapi/issues/405))
-
-
-### Bug Fixes
-
-* empty data info is not expected ([67c4da3](https://github.com/dashevo/dapi/commit/67c4da395750af774e68f9c75d3af4c6b2fd0643))
+* comprehensive error codes ([#394](https://github.com/dashevo/dapi/issues/394), [#397](https://github.com/dashevo/dapi/issues/397), [#405](https://github.com/dashevo/dapi/issues/405), [#406](https://github.com/dashevo/dapi/issues/406), [67c4da3](https://github.com/dashevo/dapi/commit/67c4da395750af774e68f9c75d3af4c6b2fd0643))
 
 
 ### BREAKING CHANGES
 
 * DAPI responds with new error codes
-* Already exists error responded instead of invalid argument if transaction or state transition already exists in chains
 
 
 
